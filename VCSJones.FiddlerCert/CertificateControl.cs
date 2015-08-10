@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using VCSJones.FiddlerCert.Properties;
@@ -59,7 +59,7 @@ namespace VCSJones.FiddlerCert
             }
             validDatesLabel.Text = $"{certificate.NotBefore.ToString("U")} to {certificate.NotAfter.ToString("U")}";
             hashAlgorithmLabel.Text = certificate.SignatureAlgorithm.FriendlyName;
-            if (chainElement.ChainElementStatus.Length == 0)
+            if (chainElement.ChainElementStatus.Length == 0 || chainElement.ChainElementStatus.All(status => status.Status == X509ChainStatusFlags.NoError))
             {
                 certStatusImage.Image = Resources.Security_Shields_Complete_and_ok_16xLG_color;
                 certStatusToolTip.SetToolTip(certStatusImage, "Certificate is OK.");
@@ -74,6 +74,11 @@ namespace VCSJones.FiddlerCert
                 certStatusImage.Image = Resources.Security_Shields_Critical_16xLG_color;
                 certStatusToolTip.SetToolTip(certStatusImage, $"Errors: {string.Join(", ", chainElement.ChainElementStatus.Select(status => status.Status))}");
             }
+            
+            var hashAlgorithm = CryptoConfig.AllowOnlyFipsAlgorithms ? (SHA256)new SHA256CryptoServiceProvider() : new SHA256Managed();
+            var hash = CertificateHashBuilder.BuildHashForPublicKey(chainElement.Certificate, hashAlgorithm);
+            keyHashLabel.Text = $@"""{hash}""";
+
         }
 
         private void viewCertButton_Click(object sender, EventArgs e)

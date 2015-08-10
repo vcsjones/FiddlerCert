@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Security.Cryptography;
+using System.Windows.Forms;
 using Fiddler;
 using System.Security.Cryptography.X509Certificates;
 

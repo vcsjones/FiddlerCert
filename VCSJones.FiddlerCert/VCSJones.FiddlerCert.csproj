@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -54,6 +55,7 @@
     <Compile Include="CertificateControl.Designer.cs">
       <DependentUpon>CertificateControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="CertificateHashBuilder.cs" />
     <Compile Include="CertificateInspector.cs" />
     <Compile Include="CertificatesControl.cs">
       <SubType>UserControl</SubType>
@@ -63,8 +65,10 @@
     </Compile>
     <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
-    <Compile Include="CryptoUI.cs" />
+    <Compile Include="Interop\crypto32.cs" />
+    <Compile Include="Interop\CryptoUI.cs" />
     <Compile Include="DistinguishedNameParser.cs" />
+    <Compile Include="Interop\Ntdsapi.cs" />
     <Compile Include="KnownOids.cs" />
     <Compile Include="OidParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

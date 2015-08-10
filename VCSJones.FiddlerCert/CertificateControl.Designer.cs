@@ -47,6 +47,8 @@
             this.certStatusImage = new System.Windows.Forms.PictureBox();
             this.certIcon = new System.Windows.Forms.PictureBox();
             this.certStatusToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.keyHashLabel = new System.Windows.Forms.Label();
+            this.keyHashTextLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.certStatusImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.certIcon)).BeginInit();
             this.SuspendLayout();
@@ -64,7 +66,7 @@
             // exportCertButton
             // 
             this.exportCertButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.exportCertButton.Location = new System.Drawing.Point(455, 147);
+            this.exportCertButton.Location = new System.Drawing.Point(455, 172);
             this.exportCertButton.Name = "exportCertButton";
             this.exportCertButton.Size = new System.Drawing.Size(75, 23);
             this.exportCertButton.TabIndex = 2;
@@ -165,7 +167,7 @@
             // installCertButton
             // 
             this.installCertButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.installCertButton.Location = new System.Drawing.Point(374, 147);
+            this.installCertButton.Location = new System.Drawing.Point(374, 172);
             this.installCertButton.Name = "installCertButton";
             this.installCertButton.Size = new System.Drawing.Size(75, 23);
             this.installCertButton.TabIndex = 13;
@@ -216,6 +218,24 @@
             this.certStatusToolTip.InitialDelay = 250;
             this.certStatusToolTip.ReshowDelay = 100;
             // 
+            // keyHashLabel
+            // 
+            this.keyHashLabel.AutoSize = true;
+            this.keyHashLabel.Location = new System.Drawing.Point(143, 141);
+            this.keyHashLabel.Name = "keyHashLabel";
+            this.keyHashLabel.Size = new System.Drawing.Size(59, 13);
+            this.keyHashLabel.TabIndex = 18;
+            this.keyHashLabel.Text = "[Key Hash]";
+            // 
+            // keyHashTextLabel
+            // 
+            this.keyHashTextLabel.AutoSize = true;
+            this.keyHashTextLabel.Location = new System.Drawing.Point(7, 141);
+            this.keyHashTextLabel.Name = "keyHashTextLabel";
+            this.keyHashTextLabel.Size = new System.Drawing.Size(105, 13);
+            this.keyHashTextLabel.TabIndex = 17;
+            this.keyHashTextLabel.Text = "SHA-256 PKP Hash:";
+            // 
             // CertificateControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -223,6 +243,8 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.keyHashLabel);
+            this.Controls.Add(this.keyHashTextLabel);
             this.Controls.Add(this.certStatusImage);
             this.Controls.Add(this.hashAlgorithmLabel);
             this.Controls.Add(this.hashAlgorithmTextLabel);
@@ -241,7 +263,7 @@
             this.Controls.Add(this.commonNameLabel);
             this.Controls.Add(this.certIcon);
             this.Name = "CertificateControl";
-            this.Size = new System.Drawing.Size(533, 173);
+            this.Size = new System.Drawing.Size(533, 198);
             ((System.ComponentModel.ISupportInitialize)(this.certStatusImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.certIcon)).EndInit();
             this.ResumeLayout(false);
@@ -269,5 +291,7 @@
         private System.Windows.Forms.Label hashAlgorithmTextLabel;
         private System.Windows.Forms.PictureBox certStatusImage;
         private System.Windows.Forms.ToolTip certStatusToolTip;
+        private System.Windows.Forms.Label keyHashLabel;
+        private System.Windows.Forms.Label keyHashTextLabel;
     }
 }

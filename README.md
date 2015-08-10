@@ -27,7 +27,7 @@ Fiddler for more information.
 
 ##Requirements
 
-Windows Vista or later is required
+Windows Vista or later is required.
 
 ##Affiliation
 

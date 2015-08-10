@@ -25,6 +25,10 @@ The Visual Studio project is set up to install the extension in the %USERPROFILE
 [documentation](http://docs.telerik.com/fiddler/extend-fiddler/extendwithdotnet#direct-fiddler-to-load-extension-assemblies) of
 Fiddler for more information.
 
+##Requirements
+
+Windows Vista or later is required
+
 ##Affiliation
 
 This is not affiliated with nor endorsed by Eric Lawrence or Telerik.

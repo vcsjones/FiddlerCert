@@ -119,18 +119,18 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="certificate_32xLG" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\certificate_32xLG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Assets\certificate_32xLG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Security_Shields_Alert_16xLG_color" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Security_Shields_Alert_16xLG_color.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Assets\Security_Shields_Alert_16xLG_color.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="security_Shields_Blank_16xLG" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\security_Shields_Blank_16xLG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Assets\security_Shields_Blank_16xLG.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Security_Shields_Complete_and_ok_16xLG_color" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Security_Shields_Complete_and_ok_16xLG_color.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Assets\Security_Shields_Complete_and_ok_16xLG_color.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Security_Shields_Critical_16xLG_color" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Security_Shields_Critical_16xLG_color.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+    <value>..\Assets\Security_Shields_Critical_16xLG_color.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

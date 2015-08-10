@@ -90,8 +90,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy "$(TargetPath)" "%25userprofile%25\Documents\Fiddler2\Inspectors\$(TargetFilename)"
-copy "$(TargetPath)" "%25userprofile%25\Documents\Fiddler2\Scripts\$(TargetFilename)"</PostBuildEvent>
+    <PostBuildEvent>mkdir "%25userprofile%25\Documents\Fiddler2\Inspectors"
+mkdir "%25userprofile%25\Documents\Fiddler2\Scripts"
+copy /Y "$(TargetPath)" "%25userprofile%25\Documents\Fiddler2\Inspectors\$(TargetFilename)"
+copy /Y "$(TargetPath)" "%25userprofile%25\Documents\Fiddler2\Scripts\$(TargetFilename)"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -23,7 +23,6 @@ namespace VCSJones.FiddlerCert
 
         public void AutoTamperRequestBefore(Session oSession)
         {
-
         }
 
         public void AutoTamperRequestAfter(Session oSession)
@@ -40,7 +39,7 @@ namespace VCSJones.FiddlerCert
             if (certificate != null)
             {
                 var base64Certificate = Convert.ToBase64String(certificate.Export(System.Security.Cryptography.X509Certificates.X509ContentType.Cert));
-                oSession[$"{nameof(CertificateInspector)}_Certificate"] = base64Certificate;
+                oSession[$"{nameof(CertificateInspector)}_ServerCertificate"] = base64Certificate;
             }
         }
 

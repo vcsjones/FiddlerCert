@@ -88,6 +88,12 @@
   <ItemGroup>
     <None Include="certificate_32xLG.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Security_Shields_Alert_16xLG_color.png" />
+    <Content Include="security_Shields_Blank_16xLG.png" />
+    <Content Include="Security_Shields_Complete_and_ok_16xLG_color.png" />
+    <Content Include="Security_Shields_Critical_16xLG_color.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir "%25userprofile%25\Documents\Fiddler2\Inspectors"

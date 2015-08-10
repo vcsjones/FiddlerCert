@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
+using VCSJones.FiddlerCert.Properties;
 
 namespace VCSJones.FiddlerCert
 {
@@ -57,6 +60,21 @@ namespace VCSJones.FiddlerCert
             }
             validDatesLabel.Text = $"{certificate.NotBefore.ToString("U")} to {certificate.NotAfter.ToString("U")}";
             hashAlgorithmLabel.Text = certificate.SignatureAlgorithm.FriendlyName;
+            if (chainElement.ChainElementStatus.Length == 0)
+            {
+                certStatusImage.Image = Resources.Security_Shields_Complete_and_ok_16xLG_color;
+                certStatusToolTip.SetToolTip(certStatusImage, "Certificate is OK.");
+            }
+            else if (chainElement.ChainElementStatus.All(status => status.Status == X509ChainStatusFlags.OfflineRevocation || status.Status == X509ChainStatusFlags.RevocationStatusUnknown))
+            {
+                certStatusImage.Image = Resources.Security_Shields_Alert_16xLG_color;
+                certStatusToolTip.SetToolTip(certStatusImage, "Unable to check revocation status.");
+            }
+            else
+            {
+                certStatusImage.Image = Resources.Security_Shields_Critical_16xLG_color;
+                certStatusToolTip.SetToolTip(certStatusImage, $"Errors: {string.Join(", ", chainElement.ChainElementStatus.Select(status => status.Status))}");
+            }
         }
 
         private void viewCertButton_Click(object sender, EventArgs e)

@@ -69,5 +69,45 @@ namespace VCSJones.FiddlerCert.Properties {
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Security_Shields_Alert_16xLG_color {
+            get {
+                object obj = ResourceManager.GetObject("Security_Shields_Alert_16xLG_color", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap security_Shields_Blank_16xLG {
+            get {
+                object obj = ResourceManager.GetObject("security_Shields_Blank_16xLG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Security_Shields_Complete_and_ok_16xLG_color {
+            get {
+                object obj = ResourceManager.GetObject("Security_Shields_Complete_and_ok_16xLG_color", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Security_Shields_Critical_16xLG_color {
+            get {
+                object obj = ResourceManager.GetObject("Security_Shields_Critical_16xLG_color", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
     }
 }

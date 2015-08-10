@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.certIcon = new System.Windows.Forms.PictureBox();
+            this.components = new System.ComponentModel.Container();
             this.commonNameLabel = new System.Windows.Forms.Label();
             this.exportCertButton = new System.Windows.Forms.Button();
             this.subjectAltNameTextLabel = new System.Windows.Forms.Label();
@@ -44,23 +44,18 @@
             this.installCertButton = new System.Windows.Forms.Button();
             this.hashAlgorithmLabel = new System.Windows.Forms.Label();
             this.hashAlgorithmTextLabel = new System.Windows.Forms.Label();
+            this.certStatusImage = new System.Windows.Forms.PictureBox();
+            this.certIcon = new System.Windows.Forms.PictureBox();
+            this.certStatusToolTip = new System.Windows.Forms.ToolTip(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.certStatusImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.certIcon)).BeginInit();
             this.SuspendLayout();
-            // 
-            // certIcon
-            // 
-            this.certIcon.Image = global::VCSJones.FiddlerCert.Properties.Resources.certificate_32xLG;
-            this.certIcon.Location = new System.Drawing.Point(10, 10);
-            this.certIcon.Name = "certIcon";
-            this.certIcon.Size = new System.Drawing.Size(32, 32);
-            this.certIcon.TabIndex = 0;
-            this.certIcon.TabStop = false;
             // 
             // commonNameLabel
             // 
             this.commonNameLabel.AutoSize = true;
             this.commonNameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.commonNameLabel.Location = new System.Drawing.Point(48, 13);
+            this.commonNameLabel.Location = new System.Drawing.Point(70, 10);
             this.commonNameLabel.Name = "commonNameLabel";
             this.commonNameLabel.Size = new System.Drawing.Size(195, 20);
             this.commonNameLabel.TabIndex = 1;
@@ -196,6 +191,31 @@
             this.hashAlgorithmTextLabel.TabIndex = 14;
             this.hashAlgorithmTextLabel.Text = "Signature Algorithm:";
             // 
+            // certStatusImage
+            // 
+            this.certStatusImage.BackColor = System.Drawing.SystemColors.Control;
+            this.certStatusImage.Image = global::VCSJones.FiddlerCert.Properties.Resources.security_Shields_Blank_16xLG;
+            this.certStatusImage.Location = new System.Drawing.Point(48, 14);
+            this.certStatusImage.Name = "certStatusImage";
+            this.certStatusImage.Size = new System.Drawing.Size(16, 16);
+            this.certStatusImage.TabIndex = 16;
+            this.certStatusImage.TabStop = false;
+            // 
+            // certIcon
+            // 
+            this.certIcon.Image = global::VCSJones.FiddlerCert.Properties.Resources.certificate_32xLG;
+            this.certIcon.Location = new System.Drawing.Point(10, 10);
+            this.certIcon.Name = "certIcon";
+            this.certIcon.Size = new System.Drawing.Size(32, 32);
+            this.certIcon.TabIndex = 0;
+            this.certIcon.TabStop = false;
+            // 
+            // certStatusToolTip
+            // 
+            this.certStatusToolTip.AutoPopDelay = 5000;
+            this.certStatusToolTip.InitialDelay = 250;
+            this.certStatusToolTip.ReshowDelay = 100;
+            // 
             // CertificateControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -203,6 +223,7 @@
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.certStatusImage);
             this.Controls.Add(this.hashAlgorithmLabel);
             this.Controls.Add(this.hashAlgorithmTextLabel);
             this.Controls.Add(this.installCertButton);
@@ -221,6 +242,7 @@
             this.Controls.Add(this.certIcon);
             this.Name = "CertificateControl";
             this.Size = new System.Drawing.Size(533, 173);
+            ((System.ComponentModel.ISupportInitialize)(this.certStatusImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.certIcon)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -245,5 +267,7 @@
         private System.Windows.Forms.Button installCertButton;
         private System.Windows.Forms.Label hashAlgorithmLabel;
         private System.Windows.Forms.Label hashAlgorithmTextLabel;
+        private System.Windows.Forms.PictureBox certStatusImage;
+        private System.Windows.Forms.ToolTip certStatusToolTip;
     }
 }

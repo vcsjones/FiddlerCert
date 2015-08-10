@@ -41,7 +41,7 @@ namespace VCSJones.FiddlerCert
         public override void AssignSession(Session oS)
         {
             _control.ClearCertificates();
-            var certificate = oS[$"{nameof(CertificateInspector)}_Certificate"];
+            var certificate = oS[$"{nameof(CertificateInspector)}_ServerCertificate"];
             if (certificate != null)
             {
                 var x509cert = new X509Certificate2(System.Convert.FromBase64String(certificate));

@@ -1,5 +1,4 @@
-﻿using System;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace VCSJones.FiddlerCert.UnitTests
 {
@@ -39,9 +38,10 @@ namespace VCSJones.FiddlerCert.UnitTests
         }
 
         [Test]
-        public void ShouldProduceErrorIfDataDoesNotEndGracefully()
+        public void ShouldHandleIncorrectlyTerminatedData()
         {
-            Assert.That(() => OidParser.ReadFromBytes(new byte[] { 6, 8, 42, 134, 72, 206, 61, 3, 1, 255 }), Throws.TypeOf<InvalidOperationException>());
+            var oid = OidParser.ReadFromBytes(new byte[] { 6, 8, 42, 134, 72, 206, 61, 3, 1, 255 });
+            Assert.That(oid, Is.Null);
         }
     }
 }

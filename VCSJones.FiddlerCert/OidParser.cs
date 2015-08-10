@@ -32,7 +32,14 @@ namespace VCSJones.FiddlerCert
             var firstValue = data[FIRST_OCTET_OFFSET] / 40L;
             var secondValue = data[FIRST_OCTET_OFFSET] % 40L;
             var remainder = data.Skip(VLQ_DATA_OFFSET);
-            return new Oid(string.Join(".", new[] {firstValue, secondValue}.Concat(ReadVlqData(remainder))));
+            try
+            {
+                return new Oid(string.Join(".", new[] {firstValue, secondValue}.Concat(ReadVlqData(remainder))));
+            }
+            catch (InvalidOperationException)
+            {
+                return null;
+            }
         }
 
         private static IEnumerable<long> ReadVlqData(IEnumerable<byte> data)

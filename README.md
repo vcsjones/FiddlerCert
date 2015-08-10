@@ -9,7 +9,7 @@ This extension provides an Inspector for HTTPS traffic that allows you to view, 
 With this extension, you can quickly:
 
 * View the certificate chain.
-* View common properties of the certificate such as the Common Name (CN in subject) and the Subject Alternatave Name.
+* View common properties of the certificate such as the Common Name (CN in subject) and the Subject Alternative Name.
 * Save the certificate to disk.
 * Import the certificate into a certificate store.
 

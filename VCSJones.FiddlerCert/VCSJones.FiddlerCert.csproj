@@ -61,6 +61,7 @@
     <Compile Include="CertificatesControl.Designer.cs">
       <DependentUpon>CertificatesControl.cs</DependentUpon>
     </Compile>
+    <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
     <Compile Include="CryptoUI.cs" />
     <Compile Include="DistinguishedNameParser.cs" />
@@ -72,6 +73,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="WinErr.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="CertificateControl.resx">

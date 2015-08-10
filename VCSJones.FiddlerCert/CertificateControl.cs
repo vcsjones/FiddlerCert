@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Windows.Forms;
 using VCSJones.FiddlerCert.Properties;
@@ -83,18 +82,7 @@ namespace VCSJones.FiddlerCert
             {
                 return;
             }
-            var structConfiguration = new CRYPTUI_VIEWCERTIFICATE_STRUCT();
-            structConfiguration.dwSize = (uint)Marshal.SizeOf(typeof(CRYPTUI_VIEWCERTIFICATE_STRUCT));
-            structConfiguration.pCertContext = _chainElement.Certificate.Handle;
-            structConfiguration.szTitle = "Fiddler: Certificate Information";
-            structConfiguration.dwFlags = ViewCertificateFlags.CRYPTUI_DISABLE_EDITPROPERTIES;
-            structConfiguration.nStartPage = 0;
-            structConfiguration.hwndParent = ParentForm?.Handle ?? IntPtr.Zero;
-            var propertiesChanged = false;
-            if (!Cryptui.CryptUIDlgViewCertificate(ref structConfiguration, ref propertiesChanged))
-            {
-                MessageBox.Show("An error occurred viewing the certificate.");
-            }
+            CertificateUI.ShowCertificate(_chainElement.Certificate, ParentForm);
         }
 
         private void installCertButton_Click(object sender, EventArgs e)
@@ -103,16 +91,7 @@ namespace VCSJones.FiddlerCert
             {
                 return;
             }
-            var cryptuiWizImportSrcInfo = new CRYPTUI_WIZ_IMPORT_SRC_INFO();
-            cryptuiWizImportSrcInfo.dwSize = (uint) Marshal.SizeOf(typeof (CRYPTUI_WIZ_IMPORT_SRC_INFO));
-            cryptuiWizImportSrcInfo.dwSubjectChoice = ImportSourceSubjectChoice.CRYPTUI_WIZ_IMPORT_SUBJECT_CERT_CONTEXT;
-            cryptuiWizImportSrcInfo.pCertContext = _chainElement.Certificate.Handle;
-            cryptuiWizImportSrcInfo.pwszPassword = "";
-            cryptuiWizImportSrcInfo.dwFlags = 0u;
-            if (!Cryptui.CryptUIWizImport(ImportCertificateFlags.CRYPTUI_WIZ_IMPORT_ALLOW_CERT, ParentForm?.Handle ?? IntPtr.Zero, "Fiddler: Import Certificate", cryptuiWizImportSrcInfo, IntPtr.Zero))
-            {
-                MessageBox.Show("An error occurred installing the certificate.");
-            }
+            CertificateUI.ShowImportCertificate(_chainElement.Certificate, ParentForm);
         }
     }
 }

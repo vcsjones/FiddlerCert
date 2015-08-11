@@ -61,13 +61,12 @@ namespace VCSJones.FiddlerCert
         public override void AssignSession(Session oS)
         {
             _control.ClearCertificates();
-            var certificate = oS[$"{nameof(CertificateInspector)}_ServerCertificate"];
-            if (certificate != null)
+            X509Certificate2 cert;
+            if (CertificateInspector.ServerCertificates.TryGetValue(oS.host, out cert))
             {
-                var x509cert = new X509Certificate2(System.Convert.FromBase64String(certificate));
                 var chain = new X509Chain();
                 chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck; //Performance
-                chain.Build(x509cert); //We don't really care about the results, we just want the elements.
+                chain.Build(cert); //We don't really care about the results, we just want the elements.
                 _control.SuspendLayout();
                 for (var i = 0; i < chain.ChainElements.Count; i++)
                 {

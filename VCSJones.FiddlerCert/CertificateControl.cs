@@ -24,40 +24,19 @@ namespace VCSJones.FiddlerCert
             if (dn.ContainsKey("cn"))
             {
                 commonNameLabel.Text = $"Issued To: {string.Join(", ", dn["cn"])}";
-                var toolTip = new ToolTip {ShowAlways = true};
+                var toolTip = new ToolTip { ShowAlways = true };
                 toolTip.SetToolTip(commonNameLabel, commonNameLabel.Text);
             }
             else
             {
                 commonNameLabel.Text = certificate.Thumbprint;
             }
+            var algorithmBits = BitStrengthCalculator.CalculateStrength(certificate);
+
             subjectAltNameLabel.Text = certificate.Extensions[KnownOids.SubjectAltNameExtension]?.Format(false) ?? "None";
             thumbprintLabel.Text = certificate.Thumbprint;
-            if (certificate.PublicKey.Oid.Value == KnownOids.EccPublicKey)
-            {
-                var parameterOid = OidParser.ReadFromBytes(certificate.PublicKey.EncodedParameters.RawData);
-                algorithmLabel.Text = $"{certificate.PublicKey.Oid.FriendlyName} ({parameterOid.FriendlyName})";
-                switch (parameterOid.Value)
-                {
-                    case KnownOids.EcdsaP256:
-                        keySizeLabel.Text = "256-bit";
-                        break;
-                    case KnownOids.EcdsaP384:
-                        keySizeLabel.Text = "384-bit";
-                        break;
-                    case KnownOids.EcdsaP521:
-                        keySizeLabel.Text = "521-bit";
-                        break;
-                    default:
-                        keySizeLabel.Text = "Unknown";
-                        break;
-                }
-            }
-            else
-            {
-                algorithmLabel.Text = certificate.PublicKey.Oid.FriendlyName;
-                keySizeLabel.Text = $"{certificate.PublicKey.Key.KeySize}-bit";
-            }
+            algorithmLabel.Text = algorithmBits.AlgorithmName;
+            keySizeLabel.Text = algorithmBits.BitSize?.ToString("0-bit") ?? "Unknown";
             validDatesLabel.Text = $"{certificate.NotBefore.ToString("U")} to {certificate.NotAfter.ToString("U")}";
             hashAlgorithmLabel.Text = certificate.SignatureAlgorithm.FriendlyName;
             if (chainElement.ChainElementStatus.Length == 0 || chainElement.ChainElementStatus.All(status => status.Status == X509ChainStatusFlags.NoError))

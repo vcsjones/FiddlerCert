@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using VCSJones.FiddlerCert.Properties;
 
@@ -74,10 +75,15 @@ namespace VCSJones.FiddlerCert
                 certStatusImage.Image = Resources.Security_Shields_Critical_16xLG_color;
                 certStatusToolTip.SetToolTip(certStatusImage, $"Errors: {string.Join(", ", chainElement.ChainElementStatus.Select(status => status.Status))}");
             }
-            
-            var hashAlgorithm = CryptoConfig.AllowOnlyFipsAlgorithms ? (SHA256)new SHA256CryptoServiceProvider() : new SHA256Managed();
-            var hash = CertificateHashBuilder.BuildHashForPublicKey(chainElement.Certificate, hashAlgorithm);
-            keyHashLabel.Text = $@"""{hash}""";
+            SetFingerprintAsyncronously(certificate);
+        }
+
+        private void SetFingerprintAsyncronously(X509Certificate2 certificate)
+        {
+            Task.Factory.StartNew(() => CertificateHashBuilder.BuildHashForPublicKey<SHA256Managed>(certificate)).ContinueWith(task =>
+            {
+                shaThumbprintLabel.Text = $@"""{task.Result}""";
+            }, TaskScheduler.FromCurrentSynchronizationContext());
 
         }
 

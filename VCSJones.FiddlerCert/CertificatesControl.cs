@@ -14,7 +14,7 @@ namespace VCSJones.FiddlerCert
 
         internal void AssignCertificate(X509ChainElement chainElement)
         {
-            const int CERT_HEIGHT = 175;
+            const int CERT_HEIGHT = 200;
             const int CERT_PADDING = 5;
             var numberOfCertificates = Controls.Count;
             var currentOffset = (numberOfCertificates * CERT_HEIGHT) + (CERT_PADDING * numberOfCertificates) + CERT_PADDING;

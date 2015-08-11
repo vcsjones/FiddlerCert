@@ -1,13 +1,16 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23023.0
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VCSJones.FiddlerCert", "VCSJones.FiddlerCert\VCSJones.FiddlerCert.csproj", "{3B4F904F-BED4-441C-9351-918CA16A7006}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VCSJones.FiddlerCert.UnitTests", "VCSJones.FiddlerCert.UnitTests\VCSJones.FiddlerCert.UnitTests.csproj", "{7EBF08C8-303F-4784-85AB-C3C00CFF5A5F}"
 EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU

@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using Fiddler;
 using System.Security.Cryptography.X509Certificates;
 
@@ -61,12 +62,10 @@ namespace VCSJones.FiddlerCert
         public override void AssignSession(Session oS)
         {
             _control.ClearCertificates();
-            X509Certificate2 cert;
-            if (CertificateInspector.ServerCertificates.TryGetValue(oS.host, out cert))
+            Tuple<X509Chain, X509Certificate2> cert;
+            if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.host, oS.port), out cert))
             {
-                var chain = new X509Chain();
-                chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck; //Performance
-                chain.Build(cert); //We don't really care about the results, we just want the elements.
+                var chain = cert.Item1;
                 _control.SuspendLayout();
                 for (var i = 0; i < chain.ChainElements.Count; i++)
                 {

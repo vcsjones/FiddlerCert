@@ -18,6 +18,7 @@ namespace VCSJones.FiddlerCert
 
         public void SetCertificate(X509ChainElement chainElement)
         {
+
             _chainElement = chainElement;
             var certificate = chainElement.Certificate;
             var dn = DistinguishedNameParser.Parse(certificate.SubjectName.Name);

@@ -10,6 +10,7 @@ namespace VCSJones.FiddlerCert
         public CertificatesControl()
         {
             InitializeComponent();
+            DoubleBuffered = true;
         }
 
         internal void AssignCertificate(X509ChainElement chainElement)

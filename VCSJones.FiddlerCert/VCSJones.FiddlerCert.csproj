@@ -40,6 +40,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -58,12 +59,6 @@
     </Compile>
     <Compile Include="CertificateHashBuilder.cs" />
     <Compile Include="CertificateInspector.cs" />
-    <Compile Include="CertificatesControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CertificatesControl.Designer.cs">
-      <DependentUpon>CertificatesControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
     <Compile Include="Interop\crypto32.cs" />
@@ -83,9 +78,6 @@
   <ItemGroup>
     <EmbeddedResource Include="CertificateControl.resx">
       <DependentUpon>CertificateControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="CertificatesControl.resx">
-      <DependentUpon>CertificatesControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

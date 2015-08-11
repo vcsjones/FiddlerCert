@@ -7,15 +7,13 @@ namespace VCSJones.FiddlerCert
 {
     public class CertInspector : Inspector2, IResponseInspector2
     {
-        readonly CertificatesControl _control = new CertificatesControl
-        {
-            Dock = DockStyle.Fill
-        };
+        private ScrollableControl _control;
 
         public override void AddToTab(TabPage o)
         {
             o.Text = "Certificates";
-            o.Controls.Add(_control);
+            o.AutoScroll = true;
+            _control = o;
         }
 
         public override int GetOrder()
@@ -25,7 +23,7 @@ namespace VCSJones.FiddlerCert
 
         public void Clear()
         {
-            _control.ClearCertificates();
+            _control.Controls.Clear();
         }
 
         public HTTPResponseHeaders headers
@@ -62,18 +60,33 @@ namespace VCSJones.FiddlerCert
         public override void AssignSession(Session oS)
         {
             _control.SuspendLayout();
-            _control.ClearCertificates();
+            _control.Controls.Clear();
             Tuple<X509Chain, X509Certificate2> cert;
             if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.host, oS.port), out cert))
             {
                 var chain = cert.Item1;
                 for (var i = 0; i < chain.ChainElements.Count; i++)
                 {
-                    _control.AssignCertificate(chain.ChainElements[i]);
+                    AssignCertificate(chain.ChainElements[i]);
 
                 }
             }
-            _control.ResumeLayout(true);
+            _control.ResumeLayout(false);
+        }
+
+
+        private void AssignCertificate(X509ChainElement chainElement)
+        {
+            const int CERT_HEIGHT = 200;
+            const int CERT_PADDING = 5;
+            var numberOfCertificates = _control.Controls.Count;
+            var currentOffset = (numberOfCertificates * CERT_HEIGHT) + (CERT_PADDING * numberOfCertificates) + CERT_PADDING;
+            var newCertificate = new CertificateControl(chainElement);
+            newCertificate.Top = currentOffset;
+            newCertificate.Height = CERT_HEIGHT;
+            newCertificate.Width = _control.Width;
+            newCertificate.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
+            _control.Controls.Add(newCertificate);
         }
 
         public override InspectorFlags GetFlags()

@@ -1,8 +1,6 @@
-﻿using System.Security.Cryptography;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Fiddler;
 using System.Security.Cryptography.X509Certificates;
-
 
 namespace VCSJones.FiddlerCert
 {
@@ -27,17 +25,42 @@ namespace VCSJones.FiddlerCert
         public void Clear()
         {
             _control.ClearCertificates();
-            bDirty = true;
+        }
+
+        public HTTPResponseHeaders headers
+        {
+            // We don't allow editing, and look only at Session flags
+            get
+            {
+                return null;
+            }
+            set { }
         }
 
         public byte[] body
         {
-            get; set;
+            // We don't allow editing, and look only at Session flags
+            get
+            {
+                return null;
+            }
+            set { }
         }
 
-        public bool bDirty { get; set; }
+        public bool bDirty
+        {
+            // We are never dirty; we don't allow editing
+            get { return false; }
+            set { }
+        }
 
-        public bool bReadOnly { get; set; }
+        public bool bReadOnly
+        {
+            // We don't allow editing
+            get { return true; }
+            set { }
+        }
+
 
         public override void AssignSession(Session oS)
         {
@@ -55,11 +78,16 @@ namespace VCSJones.FiddlerCert
 
                 }
                 _control.ResumeLayout(true);
-                bDirty = true;
             }
         }
 
-        public HTTPResponseHeaders headers { get; set; }
+        public override InspectorFlags GetFlags()
+        {
+            // We don't make sense in the AutoResponder and
+            // wouldn't work anyway (no Session object)
+            return InspectorFlags.HideInAutoResponder;
+        }
+
 
     }
 }

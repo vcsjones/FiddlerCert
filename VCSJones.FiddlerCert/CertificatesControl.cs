@@ -19,12 +19,11 @@ namespace VCSJones.FiddlerCert
             const int CERT_PADDING = 5;
             var numberOfCertificates = Controls.Count;
             var currentOffset = (numberOfCertificates * CERT_HEIGHT) + (CERT_PADDING * numberOfCertificates) + CERT_PADDING;
-            var newCertificate = new CertificateControl();
+            var newCertificate = new CertificateControl(chainElement);
             newCertificate.Top = currentOffset;
             newCertificate.Height = CERT_HEIGHT;
             newCertificate.Width = this.Width;
             newCertificate.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
-            newCertificate.SetCertificate(chainElement);
             Controls.Add(newCertificate);
         }
 

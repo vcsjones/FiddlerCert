@@ -61,19 +61,19 @@ namespace VCSJones.FiddlerCert
 
         public override void AssignSession(Session oS)
         {
+            _control.SuspendLayout();
             _control.ClearCertificates();
             Tuple<X509Chain, X509Certificate2> cert;
             if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.host, oS.port), out cert))
             {
                 var chain = cert.Item1;
-                _control.SuspendLayout();
                 for (var i = 0; i < chain.ChainElements.Count; i++)
                 {
                     _control.AssignCertificate(chain.ChainElements[i]);
 
                 }
-                _control.ResumeLayout(true);
             }
+            _control.ResumeLayout(true);
         }
 
         public override InspectorFlags GetFlags()

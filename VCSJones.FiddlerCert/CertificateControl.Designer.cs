@@ -305,6 +305,7 @@
             this.Controls.Add(this.exportCertButton);
             this.Name = "CertificateControl";
             this.Size = new System.Drawing.Size(533, 198);
+            this.Load += new System.EventHandler(this.CertificateControl_Load);
             this.itemsTabControl.ResumeLayout(false);
             this.generalTabPage.ResumeLayout(false);
             this.generalTabPage.PerformLayout();

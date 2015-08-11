@@ -47,12 +47,8 @@ namespace VCSJones.FiddlerCert
             set { }
         }
 
-        public bool bDirty
-        {
-            // We are never dirty; we don't allow editing
-            get { return false; }
-            set { }
-        }
+        // We are never dirty; we don't allow editing
+        public bool bDirty => false;
 
         public bool bReadOnly
         {

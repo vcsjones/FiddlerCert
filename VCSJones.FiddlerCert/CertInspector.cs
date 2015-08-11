@@ -49,7 +49,7 @@ namespace VCSJones.FiddlerCert
 
         public bool bDirty
         {
-            // We never dirty; we don't allow editing
+            // We are never dirty; we don't allow editing
             get { return false; }
             set { }
         }
@@ -79,6 +79,13 @@ namespace VCSJones.FiddlerCert
                 }
                 _control.ResumeLayout(true);
             }
+        }
+
+        public override InspectorFlags GetFlags()
+        {
+            // We don't make sense in the AutoResponder and
+            // wouldn't work anyway (no Session object)
+            return InspectorFlags.HideInAutoResponder;
         }
 
 

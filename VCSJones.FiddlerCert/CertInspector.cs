@@ -1,19 +1,27 @@
 ﻿using System;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 using Fiddler;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Forms.Integration;
 
 namespace VCSJones.FiddlerCert
 {
     public class CertInspector : Inspector2, IResponseInspector2
     {
-        private ScrollableControl _control;
+        private StackPanel _panel;
 
         public override void AddToTab(TabPage o)
         {
             o.Text = "Certificates";
-            o.AutoScroll = true;
-            _control = o;
+            var host = new ElementHost();
+            host.Dock = DockStyle.Fill;
+            var stackPanel = new StackPanel();
+            host.Child = new ScrollViewer { Content = stackPanel };
+            o.Controls.Add(host);
+            _panel = stackPanel;
         }
 
         public override int GetOrder()
@@ -23,7 +31,7 @@ namespace VCSJones.FiddlerCert
 
         public void Clear()
         {
-            _control.Controls.Clear();
+            _panel.Children.Clear();
         }
 
         public HTTPResponseHeaders headers
@@ -59,8 +67,7 @@ namespace VCSJones.FiddlerCert
 
         public override void AssignSession(Session oS)
         {
-            _control.SuspendLayout();
-            _control.Controls.Clear();
+            Clear();
             if (oS.isHTTPS || (oS.BitFlags & SessionFlags.IsDecryptingTunnel) == SessionFlags.IsDecryptingTunnel)
             {
                 Tuple<X509Chain, X509Certificate2> cert;
@@ -74,22 +81,17 @@ namespace VCSJones.FiddlerCert
                     }
                 }
             }
-            _control.ResumeLayout(false);
         }
 
 
         private void AssignCertificate(X509ChainElement chainElement)
         {
-            const int CERT_HEIGHT = 200;
-            const int CERT_PADDING = 5;
-            var numberOfCertificates = _control.Controls.Count;
-            var currentOffset = (numberOfCertificates * CERT_HEIGHT) + (CERT_PADDING * numberOfCertificates) + CERT_PADDING;
-            var newCertificate = new CertificateControl(chainElement);
-            newCertificate.Top = currentOffset;
-            newCertificate.Height = CERT_HEIGHT;
-            newCertificate.Width = _control.Width;
-            newCertificate.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
-            _control.Controls.Add(newCertificate);
+            var control = new WpfCertificateControl();
+            control.DataContext = new CertificateModel
+            {
+                SPKISHA256Hash = new AsyncProperty<string>(Task.Factory.StartNew(() => CertificateHashBuilder.BuildHashForPublicKey<SHA256Managed>(chainElement.Certificate)))
+            };
+            _panel.Children.Add(control);
         }
 
         public override InspectorFlags GetFlags()

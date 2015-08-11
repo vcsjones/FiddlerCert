@@ -128,7 +128,7 @@
             // 
             // certStatusImage
             // 
-            this.certStatusImage.BackColor = System.Drawing.SystemColors.Control;
+            this.certStatusImage.BackColor = System.Drawing.Color.Transparent;
             this.certStatusImage.Image = global::VCSJones.FiddlerCert.Properties.Resources.security_Shields_Blank_16xLG;
             this.certStatusImage.Location = new System.Drawing.Point(44, 10);
             this.certStatusImage.Name = "certStatusImage";

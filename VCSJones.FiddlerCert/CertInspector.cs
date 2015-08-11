@@ -66,6 +66,7 @@ namespace VCSJones.FiddlerCert
             {
                 var x509cert = new X509Certificate2(System.Convert.FromBase64String(certificate));
                 var chain = new X509Chain();
+                chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck; //Performance
                 chain.Build(x509cert); //We don't really care about the results, we just want the elements.
                 _control.SuspendLayout();
                 for (var i = 0; i < chain.ChainElements.Count; i++)

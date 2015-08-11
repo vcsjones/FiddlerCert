@@ -65,11 +65,6 @@ namespace VCSJones.FiddlerCert
                 certStatusImage.Image = Resources.Security_Shields_Complete_and_ok_16xLG_color;
                 certStatusToolTip.SetToolTip(certStatusImage, "Certificate is OK.");
             }
-            else if (chainElement.ChainElementStatus.All(status => status.Status == X509ChainStatusFlags.OfflineRevocation || status.Status == X509ChainStatusFlags.RevocationStatusUnknown))
-            {
-                certStatusImage.Image = Resources.Security_Shields_Alert_16xLG_color;
-                certStatusToolTip.SetToolTip(certStatusImage, "Unable to check revocation status.");
-            }
             else
             {
                 certStatusImage.Image = Resources.Security_Shields_Critical_16xLG_color;

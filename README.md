@@ -27,7 +27,7 @@ Fiddler for more information.
 
 ##Requirements
 
-Windows Vista / Windows Server 2003 or later is required.
+Windows Vista / Windows Server 2008 or later is required.
 
 ##Affiliation
 

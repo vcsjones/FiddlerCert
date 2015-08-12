@@ -25,10 +25,10 @@ namespace VCSJones.FiddlerCert
 
         public void OnLoad()
         {
-            _isSupportedOperatingSystem = Environment.OSVersion.Version >= new Version(5, 2);
+            _isSupportedOperatingSystem = Environment.OSVersion.Version >= new Version(6, 0);
             if (!_isSupportedOperatingSystem)
             {
-                MessageBox.Show("Windows Vista / Server 2003 or greater is required for the Certificate inspector extension to function.");
+                MessageBox.Show("Windows Vista / Server 2008 or greater is required for the Certificate inspector extension to function.");
             }
             else
             {

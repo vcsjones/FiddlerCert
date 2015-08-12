@@ -61,14 +61,17 @@ namespace VCSJones.FiddlerCert
         {
             _control.SuspendLayout();
             _control.Controls.Clear();
-            Tuple<X509Chain, X509Certificate2> cert;
-            if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.host, oS.port), out cert))
+            if (oS.isHTTPS || (oS.BitFlags & SessionFlags.IsDecryptingTunnel) == SessionFlags.IsDecryptingTunnel)
             {
-                var chain = cert.Item1;
-                for (var i = 0; i < chain.ChainElements.Count; i++)
+                Tuple<X509Chain, X509Certificate2> cert;
+                if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.host, oS.port), out cert))
                 {
-                    AssignCertificate(chain.ChainElements[i]);
+                    var chain = cert.Item1;
+                    for (var i = 0; i < chain.ChainElements.Count; i++)
+                    {
+                        AssignCertificate(chain.ChainElements[i]);
 
+                    }
                 }
             }
             _control.ResumeLayout(false);

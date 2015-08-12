@@ -58,12 +58,6 @@
     <Compile Include="AsyncProperty.cs" />
     <Compile Include="BitStrengthCalculator.cs" />
     <Compile Include="CallerMemberNameAttribute.cs" />
-    <Compile Include="CertificateControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="CertificateControl.Designer.cs">
-      <DependentUpon>CertificateControl.cs</DependentUpon>
-    </Compile>
     <Compile Include="CertificateHashBuilder.cs" />
     <Compile Include="CertificateInspector.cs" />
     <Compile Include="CertificateModel.cs" />
@@ -73,6 +67,7 @@
     <Compile Include="Interop\CryptoUI.cs" />
     <Compile Include="DistinguishedNameParser.cs" />
     <Compile Include="Interop\Ntdsapi.cs" />
+    <Compile Include="Converters.cs" />
     <Compile Include="KnownOids.cs" />
     <Compile Include="OidParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -81,15 +76,13 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="PublicKeyAlgorithm.cs" />
     <Compile Include="WinErr.cs" />
     <Compile Include="WpfCertificateControl.xaml.cs">
       <DependentUpon>WpfCertificateControl.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="CertificateControl.resx">
-      <DependentUpon>CertificateControl.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -100,10 +93,10 @@
     <Resource Include="Assets\certificate_32xLG.png" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Security_Shields_Alert_16xLG_color.png" />
-    <Content Include="Assets\security_Shields_Blank_16xLG.png" />
-    <Content Include="Assets\Security_Shields_Complete_and_ok_16xLG_color.png" />
-    <Content Include="Assets\Security_Shields_Critical_16xLG_color.png" />
+    <Resource Include="Assets\Security_Shields_Alert_16xLG_color.png" />
+    <Resource Include="Assets\security_Shields_Blank_16xLG.png" />
+    <Resource Include="Assets\Security_Shields_Complete_and_ok_16xLG_color.png" />
+    <Resource Include="Assets\Security_Shields_Critical_16xLG_color.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="WpfCertificateControl.xaml">

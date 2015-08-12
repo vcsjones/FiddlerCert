@@ -6,46 +6,54 @@ namespace VCSJones.FiddlerCert
     {
         public static CertificateBitStrength CalculateStrength(X509Certificate2 certificate)
         {
-            string algorithmName;
+            PublicKeyAlgorithm keyAlgorithm;
             int? bitSize;
-            if (certificate.PublicKey.Oid.Value == KnownOids.EccPublicKey)
+            switch (certificate.PublicKey.Oid.Value)
             {
-                var parameterOid = OidParser.ReadFromBytes(certificate.PublicKey.EncodedParameters.RawData);
-                algorithmName = $"{certificate.PublicKey.Oid.FriendlyName} ({parameterOid.FriendlyName})";
-                switch (parameterOid.Value)
-                {
-                    case KnownOids.EcdsaP256:
-                        bitSize = 256;
-                        break;
-                    case KnownOids.EcdsaP384:
-                        bitSize = 384;
-                        break;
-                    case KnownOids.EcdsaP521:
-                        bitSize = 521;
-                        break;
-                    default:
-                        bitSize = null;
-                        break;
-                }
+                case KnownOids.EccPublicKey:
+                    var parameterOid = OidParser.ReadFromBytes(certificate.PublicKey.EncodedParameters.RawData);
+                    switch (parameterOid.Value)
+                    {
+                        case KnownOids.EcdsaP256:
+                            keyAlgorithm = PublicKeyAlgorithm.ECDSA;
+                            bitSize = 256;
+                            break;
+                        case KnownOids.EcdsaP384:
+                            keyAlgorithm = PublicKeyAlgorithm.ECDSA;
+                            bitSize = 384;
+                            break;
+                        case KnownOids.EcdsaP521:
+                            keyAlgorithm = PublicKeyAlgorithm.ECDSA;
+                            bitSize = 521;
+                            break;
+                        default:
+                            keyAlgorithm = PublicKeyAlgorithm.Other;
+                            bitSize = null;
+                            break;
+                    }
+                    break;
+                case KnownOids.RSA:
+                    keyAlgorithm = PublicKeyAlgorithm.RSA;
+                    bitSize = certificate.PublicKey.Key.KeySize;
+                    break;
+                default:
+                    keyAlgorithm = PublicKeyAlgorithm.Other;
+                    bitSize = null;
+                    break;
             }
-            else
-            {
-                algorithmName = certificate.PublicKey.Oid.FriendlyName;
-                bitSize = certificate.PublicKey.Key.KeySize;
-            }
-            return new CertificateBitStrength(algorithmName, bitSize);
+            return new CertificateBitStrength(keyAlgorithm, bitSize);
         }
-    }
 
-    public class CertificateBitStrength
-    {
-        public CertificateBitStrength(string algorithmName, int? bitSize)
+        public class CertificateBitStrength
         {
-            AlgorithmName = algorithmName;
-            BitSize = bitSize;
-        }
+            public CertificateBitStrength(PublicKeyAlgorithm algorithmName, int? bitSize)
+            {
+                AlgorithmName = algorithmName;
+                BitSize = bitSize;
+            }
 
-        public string AlgorithmName { get; }
-        public int? BitSize { get; }
+            public PublicKeyAlgorithm AlgorithmName { get; }
+            public int? BitSize { get; }
+        }
     }
 }

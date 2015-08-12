@@ -27,6 +27,7 @@ namespace VCSJones.FiddlerCert
             Task.Factory.StartNew(() => CertificateHashBuilder.BuildHashForPublicKey<SHA256Managed>(certificate)).ContinueWith(task =>
             {
                 shaThumbprintLabel.Text = $@"""{task.Result}""";
+
             }, TaskScheduler.FromCurrentSynchronizationContext());
 
         }

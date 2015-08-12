@@ -73,6 +73,26 @@ namespace VCSJones.FiddlerCert.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap pushpin_16xLG {
+            get {
+                object obj = ResourceManager.GetObject("pushpin_16xLG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap pushpin_32xLG {
+            get {
+                object obj = ResourceManager.GetObject("pushpin_32xLG", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Security_Shields_Alert_16xLG_color {
             get {
                 object obj = ResourceManager.GetObject("Security_Shields_Alert_16xLG_color", resourceCulture);

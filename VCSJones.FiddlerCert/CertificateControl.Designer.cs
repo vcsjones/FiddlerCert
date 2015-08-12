@@ -34,7 +34,6 @@
             this.certStatusToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.itemsTabControl = new System.Windows.Forms.TabControl();
             this.generalTabPage = new System.Windows.Forms.TabPage();
-            this.certStatusImage = new System.Windows.Forms.PictureBox();
             this.hashAlgorithmLabel = new System.Windows.Forms.Label();
             this.hashAlgorithmTextLabel = new System.Windows.Forms.Label();
             this.validDatesLabel = new System.Windows.Forms.Label();
@@ -48,14 +47,18 @@
             this.subjectAltNameLabel = new System.Windows.Forms.Label();
             this.subjectAltNameTextLabel = new System.Windows.Forms.Label();
             this.commonNameLabel = new System.Windows.Forms.Label();
+            this.certStatusImage = new System.Windows.Forms.PictureBox();
             this.certIcon = new System.Windows.Forms.PictureBox();
-            this.pkpHashesTab = new System.Windows.Forms.TabPage();
-            this.shaThumbprintLabel = new System.Windows.Forms.Label();
             this.shaFingerpintTextLabel = new System.Windows.Forms.Label();
+            this.shaThumbprintLabel = new System.Windows.Forms.Label();
+            this.publicKeyImage = new System.Windows.Forms.PictureBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.pkpHashesTab = new System.Windows.Forms.TabPage();
             this.itemsTabControl.SuspendLayout();
             this.generalTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.certStatusImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.certIcon)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.publicKeyImage)).BeginInit();
             this.pkpHashesTab.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -125,16 +128,6 @@
             this.generalTabPage.TabIndex = 0;
             this.generalTabPage.Text = "Overview";
             this.generalTabPage.UseVisualStyleBackColor = true;
-            // 
-            // certStatusImage
-            // 
-            this.certStatusImage.BackColor = System.Drawing.Color.Transparent;
-            this.certStatusImage.Image = global::VCSJones.FiddlerCert.Properties.Resources.security_Shields_Blank_16xLG;
-            this.certStatusImage.Location = new System.Drawing.Point(44, 10);
-            this.certStatusImage.Name = "certStatusImage";
-            this.certStatusImage.Size = new System.Drawing.Size(16, 16);
-            this.certStatusImage.TabIndex = 33;
-            this.certStatusImage.TabStop = false;
             // 
             // hashAlgorithmLabel
             // 
@@ -254,6 +247,16 @@
             this.commonNameLabel.TabIndex = 20;
             this.commonNameLabel.Text = "[certificate common name]";
             // 
+            // certStatusImage
+            // 
+            this.certStatusImage.BackColor = System.Drawing.Color.Transparent;
+            this.certStatusImage.Image = global::VCSJones.FiddlerCert.Properties.Resources.security_Shields_Blank_16xLG;
+            this.certStatusImage.Location = new System.Drawing.Point(44, 10);
+            this.certStatusImage.Name = "certStatusImage";
+            this.certStatusImage.Size = new System.Drawing.Size(16, 16);
+            this.certStatusImage.TabIndex = 33;
+            this.certStatusImage.TabStop = false;
+            // 
             // certIcon
             // 
             this.certIcon.Image = global::VCSJones.FiddlerCert.Properties.Resources.certificate_32xLG;
@@ -263,8 +266,48 @@
             this.certIcon.TabIndex = 19;
             this.certIcon.TabStop = false;
             // 
+            // shaFingerpintTextLabel
+            // 
+            this.shaFingerpintTextLabel.AutoSize = true;
+            this.shaFingerpintTextLabel.Location = new System.Drawing.Point(3, 41);
+            this.shaFingerpintTextLabel.Name = "shaFingerpintTextLabel";
+            this.shaFingerpintTextLabel.Size = new System.Drawing.Size(129, 13);
+            this.shaFingerpintTextLabel.TabIndex = 0;
+            this.shaFingerpintTextLabel.Text = "SHA256 SPKI Fingerprint:";
+            // 
+            // shaThumbprintLabel
+            // 
+            this.shaThumbprintLabel.AutoSize = true;
+            this.shaThumbprintLabel.Location = new System.Drawing.Point(139, 41);
+            this.shaThumbprintLabel.Name = "shaThumbprintLabel";
+            this.shaThumbprintLabel.Size = new System.Drawing.Size(68, 13);
+            this.shaThumbprintLabel.TabIndex = 23;
+            this.shaThumbprintLabel.Text = "Calculating...";
+            // 
+            // publicKeyImage
+            // 
+            this.publicKeyImage.Image = global::VCSJones.FiddlerCert.Properties.Resources.pushpin_32xLG;
+            this.publicKeyImage.Location = new System.Drawing.Point(6, 6);
+            this.publicKeyImage.Name = "publicKeyImage";
+            this.publicKeyImage.Size = new System.Drawing.Size(32, 32);
+            this.publicKeyImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.publicKeyImage.TabIndex = 24;
+            this.publicKeyImage.TabStop = false;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(44, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(81, 20);
+            this.label1.TabIndex = 25;
+            this.label1.Text = "Public Key";
+            // 
             // pkpHashesTab
             // 
+            this.pkpHashesTab.Controls.Add(this.label1);
+            this.pkpHashesTab.Controls.Add(this.publicKeyImage);
             this.pkpHashesTab.Controls.Add(this.shaThumbprintLabel);
             this.pkpHashesTab.Controls.Add(this.shaFingerpintTextLabel);
             this.pkpHashesTab.Location = new System.Drawing.Point(4, 22);
@@ -272,26 +315,8 @@
             this.pkpHashesTab.Padding = new System.Windows.Forms.Padding(3);
             this.pkpHashesTab.Size = new System.Drawing.Size(519, 137);
             this.pkpHashesTab.TabIndex = 1;
-            this.pkpHashesTab.Text = "HPKP";
+            this.pkpHashesTab.Text = "Public Key";
             this.pkpHashesTab.UseVisualStyleBackColor = true;
-            // 
-            // shaThumbprintLabel
-            // 
-            this.shaThumbprintLabel.AutoSize = true;
-            this.shaThumbprintLabel.Location = new System.Drawing.Point(139, 3);
-            this.shaThumbprintLabel.Name = "shaThumbprintLabel";
-            this.shaThumbprintLabel.Size = new System.Drawing.Size(68, 13);
-            this.shaThumbprintLabel.TabIndex = 23;
-            this.shaThumbprintLabel.Text = "Calculating...";
-            // 
-            // shaFingerpintTextLabel
-            // 
-            this.shaFingerpintTextLabel.AutoSize = true;
-            this.shaFingerpintTextLabel.Location = new System.Drawing.Point(6, 3);
-            this.shaFingerpintTextLabel.Name = "shaFingerpintTextLabel";
-            this.shaFingerpintTextLabel.Size = new System.Drawing.Size(129, 13);
-            this.shaFingerpintTextLabel.TabIndex = 0;
-            this.shaFingerpintTextLabel.Text = "SHA256 SPKI Fingerprint:";
             // 
             // CertificateControl
             // 
@@ -311,6 +336,7 @@
             this.generalTabPage.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.certStatusImage)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.certIcon)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.publicKeyImage)).EndInit();
             this.pkpHashesTab.ResumeLayout(false);
             this.pkpHashesTab.PerformLayout();
             this.ResumeLayout(false);
@@ -339,6 +365,8 @@
         private System.Windows.Forms.Label commonNameLabel;
         private System.Windows.Forms.PictureBox certIcon;
         private System.Windows.Forms.TabPage pkpHashesTab;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.PictureBox publicKeyImage;
         private System.Windows.Forms.Label shaThumbprintLabel;
         private System.Windows.Forms.Label shaFingerpintTextLabel;
     }

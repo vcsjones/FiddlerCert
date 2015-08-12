@@ -4,7 +4,7 @@ A Fiddler extension for examining certificates.
 This is an extension for the excellent Fiddler tool, a web debugging tool developed by Eric Lawrence at Telerik.
 This extension provides an Inspector for HTTPS traffic that allows you to view, export, and install certificates.
 
-![Fiddler Cert](https://vcsjones.com/wp-content/uploads/fiddlercert.png)
+![Fiddler Cert](https://vcsjones.com/wp-content/uploads/fiddlercert2.png)
 
 With this extension, you can quickly:
 

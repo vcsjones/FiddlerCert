@@ -1,19 +1,38 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.Cryptography;
 using System.Windows.Forms;
 using Fiddler;
 using System.Security.Cryptography.X509Certificates;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Forms.Integration;
 
 namespace VCSJones.FiddlerCert
 {
     public class CertInspector : Inspector2, IResponseInspector2
     {
-        private ScrollableControl _control;
+        private StackPanel _panel;
+        private readonly X509Store _rootStore = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
+        private readonly X509Store _userStore = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
+
+        public CertInspector()
+        {
+            _rootStore.Open(OpenFlags.ReadOnly);
+            _userStore.Open(OpenFlags.ReadOnly);
+        }
 
         public override void AddToTab(TabPage o)
         {
             o.Text = "Certificates";
-            o.AutoScroll = true;
-            _control = o;
+            var host = new ElementHost();
+            host.Dock = DockStyle.Fill;
+            var stackPanel = new StackPanel();
+            host.Child = new ScrollViewer { Content = stackPanel };
+            o.Controls.Add(host);
+            _panel = stackPanel;
         }
 
         public override int GetOrder()
@@ -23,7 +42,7 @@ namespace VCSJones.FiddlerCert
 
         public void Clear()
         {
-            _control.Controls.Clear();
+            _panel.Children.Clear();
         }
 
         public HTTPResponseHeaders headers
@@ -59,8 +78,7 @@ namespace VCSJones.FiddlerCert
 
         public override void AssignSession(Session oS)
         {
-            _control.SuspendLayout();
-            _control.Controls.Clear();
+            Clear();
             if (oS.isHTTPS || (oS.BitFlags & SessionFlags.IsDecryptingTunnel) == SessionFlags.IsDecryptingTunnel)
             {
                 Tuple<X509Chain, X509Certificate2> cert;
@@ -70,26 +88,43 @@ namespace VCSJones.FiddlerCert
                     for (var i = 0; i < chain.ChainElements.Count; i++)
                     {
                         AssignCertificate(chain.ChainElements[i]);
-
                     }
                 }
             }
-            _control.ResumeLayout(false);
         }
 
 
         private void AssignCertificate(X509ChainElement chainElement)
         {
-            const int CERT_HEIGHT = 200;
-            const int CERT_PADDING = 5;
-            var numberOfCertificates = _control.Controls.Count;
-            var currentOffset = (numberOfCertificates * CERT_HEIGHT) + (CERT_PADDING * numberOfCertificates) + CERT_PADDING;
-            var newCertificate = new CertificateControl(chainElement);
-            newCertificate.Top = currentOffset;
-            newCertificate.Height = CERT_HEIGHT;
-            newCertificate.Width = _control.Width;
-            newCertificate.Anchor = AnchorStyles.Top | AnchorStyles.Right | AnchorStyles.Left;
-            _control.Controls.Add(newCertificate);
+            var certificate = chainElement.Certificate;
+            var control = new WpfCertificateControl();
+            var algorithmBits = BitStrengthCalculator.CalculateStrength(certificate);
+            var dn = DistinguishedNameParser.Parse(certificate.Subject);
+            control.DataContext = new CertificateModel
+            {
+                SPKISHA256Hash = new AsyncProperty<string>(Task.Factory.StartNew(() => CertificateHashBuilder.BuildHashForPublicKey<SHA256CryptoServiceProvider>(chainElement.Certificate)), "Calculating..."),
+                SPKISHA1Hash = new AsyncProperty<string>(Task.Factory.StartNew(() => CertificateHashBuilder.BuildHashForPublicKey<SHA1CryptoServiceProvider>(chainElement.Certificate)), "Calculating..."),
+                CommonName = dn.ContainsKey("cn") ? dn["cn"].FirstOrDefault() ?? certificate.Thumbprint : certificate.Thumbprint,
+                Thumbprint = certificate.Thumbprint,
+                SubjectAlternativeName = certificate.Extensions[KnownOids.SubjectAltNameExtension]?.Format(false) ?? "None",
+                PublicKey = new PublicKeyModel
+                {
+                    Algorithm = algorithmBits.AlgorithmName,
+                    KeySizeBits = algorithmBits.BitSize,
+                    PublicKey = certificate.PublicKey.EncodedKeyValue.RawData
+                },
+                BeginDate = certificate.NotBefore,
+                EndDate = certificate.NotAfter,
+                SignatureAlgorithm = new SignatureAlgorithmModel
+                {
+                    SignatureAlgorithm = certificate.SignatureAlgorithm,
+                    IsTrustedRoot = _rootStore.Certificates.Contains(certificate) || _userStore.Certificates.Contains(certificate)
+                },
+                Errors = new AsyncProperty<CertificateErrors>(Task.Factory.StartNew(() => CertificateErrorsCalculator.GetCertificateErrors(chainElement)), CertificateErrors.Unknown),
+                InstallCommand = new RelayCommand(parameter => CertificateUI.ShowImportCertificate(chainElement.Certificate)),
+                ViewCommand = new RelayCommand(parameter => CertificateUI.ShowCertificate(chainElement.Certificate))
+            };
+            _panel.Children.Add(control);
         }
 
         public override InspectorFlags GetFlags()
@@ -100,5 +135,32 @@ namespace VCSJones.FiddlerCert
         }
 
 
+    }
+
+    public static class CertificateErrorsCalculator
+    {
+        public static CertificateErrors GetCertificateErrors(X509ChainElement chainElement)
+        {
+            //If the length is not zero and the items aren't "OK", return critical.
+            if (chainElement.ChainElementStatus.Length != 0 && !chainElement.ChainElementStatus.All(s => s.Status == X509ChainStatusFlags.NoError))
+            {
+                return CertificateErrors.Critical;
+            }
+            //Recheck with revocation
+            var chain = new X509Chain();
+            chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
+            chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EndCertificateOnly;
+            chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags & ~X509VerificationFlags.IgnoreEndRevocationUnknown;
+            var builtChain = chain.Build(chainElement.Certificate);
+            if (chain.ChainStatus.Any(s => s.Status == X509ChainStatusFlags.RevocationStatusUnknown))
+            {
+                return CertificateErrors.UnknownRevocation;
+            }
+            if (!builtChain)
+            {
+                return CertificateErrors.Critical;
+            }
+            return CertificateErrors.None;
+        }
     }
 }

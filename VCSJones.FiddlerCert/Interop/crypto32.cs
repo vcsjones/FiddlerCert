@@ -41,6 +41,5 @@ namespace VCSJones.FiddlerCert.Interop
                 [In, MarshalAs(UnmanagedType.SysInt)] IntPtr pbEncoded,
                 [In, Out, MarshalAs(UnmanagedType.U4)]ref uint cbEncoded
             );
-
     }
 }

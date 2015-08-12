@@ -1,0 +1,115 @@
+﻿<UserControl x:Class="VCSJones.FiddlerCert.WpfCertificateControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VCSJones.FiddlerCert"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="500" d:DataContext="{local:CertificateModel CommonName=ABC123}" Padding="5"
+             MinHeight="200">
+    <UserControl.Resources>
+        <Style x:Key="TabHeader" TargetType="{x:Type TextBlock}">
+            <Style.Setters>
+                <Setter Property="FontSize" Value="24"/>
+                <Setter Property="Margin" Value="10,0,0,0" />
+                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
+            </Style.Setters>
+        </Style>
+        <local:KeyStengthConverter x:Key="KeyStrengthConverter" />
+        <local:ExpiryStrengthConverter x:Key="ExpiryStrengthConverter" />
+        <local:TimeSpanConverter x:Key="TimeSpanConverter" />
+        <local:OidConverter x:Key="OidConverter" />
+        <local:SignatureAlgorithmStrengthConverter x:Key="SignatureAlgorithmStrengthConverter" />
+        <local:ErrorsToShieldConverter x:Key="ErrorsToShieldConverter" />
+    </UserControl.Resources>
+    <TabControl>
+        <TabItem Header="Overview">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                    <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" />
+                    <Image Width="16" Height="16" Source="{Binding Errors.Result, Converter={StaticResource ErrorsToShieldConverter}}" Stretch="None" />
+                    <TextBlock Style="{StaticResource TabHeader}" Text="{Binding CommonName, StringFormat=Issued To {0}}" />
+                </StackPanel>
+                <Label Grid.Column="0" Grid.Row="1">Subject Altnernative Name:</Label>
+                <Label Grid.Column="1" Grid.Row="1" Content="{Binding SubjectAlternativeName}" />
+                <Label Grid.Column="0" Grid.Row="2">Thumbprint:</Label>
+                <Label Grid.Column="1" Grid.Row="2" Content="{Binding Thumbprint}" />
+                <Label Grid.Column="0" Grid.Row="3">Public Key:</Label>
+                <Label Grid.Column="1" Grid.Row="3" Foreground="{Binding PublicKey, Converter={StaticResource KeyStrengthConverter}}">
+                    <Label.Content>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} ({1}-bit)">
+                                    <MultiBinding.Bindings>
+                                        <Binding Path="PublicKey.Algorithm" />
+                                        <Binding Path="PublicKey.KeySizeBits" />
+                                    </MultiBinding.Bindings>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Label.Content>
+                </Label>
+                <Label Grid.Column="0" Grid.Row="4">Signature Algorithm:</Label>
+                <Label Grid.Column="1" Grid.Row="4" Content="{Binding SignatureAlgorithm.SignatureAlgorithm, Converter={StaticResource OidConverter}}" ToolTip="{Binding SignatureAlgorithm.SignatureAlgorithm.Value}">
+                    <Label.Foreground>
+                        <Binding Path="SignatureAlgorithm" Converter="{StaticResource SignatureAlgorithmStrengthConverter}" />
+                    </Label.Foreground>
+                </Label>
+                <Label Grid.Column="0" Grid.Row="5">Validity From:</Label>
+                <Label Grid.Column="1" Grid.Row="5" Foreground="{Binding EndDate, Converter={StaticResource ExpiryStrengthConverter}}" ToolTip="{Binding ExpiresIn, Converter={StaticResource TimeSpanConverter}}">
+                    <Label.Content>
+                        <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} to {1}">
+                                    <MultiBinding.Bindings>
+                                        <Binding Path="BeginDate" />
+                                        <Binding Path="EndDate" />
+                                    </MultiBinding.Bindings>
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Label.Content>
+                </Label>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
+                    <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding ViewCommand}">View</Button>
+                    <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding InstallCommand}">Install</Button>
+                </StackPanel>
+            </Grid>
+        </TabItem>
+        <TabItem Header="HPKP">
+            <Grid VerticalAlignment="Top">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                    <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" SnapsToDevicePixels="True" />
+                    <TextBlock Style="{StaticResource TabHeader}">SPKI Hashes</TextBlock>
+                </StackPanel>
+                <Label Grid.Row="1" Grid.Column="0">SHA256 SPKI Hash:</Label>
+                <Label Grid.Row="1" Grid.Column="1" ContentStringFormat="&quot;{0}&quot;" Content="{Binding SPKISHA256Hash.Result}" />
+                <Label Grid.Row="2" Grid.Column="0">SHA1 SPKI Hash:</Label>
+                <Label Grid.Row="2" Grid.Column="1" ContentStringFormat="&quot;{0}&quot;" Content="{Binding SPKISHA1Hash.Result}" />
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

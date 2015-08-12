@@ -89,7 +89,8 @@ namespace VCSJones.FiddlerCert
             var control = new WpfCertificateControl();
             control.DataContext = new CertificateModel
             {
-                SPKISHA256Hash = new AsyncProperty<string>(Task.Factory.StartNew(() => CertificateHashBuilder.BuildHashForPublicKey<SHA256Managed>(chainElement.Certificate)))
+                SPKISHA256Hash = new AsyncProperty<string>(Task.Factory.StartNew(() => CertificateHashBuilder.BuildHashForPublicKey<SHA256CryptoServiceProvider>(chainElement.Certificate)), "Calculating..."),
+                SPKISHA1Hash = new AsyncProperty<string>(Task.Factory.StartNew(() => CertificateHashBuilder.BuildHashForPublicKey<SHA1CryptoServiceProvider>(chainElement.Certificate)), "Calculating...")
             };
             _panel.Children.Add(control);
         }

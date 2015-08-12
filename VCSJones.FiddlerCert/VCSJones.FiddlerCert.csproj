@@ -55,7 +55,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AsyncProperty.cs" />
     <Compile Include="BitStrengthCalculator.cs" />
+    <Compile Include="CallerMemberNameAttribute.cs" />
     <Compile Include="CertificateControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -64,6 +66,7 @@
     </Compile>
     <Compile Include="CertificateHashBuilder.cs" />
     <Compile Include="CertificateInspector.cs" />
+    <Compile Include="CertificateModel.cs" />
     <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
     <Compile Include="Interop\crypto32.cs" />

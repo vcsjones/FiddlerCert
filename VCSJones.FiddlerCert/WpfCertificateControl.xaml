@@ -28,6 +28,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
+                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                     <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" SnapsToDevicePixels="True" />
@@ -35,6 +36,8 @@
                 </StackPanel>
                 <Label Grid.Row="1" Grid.Column="0">SHA256 SPKI Hash</Label>
                 <Label Grid.Row="1" Grid.Column="1" Content="{Binding SPKISHA256Hash.Result}" />
+                <Label Grid.Row="2" Grid.Column="0">SHA1 SPKI Hash</Label>
+                <Label Grid.Row="2" Grid.Column="1" Content="{Binding SPKISHA1Hash.Result}" />
             </Grid>
         </TabItem>
     </TabControl>

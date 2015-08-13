@@ -30,7 +30,7 @@ namespace VCSJones.FiddlerCert
             {
                 MessageBox.Show("Windows Vista / Server 2008 or greater is required for the Certificate inspector extension to function.");
             }
-            else if (!CONFIG.bCaptureCONNECT)
+            else if (!CONFIG.bCaptureCONNECT || !CONFIG.bMITM_HTTPS)
             {
                 MessageBox.Show("FiddlerCert will not work without capturing HTTPS CONNECTs. Please enable CONNECT capturing in configuration.");
             }

@@ -25,6 +25,10 @@ namespace VCSJones.FiddlerCert
 
         public void OnLoad()
         {
+            if (!CONFIG.bCaptureCONNECT)
+            {
+                MessageBox.Show("FiddlerCert will not work without capturing HTTPS CONNECTs. Please enable CONNECT capturing in configuration.");
+            }
             _isSupportedOperatingSystem = Environment.OSVersion.Version >= new Version(6, 0);
             if (!_isSupportedOperatingSystem)
             {

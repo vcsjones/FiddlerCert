@@ -91,6 +91,10 @@ namespace VCSJones.FiddlerCert
                     }
                 }
             }
+            else
+            {
+                _panel.Children.Add(new System.Windows.Controls.Label {Content = "Certificates are for HTTPS connections only."});
+            }
         }
 
 

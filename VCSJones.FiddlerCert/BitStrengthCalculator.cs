@@ -10,19 +10,19 @@ namespace VCSJones.FiddlerCert
             int? bitSize;
             switch (certificate.PublicKey.Oid.Value)
             {
-                case KnownOids.EccPublicKey:
+                case KnownOids.X509Algorithms.Ecc:
                     var parameterOid = OidParser.ReadFromBytes(certificate.PublicKey.EncodedParameters.RawData);
                     switch (parameterOid.Value)
                     {
-                        case KnownOids.EcdsaP256:
+                        case KnownOids.EccCurves.EcdsaP256:
                             keyAlgorithm = PublicKeyAlgorithm.ECDSA;
                             bitSize = 256;
                             break;
-                        case KnownOids.EcdsaP384:
+                        case KnownOids.EccCurves.EcdsaP384:
                             keyAlgorithm = PublicKeyAlgorithm.ECDSA;
                             bitSize = 384;
                             break;
-                        case KnownOids.EcdsaP521:
+                        case KnownOids.EccCurves.EcdsaP521:
                             keyAlgorithm = PublicKeyAlgorithm.ECDSA;
                             bitSize = 521;
                             break;
@@ -32,7 +32,7 @@ namespace VCSJones.FiddlerCert
                             break;
                     }
                     break;
-                case KnownOids.RSA:
+                case KnownOids.X509Algorithms.RSA:
                     keyAlgorithm = PublicKeyAlgorithm.RSA;
                     bitSize = certificate.PublicKey.Key.KeySize;
                     break;

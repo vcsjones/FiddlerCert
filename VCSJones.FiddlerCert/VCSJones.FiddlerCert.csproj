@@ -58,6 +58,7 @@
     <Compile Include="AsyncProperty.cs" />
     <Compile Include="BitStrengthCalculator.cs" />
     <Compile Include="CallerMemberNameAttribute.cs" />
+    <Compile Include="CertificateErrorsCalculator.cs" />
     <Compile Include="CertificateHashBuilder.cs" />
     <Compile Include="CertificateInspector.cs" />
     <Compile Include="CertificateModel.cs" />

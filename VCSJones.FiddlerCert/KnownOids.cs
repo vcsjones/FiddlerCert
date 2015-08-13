@@ -2,12 +2,23 @@
 {
     public static class KnownOids
     {
-        public const string RSA = "1.2.840.113549.1.1.1";
-        public const string SubjectAltNameExtension = "2.5.29.17";
-        public const string EccPublicKey = "1.2.840.10045.2.1";
-        public const string EcdsaP256 = "1.2.840.10045.3.1.7";
-        public const string EcdsaP384 = "1.3.132.0.34";
-        public const string EcdsaP521 = "1.3.132.0.35";
+        public static class X509Algorithms
+        {
+            public const string RSA = "1.2.840.113549.1.1.1";
+            public const string Ecc = "1.2.840.10045.2.1";
+        }
+
+        public static class X509Extensions
+        {
+            public const string SubjectAltNameExtension = "2.5.29.17";
+        }
+
+        public static class EccCurves
+        {
+            public const string EcdsaP256 = "1.2.840.10045.3.1.7";
+            public const string EcdsaP384 = "1.3.132.0.34";
+            public const string EcdsaP521 = "1.3.132.0.35";
+        }
 
         public static class SignatureAlgorithms
         {

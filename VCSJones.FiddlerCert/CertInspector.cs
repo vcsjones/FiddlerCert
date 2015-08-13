@@ -79,7 +79,7 @@ namespace VCSJones.FiddlerCert
         public override void AssignSession(Session oS)
         {
             Clear();
-            if (oS.isHTTPS || (oS.BitFlags & SessionFlags.IsDecryptingTunnel) == SessionFlags.IsDecryptingTunnel)
+            if (oS.isHTTPS || (oS.BitFlags & SessionFlags.IsDecryptingTunnel) == SessionFlags.IsDecryptingTunnel || (oS.BitFlags & SessionFlags.IsBlindTunnel) == SessionFlags.IsBlindTunnel)
             {
                 Tuple<X509Chain, X509Certificate2> cert;
                 if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.host, oS.port), out cert))

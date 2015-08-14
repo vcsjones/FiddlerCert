@@ -187,6 +187,18 @@ namespace VCSJones.FiddlerCert
         private string _hashBase64;
         private bool _isPinned;
         private PinAlgorithm _algorithm;
+        private bool _reportOnly;
+
+        public bool ReportOnly
+        {
+            get { return _reportOnly; }
+            set
+            {
+                _reportOnly = value;
+                OnPropertyChanged();
+            }
+        }
+
 
         public string HashBase64
         {

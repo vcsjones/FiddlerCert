@@ -133,7 +133,17 @@ namespace VCSJones.FiddlerCert
 
         private static SpkiHashesModel CalculateHashes(X509Certificate2 certificate, Session session)
         {
+            var reportOnly = false;
             var pinnedKeys = session.ResponseHeaders.Exists("public-key-pins") ? PublicKeyPinsParser.Parse(session.ResponseHeaders["public-key-pins"]) : null;
+            if (pinnedKeys == null)
+            {
+                pinnedKeys = session.ResponseHeaders.Exists("public-key-pins-report-only") ? PublicKeyPinsParser.Parse(session.ResponseHeaders["public-key-pins-report-only"]) : null;
+                if (pinnedKeys != null)
+                {
+                    reportOnly = true;
+                }
+            }
+
             var sha256 = CertificateHashBuilder.BuildHashForPublicKey<SHA256CryptoServiceProvider>(certificate);
             var sha1 = CertificateHashBuilder.BuildHashForPublicKey<SHA1CryptoServiceProvider>(certificate);
             var model = new SpkiHashesModel
@@ -142,12 +152,14 @@ namespace VCSJones.FiddlerCert
                 {
                     new SpkiHashModel
                     {
+                        ReportOnly = reportOnly,
                         Algorithm = PinAlgorithm.SHA1,
                         HashBase64 = sha1,
                         IsPinned = pinnedKeys?.PinnedKeys?.Any(pk => pk.FingerprintBase64 == sha1) ?? false
                     },
                     new SpkiHashModel
                     {
+                        ReportOnly = reportOnly,
                         Algorithm = PinAlgorithm.SHA256,
                         HashBase64 = sha256,
                         IsPinned = pinnedKeys?.PinnedKeys?.Any(pk => pk.FingerprintBase64 == sha256) ?? false

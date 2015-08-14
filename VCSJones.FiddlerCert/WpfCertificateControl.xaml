@@ -121,6 +121,10 @@
                                         <Image
                                            Source="/VCSJones.FiddlerCert;component/Assets/pushpin_16xLG.png" Width="16" Height="16"
                                            ToolTip="Public key hash is pinned with HPKP." />
+                                        <Image
+                                           Visibility="{Binding ReportOnly, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                           Source="/VCSJones.FiddlerCert;component/Assets/Message_16xLG.png" Width="16" Height="16"
+                                           ToolTip="Public key hash is pinned with HPKP." />
                                         <Image Source="/VCSJones.FiddlerCert;component/Assets/StatusAnnotations_Alert_16xLG_color.png" Width="16" Height="16"
                                            ToolTip="This hash appears to be pinned, but using a non-standard algorithm.">
                                             <Image.Visibility>

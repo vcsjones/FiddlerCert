@@ -21,6 +21,7 @@
         <local:OidConverter x:Key="OidConverter" />
         <local:SignatureAlgorithmStrengthConverter x:Key="SignatureAlgorithmStrengthConverter" />
         <local:ErrorsToShieldConverter x:Key="ErrorsToShieldConverter" />
+        <local:ContainedValueVisibilityConverter x:Key="ContainedValueVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <TabControl>
@@ -107,7 +108,7 @@
                 </StackPanel>
                 <ItemsControl ItemsSource="{Binding SpkiHashes.Result.Hashes}"  Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">
                     <ItemsControl.ItemTemplate>
-                        <DataTemplate>
+                        <DataTemplate DataType="{x:Type local:SpkiHashModel}">
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition SharedSizeGroup="LabelGroup" Width="Auto" />
@@ -116,7 +117,23 @@
                                 <Label Grid.Column="0" Content="{Binding Algorithm}" ContentStringFormat="{}{0} SPKI Hash:" />
                                 <StackPanel Orientation="Horizontal" Grid.Column="1">
                                     <Label Content="{Binding HashBase64}" ContentStringFormat="&quot;{0}&quot;" />
-                                    <Image Visibility="{Binding IsPinned, Converter={StaticResource BooleanToVisibilityConverter}}" Source="/VCSJones.FiddlerCert;component/Assets/pushpin_16xLG.png" Width="16" Height="16" ToolTip="Public key hash is pinned with HPKP." />
+                                    <StackPanel Visibility="{Binding IsPinned, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                        <Image
+                                           Source="/VCSJones.FiddlerCert;component/Assets/pushpin_16xLG.png" Width="16" Height="16"
+                                           ToolTip="Public key hash is pinned with HPKP." />
+                                        <Image Source="/VCSJones.FiddlerCert;component/Assets/StatusAnnotations_Alert_16xLG_color.png" Width="16" Height="16"
+                                           ToolTip="This hash appears to be pinned, but using a non-standard algorithm.">
+                                            <Image.Visibility>
+                                                <Binding Path="Algorithm" Converter="{StaticResource ContainedValueVisibilityConverter}">
+                                                    <Binding.ConverterParameter>
+                                                        <x:Array Type="{x:Type local:PinAlgorithm}">
+                                                            <local:PinAlgorithm>SHA1</local:PinAlgorithm>
+                                                        </x:Array>
+                                                    </Binding.ConverterParameter>
+                                                </Binding>
+                                            </Image.Visibility>
+                                        </Image>
+                                    </StackPanel>
                                 </StackPanel>
                             </Grid>
                         </DataTemplate>

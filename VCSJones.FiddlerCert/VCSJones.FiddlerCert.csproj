@@ -110,6 +110,9 @@
   <ItemGroup>
     <Resource Include="Assets\pushpin_16xLG.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\StatusAnnotations_Alert_16xLG_color.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir "%25userprofile%25\Documents\Fiddler2\Inspectors"

@@ -1,16 +1,14 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
 using System.Windows.Input;
 
 namespace VCSJones.FiddlerCert
 {
     public class CertificateModel : INotifyPropertyChanged
     {
-        private AsyncProperty<string> _spkiSHA256Hash;
-        private AsyncProperty<string> _spkiSHA1Hash;
         private string _commonName;
         private string _thumbprint;
         private string _subjectAlternativeName;
@@ -20,33 +18,10 @@ namespace VCSJones.FiddlerCert
         private SignatureAlgorithmModel _signatureAlgorithm;
         private AsyncProperty<CertificateErrors> _errors;
         private RelayCommand _viewCommand, _installCommand;
+        private AsyncProperty<SpkiHashesModel> _spkiHashes;
 
 
-        public AsyncProperty<string> SPKISHA256Hash
-        {
-            get
-            {
-                return _spkiSHA256Hash;
-            }
-            set
-            {
-                _spkiSHA256Hash = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public AsyncProperty<string> SPKISHA1Hash
-        {
-            get
-            {
-                return _spkiSHA1Hash;
-            }
-            set
-            {
-                _spkiSHA1Hash = value;
-                OnPropertyChanged();
-            }
-        }
+      
 
         public string CommonName
         {
@@ -144,6 +119,16 @@ namespace VCSJones.FiddlerCert
             }
         }
 
+        public AsyncProperty<SpkiHashesModel> SpkiHashes
+        {
+            get { return _spkiHashes; }
+            set
+            {
+                _spkiHashes = value;
+                OnPropertyChanged();
+            }
+        }
+
         public RelayCommand ViewCommand
         {
             get { return _viewCommand; }
@@ -171,6 +156,85 @@ namespace VCSJones.FiddlerCert
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
+
+    public class SpkiHashesModel : INotifyPropertyChanged
+    {
+        private ObservableCollection<SpkiHashModel> _hashes;
+
+        public ObservableCollection<SpkiHashModel> Hashes
+        {
+            get
+            {
+                return _hashes;
+            }
+            set
+            {
+                _hashes = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
+    public class SpkiHashModel : INotifyPropertyChanged
+    {
+        private string _hashBase64;
+        private bool _isPinned;
+        private PinAlgorithm _algorithm;
+
+        public string HashBase64
+        {
+            get
+            {
+                return _hashBase64;
+            }
+            set
+            {
+                _hashBase64 = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool IsPinned
+        {
+            get
+            {
+                return _isPinned;
+            }
+            set
+            {
+                _isPinned = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public PinAlgorithm Algorithm
+        {
+            get
+            {
+                return _algorithm;
+            }
+            set
+            {
+                _algorithm = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+    }
+
 
     public enum CertificateErrors
     {

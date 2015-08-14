@@ -64,6 +64,8 @@
     <Compile Include="CertificateModel.cs" />
     <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
+    <Compile Include="Interop\Msvcrt.cs" />
+    <Compile Include="PublicKeyPinsParser.cs" />
     <Compile Include="Interop\crypto32.cs" />
     <Compile Include="Interop\CryptoUI.cs" />
     <Compile Include="DistinguishedNameParser.cs" />
@@ -104,6 +106,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\pushpin_16xLG.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

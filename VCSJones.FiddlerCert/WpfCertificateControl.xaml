@@ -21,6 +21,7 @@
         <local:OidConverter x:Key="OidConverter" />
         <local:SignatureAlgorithmStrengthConverter x:Key="SignatureAlgorithmStrengthConverter" />
         <local:ErrorsToShieldConverter x:Key="ErrorsToShieldConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <TabControl>
         <TabItem Header="Overview">
@@ -41,11 +42,11 @@
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                     <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" />
-                    <Image Width="16" Height="16" Source="{Binding Errors.Result, Converter={StaticResource ErrorsToShieldConverter}}" Stretch="None" />
+                    <Image Width="16" Height="16" Source="{Binding Errors.Result, Converter={StaticResource ErrorsToShieldConverter}, FallbackValue={x:Static local:CertificateErrors.Unknown}}" Stretch="None" />
                     <TextBlock Style="{StaticResource TabHeader}" Text="{Binding CommonName, StringFormat=Issued To {0}}" />
                 </StackPanel>
                 <Label Grid.Column="0" Grid.Row="1">Subject Altnernative Name:</Label>
-                <Label Grid.Column="1" Grid.Row="1" Content="{Binding SubjectAlternativeName}" />
+                <Label Grid.Column="1" Grid.Row="1" Content="{Binding SubjectAlternativeName}" ToolTip="{Binding SubjectAlternativeName}" />
                 <Label Grid.Column="0" Grid.Row="2">Thumbprint:</Label>
                 <Label Grid.Column="1" Grid.Row="2" Content="{Binding Thumbprint}" />
                 <Label Grid.Column="0" Grid.Row="3">Public Key:</Label>
@@ -99,16 +100,28 @@
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition />
-                    <RowDefinition />
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                     <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" SnapsToDevicePixels="True" />
                     <TextBlock Style="{StaticResource TabHeader}">SPKI Hashes</TextBlock>
                 </StackPanel>
-                <Label Grid.Row="1" Grid.Column="0">SHA256 SPKI Hash:</Label>
-                <Label Grid.Row="1" Grid.Column="1" ContentStringFormat="&quot;{0}&quot;" Content="{Binding SPKISHA256Hash.Result}" />
-                <Label Grid.Row="2" Grid.Column="0">SHA1 SPKI Hash:</Label>
-                <Label Grid.Row="2" Grid.Column="1" ContentStringFormat="&quot;{0}&quot;" Content="{Binding SPKISHA1Hash.Result}" />
+                <ItemsControl ItemsSource="{Binding SpkiHashes.Result.Hashes}"  Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition SharedSizeGroup="LabelGroup" Width="Auto" />
+                                    <ColumnDefinition  />
+                                </Grid.ColumnDefinitions>
+                                <Label Grid.Column="0" Content="{Binding Algorithm}" ContentStringFormat="{}{0} SPKI Hash:" />
+                                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                    <Label Content="{Binding HashBase64}" ContentStringFormat="&quot;{0}&quot;" />
+                                    <Image Visibility="{Binding IsPinned, Converter={StaticResource BooleanToVisibilityConverter}}" Source="/VCSJones.FiddlerCert;component/Assets/pushpin_16xLG.png" Width="16" Height="16" ToolTip="Public key hash is pinned with HPKP." />
+                                </StackPanel>
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
             </Grid>
         </TabItem>
     </TabControl>

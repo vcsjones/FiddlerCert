@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
@@ -87,7 +88,7 @@ namespace VCSJones.FiddlerCert
                     var chain = cert.Item1;
                     for (var i = 0; i < chain.ChainElements.Count; i++)
                     {
-                        AssignCertificate(chain.ChainElements[i]);
+                        AssignCertificate(chain.ChainElements[i], oS);
                     }
                 }
             }
@@ -98,7 +99,7 @@ namespace VCSJones.FiddlerCert
         }
 
 
-        private void AssignCertificate(X509ChainElement chainElement)
+        private void AssignCertificate(X509ChainElement chainElement, Session oS)
         {
             var certificate = chainElement.Certificate;
             var control = new WpfCertificateControl();
@@ -106,8 +107,6 @@ namespace VCSJones.FiddlerCert
             var dn = DistinguishedNameParser.Parse(certificate.Subject);
             control.DataContext = new CertificateModel
             {
-                SPKISHA256Hash = new AsyncProperty<string>(Task.Factory.StartNew(() => CertificateHashBuilder.BuildHashForPublicKey<SHA256CryptoServiceProvider>(chainElement.Certificate)), "Calculating..."),
-                SPKISHA1Hash = new AsyncProperty<string>(Task.Factory.StartNew(() => CertificateHashBuilder.BuildHashForPublicKey<SHA1CryptoServiceProvider>(chainElement.Certificate)), "Calculating..."),
                 CommonName = dn.ContainsKey("cn") ? dn["cn"].FirstOrDefault() ?? certificate.Thumbprint : certificate.Thumbprint,
                 Thumbprint = certificate.Thumbprint,
                 SubjectAlternativeName = certificate.Extensions[KnownOids.X509Extensions.SubjectAltNameExtension]?.Format(false) ?? "None",
@@ -125,11 +124,39 @@ namespace VCSJones.FiddlerCert
                     IsTrustedRoot = _rootStore.Certificates.Contains(certificate) || _userStore.Certificates.Contains(certificate)
                 },
                 Errors = new AsyncProperty<CertificateErrors>(Task.Factory.StartNew(() => CertificateErrorsCalculator.GetCertificateErrors(chainElement)), CertificateErrors.Unknown),
+                SpkiHashes = new AsyncProperty<SpkiHashesModel>(Task.Factory.StartNew(() => CalculateHashes(chainElement.Certificate, oS))),
                 InstallCommand = new RelayCommand(parameter => CertificateUI.ShowImportCertificate(chainElement.Certificate)),
                 ViewCommand = new RelayCommand(parameter => CertificateUI.ShowCertificate(chainElement.Certificate))
             };
             _panel.Children.Add(control);
         }
+
+        private static SpkiHashesModel CalculateHashes(X509Certificate2 certificate, Session session)
+        {
+            var pinnedKeys = session.ResponseHeaders.Exists("public-key-pins") ? PublicKeyPinsParser.Parse(session.ResponseHeaders["public-key-pins"]) : null;
+            var sha256 = CertificateHashBuilder.BuildHashForPublicKey<SHA256CryptoServiceProvider>(certificate);
+            var sha1 = CertificateHashBuilder.BuildHashForPublicKey<SHA1CryptoServiceProvider>(certificate);
+            var model = new SpkiHashesModel
+            {
+                Hashes = new ObservableCollection<SpkiHashModel>
+                {
+                    new SpkiHashModel
+                    {
+                        Algorithm = PinAlgorithm.SHA1,
+                        HashBase64 = sha1,
+                        IsPinned = pinnedKeys?.PinnedKeys?.Any(pk => pk.FingerprintBase64 == sha1) ?? false
+                    },
+                    new SpkiHashModel
+                    {
+                        Algorithm = PinAlgorithm.SHA256,
+                        HashBase64 = sha256,
+                        IsPinned = pinnedKeys?.PinnedKeys?.Any(pk => pk.FingerprintBase64 == sha256) ?? false
+                    },
+                }
+            };
+            return model;
+        }
+
 
         public override InspectorFlags GetFlags()
         {

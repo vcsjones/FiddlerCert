@@ -92,13 +92,21 @@
                 </StackPanel>
             </Grid>
         </TabItem>
-        <TabItem Header="HPKP">
+        <TabItem>
+            <TabItem.Header>
+                <StackPanel Orientation="Horizontal">
+                    <Label>HPKP</Label>
+                    
+                </StackPanel>
+            </TabItem.Header>
             <Grid VerticalAlignment="Top">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
@@ -112,7 +120,7 @@
                             <Grid>
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition SharedSizeGroup="LabelGroup" Width="Auto" />
-                                    <ColumnDefinition  />
+                                    <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Label Grid.Column="0" Content="{Binding Algorithm}" ContentStringFormat="{}{0} SPKI Hash:" />
                                 <StackPanel Orientation="Horizontal" Grid.Column="1">
@@ -143,6 +151,10 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
+                <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" Style="{StaticResource TabHeader}">HPKP Configuration</TextBlock>
+                <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Visibility="{Binding HasPublicKeyPinsHeader, Converter={StaticResource BooleanToVisibilityConverter}}">
+                    
+                </StackPanel>
             </Grid>
         </TabItem>
     </TabControl>

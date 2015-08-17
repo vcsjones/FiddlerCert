@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
@@ -8,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Expression = System.Linq.Expressions.Expression;
 
 namespace VCSJones.FiddlerCert
 {
@@ -223,6 +225,31 @@ namespace VCSJones.FiddlerCert
             }
             var arr = (Array) parameter;
             return Array.BinarySearch(arr, value) >= 0 ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class EnumFlagsVisibilityConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || parameter == null)
+            {
+                return null;
+            }
+            if (!value.GetType().IsEnum || !parameter.GetType().IsEnum)
+            {
+                return null;
+            }
+            var flagsParam = Expression.Parameter(typeof(object), "flags");
+            var flagParam = Expression.Parameter(typeof(object), "flag");
+            var hasFlag = Expression.Equal(Expression.And(Expression.Convert(flagsParam, value.GetType()), Expression.Convert(flagParam, parameter.GetType())), flagParam);
+            var expression = Expression.Lambda<Func<object, object, bool>>(hasFlag, flagsParam, flagParam);
+            return expression.Compile()(value, parameter) ? Visibility.Visible : Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

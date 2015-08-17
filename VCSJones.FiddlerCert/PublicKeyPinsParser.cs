@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using VCSJones.FiddlerCert.Interop;
 
 namespace VCSJones.FiddlerCert
 {
@@ -10,50 +9,6 @@ namespace VCSJones.FiddlerCert
     {
         SHA1,
         SHA256,
-    }
-
-    public class PinnedKey : IEquatable<PinnedKey>
-    {
-        public PinnedKey(PinAlgorithm algorithm, byte[] fingerprint)
-        {
-            if (fingerprint == null)
-            {
-                throw new ArgumentNullException(nameof(fingerprint));
-            }
-            Algorithm = algorithm;
-            Fingerprint = (byte[]) fingerprint.Clone();
-        }
-
-        public PinAlgorithm Algorithm { get; }
-        public byte[] Fingerprint { get; }
-
-        public string FingerprintBase64 => Convert.ToBase64String(Fingerprint);
-
-        public bool Equals(PinnedKey other)
-        {
-            if (other == null) return false;
-            if (ReferenceEquals(this, other)) return true;
-            if (Algorithm != other.Algorithm) return false;
-            if (Fingerprint.Length != other.Fingerprint.Length) return false;
-            if (Msvcrt.memcmp(Fingerprint, other.Fingerprint, (UIntPtr) Fingerprint.Length) != 0) return false;
-            return true;
-        }
-    }
-
-    public class PublicPinnedKeys
-    {
-        public PublicPinnedKeys(IList<PinnedKey> pinnedKeys, TimeSpan maxAge, bool? includeSubDomains, Uri reportUri)
-        {
-            PinnedKeys = pinnedKeys;
-            MaxAge = maxAge;
-            IncludeSubDomains = includeSubDomains;
-            ReportUri = reportUri;
-        }
-
-        public IList<PinnedKey> PinnedKeys { get; }
-        public TimeSpan MaxAge { get; }
-        public bool? IncludeSubDomains { get; }
-        public Uri ReportUri { get; }
     }
 
     public static class PublicKeyPinsParser
@@ -75,7 +30,7 @@ namespace VCSJones.FiddlerCert
                         long maxAgeParsed;
                         if (!long.TryParse(identifier.Value, out maxAgeParsed))
                         {
-                            return null;
+                            continue;
                         }
                         maxAge = maxAgeParsed;
                     }
@@ -119,11 +74,7 @@ namespace VCSJones.FiddlerCert
 
                     }
                 }
-                if (!maxAge.HasValue)
-                {
-                    return null;
-                }
-                return new PublicPinnedKeys(keys.AsReadOnly(), TimeSpan.FromSeconds(maxAge.Value), includeSubDomains, reportUri);
+                return new PublicPinnedKeys(keys.AsReadOnly(), maxAge == null ? null : (TimeSpan?)TimeSpan.FromSeconds(maxAge.Value), includeSubDomains, reportUri);
             }
             catch
             {

@@ -64,7 +64,9 @@
     <Compile Include="CertificateModel.cs" />
     <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
+    <Compile Include="PinCheckResult.cs" />
     <Compile Include="Interop\Msvcrt.cs" />
+    <Compile Include="PinnedKey.cs" />
     <Compile Include="PublicKeyPinsParser.cs" />
     <Compile Include="Interop\crypto32.cs" />
     <Compile Include="Interop\CryptoUI.cs" />
@@ -80,6 +82,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="PublicKeyAlgorithm.cs" />
+    <Compile Include="PublicPinnedKeys.cs" />
     <Compile Include="WinErr.cs" />
     <Compile Include="WpfCertificateControl.xaml.cs">
       <DependentUpon>WpfCertificateControl.xaml</DependentUpon>

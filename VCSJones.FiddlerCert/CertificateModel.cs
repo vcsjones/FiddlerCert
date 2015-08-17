@@ -20,9 +20,6 @@ namespace VCSJones.FiddlerCert
         private RelayCommand _viewCommand, _installCommand;
         private AsyncProperty<SpkiHashesModel> _spkiHashes;
 
-
-      
-
         public string CommonName
         {
             get
@@ -159,7 +156,36 @@ namespace VCSJones.FiddlerCert
 
     public class SpkiHashesModel : INotifyPropertyChanged
     {
+        
         private ObservableCollection<SpkiHashModel> _hashes;
+        private bool _hasPublicKeyPinsHeader;
+        private PinCheckResult _pinChecks;
+
+        public bool HasPublicKeyPinsHeader
+        {
+            get
+            {
+                return _hasPublicKeyPinsHeader;
+            }
+            set
+            {
+                _hasPublicKeyPinsHeader = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public PinCheckResult PinChecks
+        {
+            get
+            {
+                return _pinChecks;
+            }
+            set
+            {
+                _pinChecks = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ObservableCollection<SpkiHashModel> Hashes
         {

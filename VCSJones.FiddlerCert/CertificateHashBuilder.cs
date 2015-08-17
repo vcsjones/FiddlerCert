@@ -8,7 +8,20 @@ namespace VCSJones.FiddlerCert
 {
     public static class CertificateHashBuilder
     {
-        public static string BuildHashForPublicKey<THashAlgorithm>(X509Certificate2 certificate) where THashAlgorithm:HashAlgorithm, new()
+        public static PinnedKey[] PinnedKeysForCertificate(X509Certificate2 certificate)
+        {
+            return new[] {
+                new PinnedKey(PinAlgorithm.SHA256, BuildHashForPublicKeyBinary<SHA256CryptoServiceProvider>(certificate)),
+                new PinnedKey(PinAlgorithm.SHA1, BuildHashForPublicKeyBinary<SHA1CryptoServiceProvider>(certificate))
+                };
+        }
+
+        public static string BuildHashForPublicKey<THashAlgorithm>(X509Certificate2 certificate) where THashAlgorithm : HashAlgorithm, new()
+        {
+            return Convert.ToBase64String(BuildHashForPublicKeyBinary<THashAlgorithm>(certificate));
+        }
+
+        public static byte[] BuildHashForPublicKeyBinary<THashAlgorithm>(X509Certificate2 certificate) where THashAlgorithm : HashAlgorithm, new()
         {
             var PUBLIC_KEY_INFO_TYPE = new IntPtr(8);
             IntPtr publicKeyParametersBuffer = IntPtr.Zero, publicKeyBuffer = IntPtr.Zero, encodingBuffer = IntPtr.Zero;
@@ -39,7 +52,7 @@ namespace VCSJones.FiddlerCert
                         Marshal.Copy(encodingBuffer, encoded, 0, encoded.Length);
                         using (var algorithm = new THashAlgorithm())
                         {
-                            return Convert.ToBase64String(algorithm.ComputeHash(encoded));
+                            return algorithm.ComputeHash(encoded);
                         }
                     }
                 }

@@ -24,143 +24,176 @@
         <local:ContainedValueVisibilityConverter x:Key="ContainedValueVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
-    <ItemsControl ItemsSource="{Binding CertificateChain.Result}">
-        <ItemsControl.ItemsPanel>
-            <ItemsPanelTemplate>
-                <StackPanel IsItemsHost="True" />
-            </ItemsPanelTemplate>
-        </ItemsControl.ItemsPanel>
-        <ItemsControl.ItemTemplate>
-            <DataTemplate DataType="{x:Type local:CertificateModel}" >
-                <TabControl Margin="5">
-                    <TabItem Header="Overview">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="Auto" />
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
-                            </Grid.RowDefinitions>
-                            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
-                                <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" />
-                                <Image Width="16" Height="16" Source="{Binding Errors.Result, Converter={StaticResource ErrorsToShieldConverter}, FallbackValue={x:Static local:CertificateErrors.Unknown}}" Stretch="None" />
-                                <TextBlock Style="{StaticResource TabHeader}" Text="{Binding CommonName, StringFormat=Issued To {0}}" />
-                            </StackPanel>
-                            <Label Grid.Column="0" Grid.Row="1">Subject Altnernative Name:</Label>
-                            <Label Grid.Column="1" Grid.Row="1" Content="{Binding SubjectAlternativeName}" ToolTip="{Binding SubjectAlternativeName}" />
-                            <Label Grid.Column="0" Grid.Row="2">Thumbprint:</Label>
-                            <Label Grid.Column="1" Grid.Row="2" Content="{Binding Thumbprint}" />
-                            <Label Grid.Column="0" Grid.Row="3">Public Key:</Label>
-                            <Label Grid.Column="1" Grid.Row="3" Foreground="{Binding PublicKey, Converter={StaticResource KeyStrengthConverter}}">
-                                <Label.Content>
-                                    <TextBlock>
-                                        <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0} ({1}-bit)">
-                                                <MultiBinding.Bindings>
-                                                    <Binding Path="PublicKey.Algorithm" />
-                                                    <Binding Path="PublicKey.KeySizeBits" />
-                                                </MultiBinding.Bindings>
-                                            </MultiBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
-                                </Label.Content>
-                            </Label>
-                            <Label Grid.Column="0" Grid.Row="4">Signature Algorithm:</Label>
-                            <Label Grid.Column="1" Grid.Row="4" Content="{Binding SignatureAlgorithm.SignatureAlgorithm, Converter={StaticResource OidConverter}}" ToolTip="{Binding SignatureAlgorithm.SignatureAlgorithm.Value}">
-                                <Label.Foreground>
-                                    <Binding Path="SignatureAlgorithm" Converter="{StaticResource SignatureAlgorithmStrengthConverter}" />
-                                </Label.Foreground>
-                            </Label>
-                            <Label Grid.Column="0" Grid.Row="5">Validity From:</Label>
-                            <Label Grid.Column="1" Grid.Row="5" Foreground="{Binding EndDate, Converter={StaticResource ExpiryStrengthConverter}}" ToolTip="{Binding ExpiresIn, Converter={StaticResource TimeSpanConverter}}">
-                                <Label.Content>
-                                    <TextBlock>
-                                        <TextBlock.Text>
-                                            <MultiBinding StringFormat="{}{0} to {1}">
-                                                <MultiBinding.Bindings>
-                                                    <Binding Path="BeginDate" />
-                                                    <Binding Path="EndDate" />
-                                                </MultiBinding.Bindings>
-                                            </MultiBinding>
-                                        </TextBlock.Text>
-                                    </TextBlock>
-                                </Label.Content>
-                            </Label>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
-                                <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding ViewCommand}">View</Button>
-                                <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding InstallCommand}">Install</Button>
-                            </StackPanel>
-                        </Grid>
-                    </TabItem>
-                    <TabItem>
-                        <TabItem.Header>
-                            <StackPanel Orientation="Horizontal">
-                                <Label>HPKP</Label>
-
-                            </StackPanel>
-                        </TabItem.Header>
-                        <Grid VerticalAlignment="Top">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition />
-                                <RowDefinition />
-                            </Grid.RowDefinitions>
-                            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
-                                <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" SnapsToDevicePixels="True" />
-                                <TextBlock Style="{StaticResource TabHeader}">SPKI Hashes</TextBlock>
-                            </StackPanel>
-                            <ItemsControl ItemsSource="{Binding SpkiHashes.Result.Hashes}"  Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type local:SpkiHashModel}">
-                                        <Grid>
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition SharedSizeGroup="LabelGroup" Width="Auto" />
-                                                <ColumnDefinition />
-                                            </Grid.ColumnDefinitions>
-                                            <Label Grid.Column="0" Content="{Binding Algorithm}" ContentStringFormat="{}{0} SPKI Hash:" />
-                                            <StackPanel Orientation="Horizontal" Grid.Column="1">
-                                                <Label Content="{Binding HashBase64}" ContentStringFormat="&quot;{0}&quot;" />
-                                                <StackPanel Visibility="{Binding IsPinned, Converter={StaticResource BooleanToVisibilityConverter}}">
-                                                    <Image
+    <TabControl>
+        <TabItem Header="Certificates">
+            <ItemsControl ItemsSource="{Binding CertificateChain.Result}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel IsItemsHost="True" />
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate DataType="{x:Type local:CertificateModel}" >
+                        <TabControl Margin="5">
+                            <TabItem Header="Overview">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="Auto" />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                                        <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" />
+                                        <Image Width="16" Height="16" Source="{Binding Errors.Result, Converter={StaticResource ErrorsToShieldConverter}, FallbackValue={x:Static local:CertificateErrors.Unknown}}" Stretch="None" />
+                                        <TextBlock Style="{StaticResource TabHeader}" Text="{Binding CommonName, StringFormat=Issued To {0}}" />
+                                    </StackPanel>
+                                    <Label Grid.Column="0" Grid.Row="1">Subject Altnernative Name:</Label>
+                                    <Label Grid.Column="1" Grid.Row="1" Content="{Binding SubjectAlternativeName}" ToolTip="{Binding SubjectAlternativeName}" />
+                                    <Label Grid.Column="0" Grid.Row="2">Thumbprint:</Label>
+                                    <Label Grid.Column="1" Grid.Row="2" Content="{Binding Thumbprint}" />
+                                    <Label Grid.Column="0" Grid.Row="3">Public Key:</Label>
+                                    <Label Grid.Column="1" Grid.Row="3" Foreground="{Binding PublicKey, Converter={StaticResource KeyStrengthConverter}}">
+                                        <Label.Content>
+                                            <TextBlock>
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} ({1}-bit)">
+                                                        <MultiBinding.Bindings>
+                                                            <Binding Path="PublicKey.Algorithm" />
+                                                            <Binding Path="PublicKey.KeySizeBits" />
+                                                        </MultiBinding.Bindings>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </Label.Content>
+                                    </Label>
+                                    <Label Grid.Column="0" Grid.Row="4">Signature Algorithm:</Label>
+                                    <Label Grid.Column="1" Grid.Row="4" Content="{Binding SignatureAlgorithm.SignatureAlgorithm, Converter={StaticResource OidConverter}}" ToolTip="{Binding SignatureAlgorithm.SignatureAlgorithm.Value}">
+                                        <Label.Foreground>
+                                            <Binding Path="SignatureAlgorithm" Converter="{StaticResource SignatureAlgorithmStrengthConverter}" />
+                                        </Label.Foreground>
+                                    </Label>
+                                    <Label Grid.Column="0" Grid.Row="5">Validity From:</Label>
+                                    <Label Grid.Column="1" Grid.Row="5" Foreground="{Binding EndDate, Converter={StaticResource ExpiryStrengthConverter}}" ToolTip="{Binding ExpiresIn, Converter={StaticResource TimeSpanConverter}}">
+                                        <Label.Content>
+                                            <TextBlock>
+                                                <TextBlock.Text>
+                                                    <MultiBinding StringFormat="{}{0} to {1}">
+                                                        <MultiBinding.Bindings>
+                                                            <Binding Path="BeginDate" />
+                                                            <Binding Path="EndDate" />
+                                                        </MultiBinding.Bindings>
+                                                    </MultiBinding>
+                                                </TextBlock.Text>
+                                            </TextBlock>
+                                        </Label.Content>
+                                    </Label>
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
+                                        <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding ViewCommand}">View</Button>
+                                        <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding InstallCommand}">Install</Button>
+                                    </StackPanel>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="SPKI Fingerprints">
+                                <Grid VerticalAlignment="Top">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                                        <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" SnapsToDevicePixels="True" />
+                                        <TextBlock Style="{StaticResource TabHeader}">SPKI Hashes</TextBlock>
+                                    </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding SpkiHashes.Result.Hashes}"  Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate DataType="{x:Type local:SpkiHashModel}">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition SharedSizeGroup="LabelGroup" Width="Auto" />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label Grid.Column="0" Content="{Binding Algorithm}" ContentStringFormat="{}{0} SPKI Hash:" />
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                                        <Label Content="{Binding HashBase64}" ContentStringFormat="&quot;{0}&quot;" />
+                                                        <StackPanel Visibility="{Binding IsPinned, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                            <Image
                                            Source="/VCSJones.FiddlerCert;component/Assets/pushpin_16xLG.png" Width="16" Height="16"
                                            ToolTip="Public key hash is pinned with HPKP." />
-                                                    <Image
+                                                            <Image
                                            Visibility="{Binding ReportOnly, Converter={StaticResource BooleanToVisibilityConverter}}"
                                            Source="/VCSJones.FiddlerCert;component/Assets/Message_16xLG.png" Width="16" Height="16"
-                                           ToolTip="Public key hash is pinned with HPKP." />
-                                                    <Image Source="/VCSJones.FiddlerCert;component/Assets/StatusAnnotations_Alert_16xLG_color.png" Width="16" Height="16"
+                                           ToolTip="Public key is pinned using report-only." />
+                                                            <Image Source="/VCSJones.FiddlerCert;component/Assets/StatusAnnotations_Alert_16xLG_color.png" Width="16" Height="16"
                                            ToolTip="This hash appears to be pinned, but using a non-standard algorithm.">
-                                                        <Image.Visibility>
-                                                            <Binding Path="Algorithm" Converter="{StaticResource ContainedValueVisibilityConverter}">
-                                                                <Binding.ConverterParameter>
-                                                                    <x:Array Type="{x:Type local:PinAlgorithm}">
-                                                                        <local:PinAlgorithm>SHA1</local:PinAlgorithm>
-                                                                    </x:Array>
-                                                                </Binding.ConverterParameter>
-                                                            </Binding>
-                                                        </Image.Visibility>
-                                                    </Image>
-                                                </StackPanel>
-                                            </StackPanel>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Grid>
-                    </TabItem>
-                </TabControl>
-            </DataTemplate>
-        </ItemsControl.ItemTemplate>
-    </ItemsControl>
+                                                                <Image.Visibility>
+                                                                    <Binding Path="Algorithm" Converter="{StaticResource ContainedValueVisibilityConverter}">
+                                                                        <Binding.ConverterParameter>
+                                                                            <x:Array Type="{x:Type local:PinAlgorithm}">
+                                                                                <local:PinAlgorithm>SHA1</local:PinAlgorithm>
+                                                                            </x:Array>
+                                                                        </Binding.ConverterParameter>
+                                                                    </Binding>
+                                                                </Image.Visibility>
+                                                            </Image>
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Grid>
+                            </TabItem>
+                        </TabControl>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </TabItem>
+        <TabItem Header="HPKP" Visibility="{Binding IsNotTunnel, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid DataContext="{Binding Hpkp}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TabHeader}" Text="Public-Key-Pins" />
+                <Label Grid.Row="1" Grid.Column="0">Pin Header:</Label>
+                <Label Grid.Row="1" Grid.Column="1">
+                    <Label.Content>
+                        <TextBlock TextWrapping="Wrap" Text="{Binding RawHpkpHeader}" />
+                    </Label.Content>
+                </Label>
+                <Label Grid.Row="2" Grid.Column="0">Pin Directives:</Label>
+                <ItemsControl Grid.Row="2" Grid.Column="1" Grid.IsSharedSizeScope="True" ItemsSource="{Binding PinDirectives}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:HpkpHashModel}">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" SharedSizeGroup="PinHash" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <Label Content="{Binding Algorithm}" FontWeight="Bold" />
+                                <Label Grid.Column="1" Content="{Binding HashBase64}" />
+                            </Grid>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </TabItem>
+    </TabControl>
 </UserControl>

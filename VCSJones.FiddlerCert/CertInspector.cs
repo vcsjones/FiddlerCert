@@ -85,15 +85,30 @@ namespace VCSJones.FiddlerCert
                 Tuple<X509Chain, X509Certificate2> cert;
                 if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.host, oS.port), out cert))
                 {
+                    var pkp = oS.ResponseHeaders.Exists("public-key-pins") ? oS.ResponseHeaders["public-key-pins"] : null;
+                    var pkpReportOnly = oS.ResponseHeaders.Exists("public-key-pins-report-only") ? oS.ResponseHeaders["public-key-pins-report-only"] : null;
+                    var pinnedKeys = pkp == null && pkpReportOnly == null ? null : PublicKeyPinsParser.Parse(pkp ?? pkpReportOnly);
+                    var reportOnly = pkpReportOnly != null;
                     var chain = cert.Item1;
+
                     var control = new WpfCertificateControl();
                     control.DataContext = new HttpSecurityModel
                     {
+                        IsNotTunnel = (oS.BitFlags & SessionFlags.IsDecryptingTunnel) != SessionFlags.IsDecryptingTunnel,
                         CertificateChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
                         {
-                            var chainItems = (from X509ChainElement t in chain.ChainElements select AssignCertificate(t, oS)).ToList();
+                            var chainItems = (from X509ChainElement t in chain.ChainElements select AssignCertificate(t, reportOnly, pinnedKeys)).ToList();
                             return new ObservableCollection<CertificateModel>(chainItems);
                         })),
+                        Hpkp = new HpkpModel
+                        {
+                            HasHpkpHeaders = pinnedKeys != null,
+                            RawHpkpHeader = pkp ?? pkpReportOnly,
+                            PinDirectives = 
+                                pinnedKeys == null ? null
+                                : new ObservableCollection<HpkpHashModel>(pinnedKeys.PinnedKeys.Select(pk => new HpkpHashModel {Algorithm = pk.Algorithm, HashBase64 = pk.FingerprintBase64}).ToArray())
+                        }
+
                     };
                     _panel.Children.Add(control);
                 }
@@ -105,7 +120,7 @@ namespace VCSJones.FiddlerCert
         }
 
 
-        private CertificateModel AssignCertificate(X509ChainElement chainElement, Session oS)
+        private CertificateModel AssignCertificate(X509ChainElement chainElement, bool reportOnly, PublicPinnedKeys pinnedKey)
         {
             var certificate = chainElement.Certificate;
             
@@ -130,24 +145,15 @@ namespace VCSJones.FiddlerCert
                     IsTrustedRoot = _rootStore.Certificates.Contains(certificate) || _userStore.Certificates.Contains(certificate)
                 },
                 Errors = new AsyncProperty<CertificateErrors>(Task.Factory.StartNew(() => CertificateErrorsCalculator.GetCertificateErrors(chainElement))),
-                SpkiHashes = new AsyncProperty<SpkiHashesModel>(Task.Factory.StartNew(() => CalculateHashes(chainElement.Certificate, oS))),
+                SpkiHashes = new AsyncProperty<SpkiHashesModel>(Task.Factory.StartNew(() => CalculateHashes(chainElement.Certificate, reportOnly, pinnedKey))),
                 InstallCommand = new RelayCommand(parameter => CertificateUI.ShowImportCertificate(chainElement.Certificate)),
                 ViewCommand = new RelayCommand(parameter => CertificateUI.ShowCertificate(chainElement.Certificate))
             };
         }
 
-        private static SpkiHashesModel CalculateHashes(X509Certificate2 certificate, Session session)
+        private static SpkiHashesModel CalculateHashes(X509Certificate2 certificate, bool reportOnly, PublicPinnedKeys pinnedKeys)
         {
-            var reportOnly = false;
-            var pinnedKeys = session.ResponseHeaders.Exists("public-key-pins") ? PublicKeyPinsParser.Parse(session.ResponseHeaders["public-key-pins"]) : null;
-            if (pinnedKeys == null)
-            {
-                pinnedKeys = session.ResponseHeaders.Exists("public-key-pins-report-only") ? PublicKeyPinsParser.Parse(session.ResponseHeaders["public-key-pins-report-only"]) : null;
-                if (pinnedKeys != null)
-                {
-                    reportOnly = true;
-                }
-            }
+            
 
             var sha256 = CertificateHashBuilder.BuildHashForPublicKey<SHA256CryptoServiceProvider>(certificate);
             var sha1 = CertificateHashBuilder.BuildHashForPublicKey<SHA1CryptoServiceProvider>(certificate);

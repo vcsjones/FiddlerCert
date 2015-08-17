@@ -9,6 +9,7 @@ namespace VCSJones.FiddlerCert
     {
         SHA1,
         SHA256,
+        Other,
     }
 
     public static class PublicKeyPinsParser
@@ -52,6 +53,15 @@ namespace VCSJones.FiddlerCert
                         var decoded = Convert.FromBase64String(identifier.Value);
                         keys.Add(new PinnedKey(PinAlgorithm.SHA1, decoded));
                     }
+                    else if (identifier.Identifier.StartsWith("pin-", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (!identifier.IsQuoted)
+                        {
+                            continue;
+                        }
+                        var decoded = Convert.FromBase64String(identifier.Value);
+                        keys.Add(new PinnedKey(PinAlgorithm.Other, decoded));
+                    }
                     else if (identifier.Identifier.Equals("includesubdomains", StringComparison.CurrentCultureIgnoreCase))
                     {
                         if (identifier.Value != null)
@@ -71,7 +81,6 @@ namespace VCSJones.FiddlerCert
                         {
                             return null;
                         }
-
                     }
                 }
                 return new PublicPinnedKeys(keys.AsReadOnly(), maxAge == null ? null : (TimeSpan?)TimeSpan.FromSeconds(maxAge.Value), includeSubDomains, reportUri);

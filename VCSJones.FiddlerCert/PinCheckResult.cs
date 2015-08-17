@@ -13,4 +13,12 @@ namespace VCSJones.FiddlerCert
         OutOfRangeMaxAge = 0x10,
         NoPinsMatchChain = 0x20
     }
+
+    public enum CommonError
+    {
+        Unknown,
+        OK,
+        Warning,
+        Fail,
+    }
 }

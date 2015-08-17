@@ -158,34 +158,6 @@ namespace VCSJones.FiddlerCert
     {
         
         private ObservableCollection<SpkiHashModel> _hashes;
-        private bool _hasPublicKeyPinsHeader;
-        private PinCheckResult _pinChecks;
-
-        public bool HasPublicKeyPinsHeader
-        {
-            get
-            {
-                return _hasPublicKeyPinsHeader;
-            }
-            set
-            {
-                _hasPublicKeyPinsHeader = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public PinCheckResult PinChecks
-        {
-            get
-            {
-                return _pinChecks;
-            }
-            set
-            {
-                _pinChecks = value;
-                OnPropertyChanged();
-            }
-        }
 
         public ObservableCollection<SpkiHashModel> Hashes
         {
@@ -379,5 +351,27 @@ namespace VCSJones.FiddlerCert
         }
 
         public event EventHandler CanExecuteChanged;
+    }
+
+    public class HttpSecurityModel : INotifyPropertyChanged
+    {
+        private ObservableCollection<CertificateModel> _certificateChain;
+
+        public ObservableCollection<CertificateModel> CertificateChain
+        {
+            get { return _certificateChain; }
+            set
+            {
+                _certificateChain = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }

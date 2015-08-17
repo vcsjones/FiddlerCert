@@ -205,6 +205,43 @@ namespace VCSJones.FiddlerCert
         }
     }
 
+    public class CommonErrorToShieldConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (!(value is CommonError))
+            {
+                return null;
+            }
+            var errors = (CommonError) value;
+            var blank = new BitmapImage();
+            blank.BeginInit();
+            switch (errors)
+            {
+                default:
+                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/security_Shields_Blank_16xLG.png", UriKind.Relative);
+                    break;
+                case CommonError.Warning:
+                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/Security_Shields_Alert_16xLG_color.png", UriKind.Relative);
+                    break;
+                case CommonError.Fail:
+                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/Security_Shields_Critical_16xLG_color.png", UriKind.Relative);
+                    break;
+                case CommonError.OK:
+                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/Security_Shields_Complete_and_ok_16xLG_color.png", UriKind.Relative);
+                    break;
+
+            }
+            blank.EndInit();
+            return blank;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
     public class ContainedValueVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -223,7 +260,7 @@ namespace VCSJones.FiddlerCert
             {
                 return null;
             }
-            var arr = (Array) parameter;
+            var arr = (Array)parameter;
             return Array.BinarySearch(arr, value) >= 0 ? Visibility.Visible : Visibility.Collapsed;
         }
 

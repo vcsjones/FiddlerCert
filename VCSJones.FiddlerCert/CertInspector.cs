@@ -86,10 +86,13 @@ namespace VCSJones.FiddlerCert
                 if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.host, oS.port), out cert))
                 {
                     var chain = cert.Item1;
-                    for (var i = 0; i < chain.ChainElements.Count; i++)
+                    var control = new WpfCertificateControl();
+                    var chainItems = (from X509ChainElement t in chain.ChainElements select AssignCertificate(t, oS)).ToList();
+                    control.DataContext = new HttpSecurityModel
                     {
-                        AssignCertificate(chain.ChainElements[i], oS);
-                    }
+                        CertificateChain = new ObservableCollection<CertificateModel>(chainItems)
+                    };
+                    _panel.Children.Add(control);
                 }
             }
             else
@@ -99,13 +102,13 @@ namespace VCSJones.FiddlerCert
         }
 
 
-        private void AssignCertificate(X509ChainElement chainElement, Session oS)
+        private CertificateModel AssignCertificate(X509ChainElement chainElement, Session oS)
         {
             var certificate = chainElement.Certificate;
-            var control = new WpfCertificateControl();
+            
             var algorithmBits = BitStrengthCalculator.CalculateStrength(certificate);
             var dn = DistinguishedNameParser.Parse(certificate.Subject);
-            control.DataContext = new CertificateModel
+            return new CertificateModel
             {
                 CommonName = dn.ContainsKey("cn") ? dn["cn"].FirstOrDefault() ?? certificate.Thumbprint : certificate.Thumbprint,
                 Thumbprint = certificate.Thumbprint,
@@ -128,7 +131,6 @@ namespace VCSJones.FiddlerCert
                 InstallCommand = new RelayCommand(parameter => CertificateUI.ShowImportCertificate(chainElement.Certificate)),
                 ViewCommand = new RelayCommand(parameter => CertificateUI.ShowCertificate(chainElement.Certificate))
             };
-            _panel.Children.Add(control);
         }
 
         private static SpkiHashesModel CalculateHashes(X509Certificate2 certificate, Session session)

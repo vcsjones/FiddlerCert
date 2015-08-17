@@ -24,7 +24,7 @@
         <local:ContainedValueVisibilityConverter x:Key="ContainedValueVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
-    <ItemsControl ItemsSource="{Binding CertificateChain}">
+    <ItemsControl ItemsSource="{Binding CertificateChain.Result}">
         <ItemsControl.ItemsPanel>
             <ItemsPanelTemplate>
                 <StackPanel IsItemsHost="True" />

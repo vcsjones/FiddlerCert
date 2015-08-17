@@ -87,10 +87,13 @@ namespace VCSJones.FiddlerCert
                 {
                     var chain = cert.Item1;
                     var control = new WpfCertificateControl();
-                    var chainItems = (from X509ChainElement t in chain.ChainElements select AssignCertificate(t, oS)).ToList();
                     control.DataContext = new HttpSecurityModel
                     {
-                        CertificateChain = new ObservableCollection<CertificateModel>(chainItems)
+                        CertificateChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
+                        {
+                            var chainItems = (from X509ChainElement t in chain.ChainElements select AssignCertificate(t, oS)).ToList();
+                            return new ObservableCollection<CertificateModel>(chainItems);
+                        })),
                     };
                     _panel.Children.Add(control);
                 }

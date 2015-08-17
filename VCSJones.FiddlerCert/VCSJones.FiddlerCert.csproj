@@ -58,15 +58,18 @@
     <Compile Include="AsyncProperty.cs" />
     <Compile Include="BitStrengthCalculator.cs" />
     <Compile Include="CallerMemberNameAttribute.cs" />
+    <Compile Include="CertificateErrors.cs" />
     <Compile Include="CertificateErrorsCalculator.cs" />
     <Compile Include="CertificateHashBuilder.cs" />
     <Compile Include="CertificateInspector.cs" />
     <Compile Include="CertificateModel.cs" />
     <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
+    <Compile Include="HttpSecurityModel.cs" />
     <Compile Include="PinCheckResult.cs" />
     <Compile Include="Interop\Msvcrt.cs" />
     <Compile Include="PinnedKey.cs" />
+    <Compile Include="PublicKeyModel.cs" />
     <Compile Include="PublicKeyPinsParser.cs" />
     <Compile Include="Interop\crypto32.cs" />
     <Compile Include="Interop\CryptoUI.cs" />
@@ -83,6 +86,10 @@
     </Compile>
     <Compile Include="PublicKeyAlgorithm.cs" />
     <Compile Include="PublicPinnedKeys.cs" />
+    <Compile Include="RelayCommand.cs" />
+    <Compile Include="SignatureAlgorithmModel.cs" />
+    <Compile Include="SpkiHashesModel.cs" />
+    <Compile Include="SpkiHashModel.cs" />
     <Compile Include="WinErr.cs" />
     <Compile Include="WpfCertificateControl.xaml.cs">
       <DependentUpon>WpfCertificateControl.xaml</DependentUpon>

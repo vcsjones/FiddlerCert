@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VCSJones.FiddlerCert"
+             xmlns:col="clr-namespace:System.Collections.Generic"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500"
              MinHeight="200" d:DataContext="{local:HttpSecurityModel}">
@@ -104,6 +105,46 @@
                                         <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding ViewCommand}">View</Button>
                                         <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding InstallCommand}">Install</Button>
                                     </StackPanel>
+                                </Grid>
+                            </TabItem>
+                            <TabItem Header="Subject">
+                                <Grid VerticalAlignment="Top">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                                        <TextBlock Style="{StaticResource TabHeader}">Subject</TextBlock>
+                                    </StackPanel>
+                                    <ItemsControl ItemsSource="{Binding DistingishedName}"  Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition SharedSizeGroup="LabelGroupSubject" Width="Auto" />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Label Grid.Column="0" Content="{Binding Key}" ContentStringFormat="{}{0}:" />
+                                                    <ItemsControl Grid.Column="1" ItemsSource="{Binding Value}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <StackPanel />
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate>
+                                                                <Label Content="{Binding .}" />
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </Grid>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="SPKI Fingerprints">

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
@@ -16,6 +17,7 @@ namespace VCSJones.FiddlerCert
         private AsyncProperty<CertificateErrors> _errors;
         private RelayCommand _viewCommand, _installCommand;
         private AsyncProperty<SpkiHashesModel> _spkiHashes;
+        private Dictionary<string, List<string>> _distinguishedName;
 
         public string CommonName
         {
@@ -26,6 +28,19 @@ namespace VCSJones.FiddlerCert
             set
             {
                 _commonName = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public Dictionary<string, List<string>> DistingishedName
+        {
+            get
+            {
+                return _distinguishedName;
+            }
+            set
+            {
+                _distinguishedName = value;
                 OnPropertyChanged();
             }
         }

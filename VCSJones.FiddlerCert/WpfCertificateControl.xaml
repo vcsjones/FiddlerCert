@@ -57,7 +57,11 @@
                                         <TextBlock Style="{StaticResource TabHeader}" Text="{Binding CommonName, StringFormat=Issued To {0}}" />
                                     </StackPanel>
                                     <Label Grid.Column="0" Grid.Row="1">Subject Altnernative Name:</Label>
-                                    <Label Grid.Column="1" Grid.Row="1" Content="{Binding SubjectAlternativeName}" ToolTip="{Binding SubjectAlternativeName}" />
+                                    <Label Grid.Column="1" Grid.Row="1">
+                                        <Label.Content>
+                                            <TextBlock TextWrapping="Wrap" Text="{Binding SubjectAlternativeName}" />
+                                        </Label.Content>
+                                    </Label>
                                     <Label Grid.Column="0" Grid.Row="2">Thumbprint:</Label>
                                     <Label Grid.Column="1" Grid.Row="2" Content="{Binding Thumbprint}" />
                                     <Label Grid.Column="0" Grid.Row="3">Public Key:</Label>

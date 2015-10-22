@@ -118,6 +118,7 @@
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                                        <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" SnapsToDevicePixels="True" />
                                         <TextBlock Style="{StaticResource TabHeader}">Subject</TextBlock>
                                     </StackPanel>
                                     <ItemsControl ItemsSource="{Binding DistingishedName}"  Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">

@@ -65,6 +65,7 @@
     <Compile Include="CertificateModel.cs" />
     <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
+    <Compile Include="DoubleClickCopyBehavior.cs" />
     <Compile Include="HpkpHashModel.cs" />
     <Compile Include="HttpSecurityModel.cs" />
     <Compile Include="PinCheckResult.cs" />

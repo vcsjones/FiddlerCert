@@ -60,15 +60,15 @@
                                     <Label Grid.Column="0" Grid.Row="1">Subject Altnernative Name:</Label>
                                     <Label Grid.Column="1" Grid.Row="1">
                                         <Label.Content>
-                                            <TextBlock TextWrapping="Wrap" Text="{Binding SubjectAlternativeName}" />
+                                            <TextBlock TextWrapping="Wrap" Text="{Binding SubjectAlternativeName}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
                                         </Label.Content>
                                     </Label>
                                     <Label Grid.Column="0" Grid.Row="2">Thumbprint:</Label>
-                                    <Label Grid.Column="1" Grid.Row="2" Content="{Binding Thumbprint}" />
+                                    <Label Grid.Column="1" Grid.Row="2" Content="{Binding Thumbprint}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
                                     <Label Grid.Column="0" Grid.Row="3">Public Key:</Label>
                                     <Label Grid.Column="1" Grid.Row="3" Foreground="{Binding PublicKey, Converter={StaticResource KeyStrengthConverter}}">
                                         <Label.Content>
-                                            <TextBlock>
+                                            <TextBlock local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True">
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0} ({1}-bit)">
                                                         <MultiBinding.Bindings>
@@ -81,7 +81,7 @@
                                         </Label.Content>
                                     </Label>
                                     <Label Grid.Column="0" Grid.Row="4">Signature Algorithm:</Label>
-                                    <Label Grid.Column="1" Grid.Row="4" Content="{Binding SignatureAlgorithm.SignatureAlgorithm, Converter={StaticResource OidConverter}}" ToolTip="{Binding SignatureAlgorithm.SignatureAlgorithm.Value}">
+                                    <Label Grid.Column="1" Grid.Row="4" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Content="{Binding SignatureAlgorithm.SignatureAlgorithm, Converter={StaticResource OidConverter}}" ToolTip="{Binding SignatureAlgorithm.SignatureAlgorithm.Value}">
                                         <Label.Foreground>
                                             <Binding Path="SignatureAlgorithm" Converter="{StaticResource SignatureAlgorithmStrengthConverter}" />
                                         </Label.Foreground>
@@ -89,7 +89,7 @@
                                     <Label Grid.Column="0" Grid.Row="5">Validity From:</Label>
                                     <Label Grid.Column="1" Grid.Row="5" Foreground="{Binding EndDate, Converter={StaticResource ExpiryStrengthConverter}}" ToolTip="{Binding ExpiresIn, Converter={StaticResource TimeSpanConverter}}">
                                         <Label.Content>
-                                            <TextBlock>
+                                            <TextBlock local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True">
                                                 <TextBlock.Text>
                                                     <MultiBinding StringFormat="{}{0} to {1}">
                                                         <MultiBinding.Bindings>
@@ -137,7 +137,7 @@
                                                         </ItemsControl.ItemsPanel>
                                                         <ItemsControl.ItemTemplate>
                                                             <DataTemplate>
-                                                                <Label Content="{Binding .}" />
+                                                                <Label local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Content="{Binding .}" />
                                                             </DataTemplate>
                                                         </ItemsControl.ItemTemplate>
                                                     </ItemsControl>
@@ -171,7 +171,7 @@
                                                     </Grid.ColumnDefinitions>
                                                     <Label Grid.Column="0" Content="{Binding Algorithm}" ContentStringFormat="{}{0} SPKI Hash:" />
                                                     <StackPanel Orientation="Horizontal" Grid.Column="1">
-                                                        <Label Content="{Binding HashBase64}" ContentStringFormat="&quot;{0}&quot;" />
+                                                        <Label  local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Content="{Binding HashBase64}" ContentStringFormat="&quot;{0}&quot;" />
                                                         <StackPanel Visibility="{Binding IsPinned, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                             <Image
                                            Source="/VCSJones.FiddlerCert;component/Assets/pushpin_16xLG.png" Width="16" Height="16"
@@ -220,7 +220,7 @@
                 <Label Grid.Row="1" Grid.Column="0">Pin Header:</Label>
                 <Label Grid.Row="1" Grid.Column="1">
                     <Label.Content>
-                        <TextBlock TextWrapping="Wrap" Text="{Binding RawHpkpHeader}" />
+                        <TextBlock  local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" TextWrapping="Wrap" Text="{Binding RawHpkpHeader}" />
                     </Label.Content>
                 </Label>
                 <Label Grid.Row="2" Grid.Column="0">Pin Directives:</Label>
@@ -233,7 +233,7 @@
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
                                 <Label Content="{Binding Algorithm}" FontWeight="Bold" />
-                                <Label Grid.Column="1" Content="{Binding HashBase64}" />
+                                <Label Grid.Column="1" Content="{Binding HashBase64}"  local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
                             </Grid>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

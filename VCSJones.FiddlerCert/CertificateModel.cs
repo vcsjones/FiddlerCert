@@ -32,7 +32,7 @@ namespace VCSJones.FiddlerCert
             }
         }
 
-        public Dictionary<string, List<string>> DistingishedName
+        public Dictionary<string, List<string>> DistinguishedName
         {
             get
             {

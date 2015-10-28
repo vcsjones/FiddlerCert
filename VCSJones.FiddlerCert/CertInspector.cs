@@ -162,7 +162,7 @@ namespace VCSJones.FiddlerCert
             {
                 CommonName = dn.ContainsKey("cn") ? dn["cn"].FirstOrDefault() ?? certificate.Thumbprint : certificate.Thumbprint,
                 Thumbprint = certificate.Thumbprint,
-                DistingishedName = dn,
+                DistinguishedName = dn,
                 SubjectAlternativeName = certificate.Extensions[KnownOids.X509Extensions.SubjectAltNameExtension]?.Format(false) ?? "None",
                 PublicKey = new PublicKeyModel
                 {

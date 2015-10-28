@@ -1,39 +1,71 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using Fiddler;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.Integration;
+using System.Windows.Media;
+using System.Windows.Threading;
 
 namespace VCSJones.FiddlerCert
 {
     public class CertInspector : Inspector2, IResponseInspector2
     {
-        private StackPanel _panel;
+        private readonly StackPanel _panel;
         private readonly X509Store _rootStore = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
         private readonly X509Store _userStore = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
+        private readonly ElementHost _host;
 
         public CertInspector()
         {
             _rootStore.Open(OpenFlags.ReadOnly);
             _userStore.Open(OpenFlags.ReadOnly);
+            _host = new ElementHost {Dock = DockStyle.Fill};
+            _panel = new StackPanel();
+            _host.Child = new ScrollViewer { Content = _panel };
+            FiddlerApplication.Prefs.AddWatcher("fiddler.ui.font", FontChanged);
+        }
+
+        private void FontChanged(object sender, PrefChangeEventArgs e)
+        {
+            if (e.PrefName == "fiddler.ui.font.face")
+            {
+                var font = e.ValueString;
+                var fontFamily = new FontFamily(font);
+                _panel.Dispatcher.BeginInvoke((Action)(() =>
+                {
+                    var style = new Style(typeof(StackPanel), _panel.Style);
+                    style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, fontFamily));
+                    style.Seal();
+                    _panel.Style = style;
+                }));
+            }
+            if (e.PrefName == "fiddler.ui.font.size")
+            {
+                double value;
+                if (double.TryParse(e.ValueString, out value))
+                {
+                    _panel.Dispatcher.BeginInvoke((Action) (() =>
+                    {
+                        var fontSizeInPoints = value*96d/72d;
+                        var style = new Style(typeof (StackPanel), _panel.Style);
+                        style.Setters.Add(new Setter(TextBlock.FontSizeProperty, fontSizeInPoints));
+                        style.Seal();
+                        _panel.Style = style;
+                    }));
+                }
+            }
         }
 
         public override void AddToTab(TabPage o)
         {
             o.Text = "Certificates";
-            var host = new ElementHost();
-            host.Dock = DockStyle.Fill;
-            var stackPanel = new StackPanel();
-            host.Child = new ScrollViewer { Content = stackPanel };
-            o.Controls.Add(host);
-            _panel = stackPanel;
+            o.Controls.Add(_host);
         }
 
         public override int GetOrder()

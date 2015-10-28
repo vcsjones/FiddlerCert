@@ -4,7 +4,6 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VCSJones.FiddlerCert"
-             xmlns:col="clr-namespace:System.Collections.Generic"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500"
              MinHeight="200" d:DataContext="{local:HttpSecurityModel}">
@@ -24,6 +23,7 @@
         <local:ErrorsToShieldConverter x:Key="ErrorsToShieldConverter" />
         <local:ContainedValueVisibilityConverter x:Key="ContainedValueVisibilityConverter" />
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <local:AndAllVisibilityConverter x:Key="AndAllVisibilityConverter" />
     </UserControl.Resources>
     <TabControl>
         <TabItem Header="Certificates">
@@ -206,7 +206,13 @@
                 </ItemsControl.ItemTemplate>
             </ItemsControl>
         </TabItem>
-        <TabItem Header="HPKP" Visibility="{Binding IsNotTunnel, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <TabItem Header="HPKP">
+            <TabItem.Visibility>
+                <MultiBinding Converter="{StaticResource AndAllVisibilityConverter}">
+                    <Binding Path="IsNotTunnel" />
+                    <Binding Path="Hpkp.HasHpkpHeaders" />
+                </MultiBinding>
+            </TabItem.Visibility>
             <Grid DataContext="{Binding Hpkp}">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />

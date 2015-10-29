@@ -299,6 +299,14 @@ namespace VCSJones.FiddlerCert
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
+            if (values == null || values.Length == 0)
+            {
+                return Visibility.Collapsed;
+            }
+            if (!(values[0] is bool))
+            {
+                return Visibility.Collapsed;
+            }
             var alltrue = values.Select(m => (bool) m).All(x => x);
             return alltrue ? Visibility.Visible : Visibility.Collapsed;
         }

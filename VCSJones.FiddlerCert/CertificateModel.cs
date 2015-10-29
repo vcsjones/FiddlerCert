@@ -18,6 +18,7 @@ namespace VCSJones.FiddlerCert
         private RelayCommand _viewCommand, _installCommand;
         private AsyncProperty<SpkiHashesModel> _spkiHashes;
         private Dictionary<string, List<string>> _distinguishedName;
+        private string _serialNumber;
 
         public string CommonName
         {
@@ -114,6 +115,19 @@ namespace VCSJones.FiddlerCert
         }
 
         public TimeSpan ExpiresIn => EndDate - DateTime.Now;
+
+        public string SerialNumber
+        {
+            get
+            {
+                return _serialNumber;
+            }
+            set
+            {
+                _serialNumber = value;
+                OnPropertyChanged();
+            }
+        }
 
         public AsyncProperty<CertificateErrors> Errors
         {

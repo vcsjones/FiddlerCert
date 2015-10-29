@@ -4,9 +4,10 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:VCSJones.FiddlerCert"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="500"
-             MinHeight="200" d:DataContext="{local:HttpSecurityModel}">
+             MinHeight="200">
     <UserControl.Resources>
         <Style x:Key="TabHeader" TargetType="{x:Type TextBlock}">
             <Style.Setters>
@@ -49,13 +50,40 @@
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
                                         <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="Auto" />
                                         <RowDefinition Height="*" />
                                         <RowDefinition Height="Auto" />
                                     </Grid.RowDefinitions>
                                     <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                                         <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" />
-                                        <Image Width="16" Height="16" Source="{Binding Errors.Result, Converter={StaticResource ErrorsToShieldConverter}, FallbackValue={x:Static local:CertificateErrors.Unknown}}" Stretch="None" />
-                                        <TextBlock Style="{StaticResource TabHeader}" Text="{Binding CommonName, StringFormat=Issued To {0}}" />
+                                        <Image Width="16" Height="16" Source="{Binding Errors.Result, Converter={StaticResource ErrorsToShieldConverter}, FallbackValue={x:Static local:CertificateErrors.Unknown}}" Stretch="None" ToolTipService.ShowDuration="{x:Static system:Int32.MaxValue}">
+                                            <Image.ToolTip>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+                                                    <Image Grid.Column="0" Grid.Row="0" Width="16" Height="16" Stretch="None" Source="/VCSJones.FiddlerCert;component/Assets/security_Shields_Blank_16xLG.png" />
+                                                    <Label Grid.Column="1" Grid.Row="0">The revocation status of the certificate is being checked.</Label>
+
+                                                    <Image Grid.Column="0" Grid.Row="1" Width="16" Height="16" Stretch="None" Source="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Alert_16xLG_color.png" />
+                                                    <Label Grid.Column="1" Grid.Row="1">The revocation status of the certificate was checked, but the status was unable to be determined.</Label>
+
+                                                    <Image Grid.Column="0" Grid.Row="2" Width="16" Height="16" Stretch="None" Source="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Critical_16xLG_color.png" />
+                                                    <Label Grid.Column="1" Grid.Row="2">The revocation status of the certificate was checked and it is revoked.</Label>
+
+                                                    <Image Grid.Column="0" Grid.Row="3" Width="16" Height="16" Stretch="None" Source="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Complete_and_ok_16xLG_color.png" />
+                                                    <Label Grid.Column="1" Grid.Row="3">The revocation status of the certificate was checked and it is not revoked.</Label>
+                                                </Grid>
+                                            </Image.ToolTip>
+                                        </Image>
+                                        <TextBlock Style="{StaticResource TabHeader}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Text="{Binding CommonName, StringFormat=Issued To {0}}" />
                                     </StackPanel>
                                     <Label Grid.Column="0" Grid.Row="1">Subject Altnernative Name:</Label>
                                     <Label Grid.Column="1" Grid.Row="1">
@@ -101,7 +129,9 @@
                                             </TextBlock>
                                         </Label.Content>
                                     </Label>
-                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
+                                    <Label Grid.Column="0" Grid.Row="6">Serial Number:</Label>
+                                    <Label Grid.Column="1" Grid.Row="6" Content="{Binding SerialNumber}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
                                         <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding ViewCommand}">View</Button>
                                         <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding InstallCommand}">Install</Button>
                                     </StackPanel>

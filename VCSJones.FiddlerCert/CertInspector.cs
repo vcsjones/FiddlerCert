@@ -172,6 +172,7 @@ namespace VCSJones.FiddlerCert
                 },
                 BeginDate = certificate.NotBefore,
                 EndDate = certificate.NotAfter,
+                SerialNumber = certificate.SerialNumber ?? "None",
                 SignatureAlgorithm = new SignatureAlgorithmModel
                 {
                     SignatureAlgorithm = certificate.SignatureAlgorithm,

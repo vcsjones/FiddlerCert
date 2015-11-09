@@ -15,7 +15,7 @@ namespace VCSJones.FiddlerCert
             cryptuiWizImportSrcInfo.pCertContext = certificate.Handle;
             cryptuiWizImportSrcInfo.pwszPassword = "";
             cryptuiWizImportSrcInfo.dwFlags = 0u;
-            if (!Cryptui.CryptUIWizImport(ImportCertificateFlags.CRYPTUI_WIZ_IMPORT_ALLOW_CERT, parent?.Handle ?? IntPtr.Zero, "Fiddler: Import Certificate", cryptuiWizImportSrcInfo, IntPtr.Zero) && Marshal.GetLastWin32Error() != WinErr.ERROR_CANCELLED)
+            if (!Cryptui.CryptUIWizImport(ImportCertificateFlags.CRYPTUI_WIZ_IMPORT_ALLOW_CERT, parent?.Handle ?? IntPtr.Zero, "Fiddler: Import Certificate", ref cryptuiWizImportSrcInfo, IntPtr.Zero) && Marshal.GetLastWin32Error() != WinErr.ERROR_CANCELLED)
             {
                 MessageBox.Show("An error occurred installing the certificate.");
             }

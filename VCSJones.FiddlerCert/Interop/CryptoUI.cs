@@ -11,7 +11,7 @@ namespace VCSJones.FiddlerCert
 
         [return: MarshalAs(UnmanagedType.Bool)]
         [method: DllImport("Cryptui.dll", ExactSpelling = true, EntryPoint = "CryptUIWizImport", CharSet = CharSet.Unicode, SetLastError = true)]
-        public static extern bool CryptUIWizImport(ImportCertificateFlags dwFlags, IntPtr hwndParent, string pwszWizardTitle, CRYPTUI_WIZ_IMPORT_SRC_INFO pImportSrc, IntPtr hDestCertStore);
+        public static extern bool CryptUIWizImport(ImportCertificateFlags dwFlags, IntPtr hwndParent, string pwszWizardTitle, ref CRYPTUI_WIZ_IMPORT_SRC_INFO pImportSrc, IntPtr hDestCertStore);
     }
 
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]

@@ -180,8 +180,8 @@ namespace VCSJones.FiddlerCert
                 },
                 Errors = new AsyncProperty<CertificateErrors>(Task.Factory.StartNew(() => CertificateErrorsCalculator.GetCertificateErrors(chainElement))),
                 SpkiHashes = new AsyncProperty<SpkiHashesModel>(Task.Factory.StartNew(() => CalculateHashes(chainElement.Certificate, reportOnly, pinnedKey))),
-                InstallCommand = new RelayCommand(parameter => CertificateUI.ShowImportCertificate(chainElement.Certificate)),
-                ViewCommand = new RelayCommand(parameter => CertificateUI.ShowCertificate(chainElement.Certificate))
+                InstallCommand = new RelayCommand(parameter => CertificateUI.ShowImportCertificate(chainElement.Certificate, FiddlerApplication.UI)),
+                ViewCommand = new RelayCommand(parameter => CertificateUI.ShowCertificate(chainElement.Certificate, FiddlerApplication.UI))
             };
         }
 

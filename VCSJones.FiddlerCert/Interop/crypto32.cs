@@ -37,7 +37,7 @@ namespace VCSJones.FiddlerCert.Interop
         internal static extern bool CryptEncodeObject(
                 [In, MarshalAs(UnmanagedType.U4)]uint dwCertEncodingType,
                 [In, MarshalAs(UnmanagedType.SysInt)]IntPtr lpszStructType,
-                [In, MarshalAs(UnmanagedType.Struct)]CERT_PUBLIC_KEY_INFO pInfo,
+                [In, MarshalAs(UnmanagedType.Struct)] ref CERT_PUBLIC_KEY_INFO pInfo,
                 [In, MarshalAs(UnmanagedType.SysInt)] IntPtr pbEncoded,
                 [In, Out, MarshalAs(UnmanagedType.U4)]ref uint cbEncoded
             );

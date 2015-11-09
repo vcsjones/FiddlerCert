@@ -43,10 +43,10 @@ namespace VCSJones.FiddlerCert
                 publicKeyInfo.Algorithm.Parameters.cbData = (uint)certificate.PublicKey.EncodedParameters.RawData.Length;
                 publicKeyInfo.Algorithm.Parameters.pbData = publicKeyParametersBuffer;
                 uint size = 0;
-                if (Crypto32.CryptEncodeObject(1, PUBLIC_KEY_INFO_TYPE, publicKeyInfo, IntPtr.Zero, ref size))
+                if (Crypto32.CryptEncodeObject(1, PUBLIC_KEY_INFO_TYPE, ref publicKeyInfo, IntPtr.Zero, ref size))
                 {
                     encodingBuffer = Marshal.AllocCoTaskMem((int)size);
-                    if (Crypto32.CryptEncodeObject(1, PUBLIC_KEY_INFO_TYPE, publicKeyInfo, encodingBuffer, ref size))
+                    if (Crypto32.CryptEncodeObject(1, PUBLIC_KEY_INFO_TYPE, ref publicKeyInfo, encodingBuffer, ref size))
                     {
                         var encoded = new byte[size];
                         Marshal.Copy(encodingBuffer, encoded, 0, encoded.Length);

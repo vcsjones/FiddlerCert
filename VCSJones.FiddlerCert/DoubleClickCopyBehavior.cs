@@ -61,6 +61,10 @@ namespace VCSJones.FiddlerCert
         private static void UIElement_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             var element = sender as UIElement;
+            if (element == null)
+            {
+                return;
+            }
             var lastClickLocation = element.GetValue(LastClickLocationProperty) as Point?;
             var lastClickTime = element.GetValue(LastClickTimeProperty) as int?;
             if (lastClickLocation.HasValue && lastClickTime.HasValue)

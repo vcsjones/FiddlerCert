@@ -155,7 +155,6 @@ namespace VCSJones.FiddlerCert
         private CertificateModel AssignCertificate(X509ChainElement chainElement, bool reportOnly, PublicPinnedKeys pinnedKey)
         {
             var certificate = chainElement.Certificate;
-            
             var algorithmBits = BitStrengthCalculator.CalculateStrength(certificate);
             var dn = DistinguishedNameParser.Parse(certificate.Subject);
             return new CertificateModel

@@ -21,7 +21,7 @@ namespace VCSJones.FiddlerCert.Interop
     internal struct CRYPT_BIT_BLOB
     {
         public uint cbData;
-        public IntPtr pbData;
+        public unsafe byte* pbData;
         public uint cUnusedBits;
     }
 
@@ -29,17 +29,28 @@ namespace VCSJones.FiddlerCert.Interop
     internal struct CRYPT_OBJID_BLOB
     {
         public uint cbData;
-        public IntPtr pbData;
+        public unsafe byte* pbData;
     }
     internal static class Crypto32
     {
-        [method: DllImport("Crypt32.dll", CallingConvention = CallingConvention.Winapi, SetLastError = true)]
-        internal static extern bool CryptEncodeObject(
-                [In, MarshalAs(UnmanagedType.U4)]uint dwCertEncodingType,
-                [In, MarshalAs(UnmanagedType.SysInt)]IntPtr lpszStructType,
-                [In, MarshalAs(UnmanagedType.Struct)] ref CERT_PUBLIC_KEY_INFO pInfo,
-                [In, MarshalAs(UnmanagedType.SysInt)] IntPtr pbEncoded,
-                [In, Out, MarshalAs(UnmanagedType.U4)]ref uint cbEncoded
+        private const string CRYPT32 = "crypt32.dll";
+        [method: DllImport(CRYPT32, CallingConvention = CallingConvention.Winapi, EntryPoint = "CryptEncodeObjectEx", SetLastError = true)]
+        public static extern bool CryptEncodeObjectEx
+            (
+            [param: In, MarshalAs(UnmanagedType.U4)] EncodingType dwCertEncodingType,
+            [param: In, MarshalAs(UnmanagedType.SysInt)] IntPtr lpszStructType,
+            [param: In, MarshalAs(UnmanagedType.Struct)] ref CERT_PUBLIC_KEY_INFO pvStructInfo,
+            [param: In, MarshalAs(UnmanagedType.U4)] uint dwFlags,
+            [param: In, MarshalAs(UnmanagedType.SysInt)] IntPtr pEncodePara,
+            [param: Out] out LocalBufferSafeHandle pvEncoded,
+            [param: In, Out, MarshalAs(UnmanagedType.U4)] ref uint pcbEncoded
             );
+    }
+
+    [Flags]
+    public enum EncodingType : uint
+    {
+        PKCS_7_ASN_ENCODING = 65536,
+        X509_ASN_ENCODING = 1
     }
 }

@@ -21,9 +21,7 @@ and it will automatically run and attach to Fiddler.
 
 ##Installing
 
-The Visual Studio project is set up to install the extension in the %USERPROFILE% location for Fiddler when built. See the
-[documentation](http://docs.telerik.com/fiddler/extend-fiddler/extendwithdotnet#direct-fiddler-to-load-extension-assemblies) of
-Fiddler for more information.
+The output of the project is `VCSJones.FiddlerCert.dll`. This project contains an inspector and a plugin. The assembly needs to be copied to both the `%USERPROFILE%\Documents\Fiddler2\Scripts` and `%USERPROFILE%\Documents\Fiddler2\Inspectors` directories for the inspector to work correctly.
 
 ##Requirements
 

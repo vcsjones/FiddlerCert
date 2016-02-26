@@ -115,7 +115,7 @@ namespace VCSJones.FiddlerCert
             if (oS.isHTTPS || (oS.BitFlags & SessionFlags.IsDecryptingTunnel) == SessionFlags.IsDecryptingTunnel)
             {
                 Tuple<X509Chain, X509Certificate2> cert;
-                if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.host, oS.port), out cert))
+                if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.hostname, oS.port), out cert))
                 {
                     var pkp = oS.ResponseHeaders.Exists("public-key-pins") ? oS.ResponseHeaders["public-key-pins"] : null;
                     var pkpReportOnly = oS.ResponseHeaders.Exists("public-key-pins-report-only") ? oS.ResponseHeaders["public-key-pins-report-only"] : null;

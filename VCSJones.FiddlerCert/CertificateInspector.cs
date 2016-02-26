@@ -15,7 +15,7 @@ namespace VCSJones.FiddlerCert
         {
             lock (ServerCertificates)
             {
-                var key = Tuple.Create(e.Session.host, e.Session.port);
+                var key = Tuple.Create(e.Session.hostname, e.Session.port);
                 if (!ServerCertificates.ContainsKey(key))
                 {
                     ServerCertificates.Add(key, Tuple.Create(new X509Chain(e.ServerCertificateChain.ChainContext), new X509Certificate2(e.ServerCertificate)));

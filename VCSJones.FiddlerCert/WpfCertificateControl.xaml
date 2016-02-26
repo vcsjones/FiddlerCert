@@ -85,7 +85,7 @@
                                         </Image>
                                         <TextBlock Style="{StaticResource TabHeader}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Text="{Binding CommonName, StringFormat=Issued To {0}}" />
                                     </StackPanel>
-                                    <Label Grid.Column="0" Grid.Row="1">Subject Altnernative Name:</Label>
+                                    <Label Grid.Column="0" Grid.Row="1">Subject Alternative Name:</Label>
                                     <Label Grid.Column="1" Grid.Row="1">
                                         <Label.Content>
                                             <TextBlock TextWrapping="Wrap" Text="{Binding SubjectAlternativeName}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />

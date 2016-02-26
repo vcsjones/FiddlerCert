@@ -8,14 +8,6 @@ namespace VCSJones.FiddlerCert
 {
     public static class CertificateHashBuilder
     {
-        public static PinnedKey[] PinnedKeysForCertificate(X509Certificate2 certificate)
-        {
-            return new[] {
-                new PinnedKey(PinAlgorithm.SHA256, BuildHashForPublicKeyBinary<SHA256CryptoServiceProvider>(certificate)),
-                new PinnedKey(PinAlgorithm.SHA1, BuildHashForPublicKeyBinary<SHA1CryptoServiceProvider>(certificate))
-                };
-        }
-
         public static string BuildHashForPublicKey<THashAlgorithm>(X509Certificate2 certificate) where THashAlgorithm : HashAlgorithm, new()
         {
             return Convert.ToBase64String(BuildHashForPublicKeyBinary<THashAlgorithm>(certificate));

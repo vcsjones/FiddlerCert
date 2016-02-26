@@ -189,18 +189,10 @@ namespace VCSJones.FiddlerCert
             
 
             var sha256 = CertificateHashBuilder.BuildHashForPublicKey<SHA256CryptoServiceProvider>(certificate);
-            var sha1 = CertificateHashBuilder.BuildHashForPublicKey<SHA1CryptoServiceProvider>(certificate);
             var model = new SpkiHashesModel
             {
                 Hashes = new ObservableCollection<SpkiHashModel>
                 {
-                    new SpkiHashModel
-                    {
-                        ReportOnly = reportOnly,
-                        Algorithm = PinAlgorithm.SHA1,
-                        HashBase64 = sha1,
-                        IsPinned = pinnedKeys?.PinnedKeys?.Any(pk => pk.FingerprintBase64 == sha1) ?? false
-                    },
                     new SpkiHashModel
                     {
                         ReportOnly = reportOnly,

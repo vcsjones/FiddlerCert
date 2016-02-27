@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<ProductName>Fiddler Certificate Inspector</ProductName>
+		<ProductUrl>https://vcsjones.com/fiddlercert</ProductUrl>
+		<ProductCompanyName>Kevin Jones</ProductCompanyName>
+		<ProductCopyright>$(ProductCompanyName)</ProductCopyright>
+		<ProductDescription>Installer for $(ProductName).</ProductDescription>
+	</PropertyGroup>
+	<PropertyGroup>
+		<OutputDir>$(MSBuildThisFileDirectory)..\out\</OutputDir>
+		<NsisScript>$(MSBuildThisFileDirectory)fiddler-cert.nsi</NsisScript>
+		<OutInstaller>$(OutputDir)FiddlerCertInspector.exe</OutInstaller>
+	</PropertyGroup>
+	<Target Name="Build">
+		<CallTarget Targets="Clean" />
+		<ItemGroup>
+			<FiddlerCertSolution Include="$(MSBuildThisFileDirectory)..\VCSJones.FiddlerCert\VCSJones.FiddlerCert.csproj">
+				<Properties>OutputPath=$(OutputDir);Configuration=Release</Properties>
+			</FiddlerCertSolution>
+		</ItemGroup>
+		<MSBuild Targets="Build" Projects="@(FiddlerCertSolution)">
+			<Output ItemName="ProjectOutputs" TaskParameter="TargetOutputs"/>
+		</MSBuild>
+		<GetAssemblyIdentity AssemblyFiles="@(ProjectOutputs)">
+			<Output
+				TaskParameter="Assemblies"
+				ItemName="FiddlerCertAssemblyIdentities" />
+		</GetAssemblyIdentity>
+		<Exec Command="&quot;$(MSBuildProgramFiles32)\NSIS\makensis.exe&quot; &quot;/XOutFile $(OutInstaller)&quot; &quot;/DProductName=$(ProductName)&quot; &quot;/DComments=$(ProductUrl)&quot; &quot;/DVERSION=%(FiddlerCertAssemblyIdentities.Version)&quot; &quot;/DProductCopy=$(ProductCopyright)&quot; &quot;/DCompanyName=$(ProductCompanyName)&quot; &quot;/DProductDescription=$(ProductDescription)&quot; &quot;$(NsisScript)&quot;" />
+		<Exec Command="signtool.exe sign /d &quot;$(ProductName)&quot; /du $(ProductUrl) /n &quot;$(ProductCompanyName)&quot; /t http://timestamp.digicert.com /fd SHA1 &quot;$(OutInstaller)&quot;" />
+		<Exec Command="signtool.exe sign /as /d &quot;$(ProductName)&quot; /du $(ProductUrl) /n &quot;$(ProductCompanyName)&quot; /tr http://timestamp.digicert.com /fd SHA256 /td SHA256 &quot;$(OutInstaller)&quot;" />
+	</Target>
+	<Target Name="Clean">
+		<RemoveDir Directories="$(OutputDir)" Condition="Exists($(OutputDir))" />
+	</Target>
+</Project>

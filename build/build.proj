@@ -19,7 +19,7 @@
 				<Properties>OutputPath=$(OutputDir);Configuration=Release</Properties>
 			</FiddlerCertSolution>
 		</ItemGroup>
-		<MSBuild Targets="Build" Projects="@(FiddlerCertSolution)">
+		<MSBuild Targets="Rebuild" Projects="@(FiddlerCertSolution)">
 			<Output ItemName="ProjectOutputs" TaskParameter="TargetOutputs"/>
 		</MSBuild>
 		<GetAssemblyIdentity AssemblyFiles="@(ProjectOutputs)">

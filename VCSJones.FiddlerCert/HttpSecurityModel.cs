@@ -58,7 +58,6 @@ namespace VCSJones.FiddlerCert
     {
         private string _rawHpkpHeader;
         private bool _hasHpkpHeaders;
-        private bool _isReportOnly;
         private ObservableCollection<HpkpHashModel> _pinDirectives;
         private ObservableCollection<PinCheckResult> _pinningErrors;
 

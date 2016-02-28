@@ -12,8 +12,7 @@
 		<NsisScript>$(MSBuildThisFileDirectory)fiddler-cert.nsi</NsisScript>
 		<OutInstaller>$(OutputDir)FiddlerCertInspector.exe</OutInstaller>
 	</PropertyGroup>
-	<Target Name="Build" DependsOnTargets="Clean">
-		<CallTarget Targets="Clean" />
+	<Target Name="Compile" DependsOnTargets="Clean">
 		<ItemGroup>
 			<FiddlerCertSolution Include="$(MSBuildThisFileDirectory)..\VCSJones.FiddlerCert\VCSJones.FiddlerCert.csproj">
 				<Properties>OutputPath=$(OutputDir);Configuration=Release</Properties>
@@ -22,6 +21,8 @@
 		<MSBuild Targets="Rebuild" Projects="@(FiddlerCertSolution)">
 			<Output ItemName="ProjectOutputs" TaskParameter="TargetOutputs"/>
 		</MSBuild>
+	</Target>
+	<Target Name="Build" DependsOnTargets="Compile">
 		<GetAssemblyIdentity AssemblyFiles="@(ProjectOutputs)">
 			<Output
 				TaskParameter="Assemblies"
@@ -32,6 +33,10 @@
 	<Target Name="Sign" DependsOnTargets="Build">
 		<Exec Command="signtool.exe sign /d &quot;$(ProductName)&quot; /du $(ProductUrl) /n &quot;$(ProductCompanyName)&quot; /t http://timestamp.digicert.com /fd SHA1 &quot;$(OutInstaller)&quot;" />
 		<Exec Command="signtool.exe sign /as /d &quot;$(ProductName)&quot; /du $(ProductUrl) /n &quot;$(ProductCompanyName)&quot; /tr http://timestamp.digicert.com /fd SHA256 /td SHA256 &quot;$(OutInstaller)&quot;" />
+	</Target>
+	<Target Name="Install" DependsOnTargets="Compile">
+		<Copy SourceFiles="@(ProjectOutputs)" DestinationFolder="$(USERPROFILE)\Documents\Fiddler2\Inspectors" />
+		<Copy SourceFiles="@(ProjectOutputs)" DestinationFolder="$(USERPROFILE)\Documents\Fiddler2\Scripts" />
 	</Target>
 	<Target Name="Clean">
 		<RemoveDir Directories="$(OutputDir)" Condition="Exists($(OutputDir))" />

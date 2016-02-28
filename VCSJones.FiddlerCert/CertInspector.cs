@@ -16,7 +16,7 @@ namespace VCSJones.FiddlerCert
 {
     public class CertInspector : Inspector2, IResponseInspector2
     {
-        private readonly StackPanel _panel;
+        private readonly Grid _panel;
         private readonly X509Store _rootStore = new X509Store(StoreName.Root, StoreLocation.CurrentUser);
         private readonly X509Store _userStore = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
         private readonly ElementHost _host;
@@ -26,8 +26,8 @@ namespace VCSJones.FiddlerCert
             _rootStore.Open(OpenFlags.ReadOnly);
             _userStore.Open(OpenFlags.ReadOnly);
             _host = new ElementHost {Dock = DockStyle.Fill};
-            _panel = new StackPanel();
-            _host.Child = new ScrollViewer { Content = _panel };
+            _panel = new Grid();
+            _host.Child = _panel;
             FiddlerApplication.Prefs.AddWatcher("fiddler.ui.font", FontChanged);
         }
 

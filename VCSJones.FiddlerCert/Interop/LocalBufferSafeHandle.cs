@@ -12,6 +12,7 @@ namespace VCSJones.FiddlerCert.Interop
             (
             [param: In, MarshalAs(UnmanagedType.SysInt)] IntPtr hMem
             );
+
         public LocalBufferSafeHandle(bool ownsHandle) : base(ownsHandle)
         {
         }

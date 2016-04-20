@@ -22,16 +22,19 @@
                     <Setter Property="Background" Value="Green" />
                     <Setter Property="Foreground" Value="White" />
                     <Setter Property="Text" Value="EV" />
+                    <Setter Property="ToolTip" Value="Extended Validated" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CertificateType}" Value="{x:Static local:CertificateType.DV}">
                     <Setter Property="Background" Value="#FFAAAAAA" />
                     <Setter Property="Foreground" Value="White" />
                     <Setter Property="Text" Value="DV" />
+                    <Setter Property="ToolTip" Value="Domain Validated" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CertificateType}" Value="{x:Static local:CertificateType.OV}">
                     <Setter Property="Background" Value="#FFAAAAAA" />
                     <Setter Property="Foreground" Value="White" />
                     <Setter Property="Text" Value="OV" />
+                    <Setter Property="ToolTip" Value="Organization Validated" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CertificateType}" Value="{x:Static local:CertificateType.None}">
                     <Setter Property="Visibility" Value="Hidden" />

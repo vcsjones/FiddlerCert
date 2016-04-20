@@ -1,12 +1,11 @@
 ﻿using System;
-using NUnit.Framework;
+using Xunit;
 
 namespace VCSJones.FiddlerCert.UnitTests
 {
-    [TestFixture]
     public class PublicKeyPinsParserTests
     {
-        [Test]
+        [Fact]
         public void ShouldParseSha256HpkpDirectives()
         {
             var input = "pin-sha256=\"jV54RY1EPxNKwrQKIa5QMGDNPSbj3VwLPtXaHiEE8y8=\";" +
@@ -14,35 +13,35 @@ namespace VCSJones.FiddlerCert.UnitTests
                         "pin-sha256=\"/sMEqQowto9yX5BozHLPdnciJkhDiL5+Ug0uil3DkUM=\";" +
                         "max-age=5184000;";
             var result = PublicKeyPinsParser.Parse(input);
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.IncludeSubDomains, Is.Null);
-            Assert.That(result.MaxAge, Is.EqualTo(TimeSpan.FromDays(60)));
-            Assert.That(result.ReportUri, Is.Null);
-            Assert.That(result.PinnedKeys.Count, Is.EqualTo(3));
+            Assert.NotNull(result);
+            Assert.Null(result.IncludeSubDomains);
+            Assert.Equal(TimeSpan.FromDays(60), result.MaxAge);
+            Assert.Null(result.ReportUri);
+            Assert.Equal(3, result.PinnedKeys.Count);
         }
 
-        [Test]
+        [Fact]
         public void ComparePinnedKeysByAlgorithm()
         {
             var pinnedKeySha1 = new PinnedKey(PinAlgorithm.SHA1, new byte[0]);
             var pinnedKeySha256 = new PinnedKey(PinAlgorithm.SHA256, new byte[0]);
-            Assert.That(pinnedKeySha1, Is.Not.EqualTo(pinnedKeySha256));
+            Assert.NotStrictEqual(pinnedKeySha256, pinnedKeySha1);
         }
 
-        [Test]
+        [Fact]
         public void ComparePinnedKeysByFingerprints()
         {
             var pinnedKey1 = new PinnedKey(PinAlgorithm.SHA1, new byte[] { 1 });
             var pinnedKey2 = new PinnedKey(PinAlgorithm.SHA1, new byte[] { 2 });
-            Assert.That(pinnedKey1, Is.Not.EqualTo(pinnedKey2));
+            Assert.NotStrictEqual(pinnedKey1, pinnedKey2);
         }
 
-        [Test]
+        [Fact]
         public void ComparePinnedKeysByFingerprintsAllSame()
         {
             var pinnedKey1 = new PinnedKey(PinAlgorithm.SHA1, new byte[] { 1 });
             var pinnedKey2 = new PinnedKey(PinAlgorithm.SHA1, new byte[] { 1 });
-            Assert.That(pinnedKey1, Is.EqualTo(pinnedKey2));
+            Assert.StrictEqual(pinnedKey1, pinnedKey2);
         }
     }
 }

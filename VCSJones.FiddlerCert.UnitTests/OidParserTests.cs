@@ -1,47 +1,46 @@
-﻿using NUnit.Framework;
+﻿using Xunit;
 
 namespace VCSJones.FiddlerCert.UnitTests
 {
-    [TestFixture]
     public class OidParserTests
     {
-        [Test]
+        [Fact]
         public void ShouldHandleNullAndReturnNull()
         {
-            Assert.That(OidParser.ReadFromBytes(null), Is.Null);
+            Assert.Null(OidParser.ReadFromBytes(null));
         }
 
-        [Test]
+        [Fact]
         public void ShouldHandleEmptyArrayAndReturnNull()
         {
-            Assert.That(OidParser.ReadFromBytes(new byte[0]), Is.Null);
+            Assert.Null(OidParser.ReadFromBytes(new byte[0]));
         }
 
-        [Test]
+        [Fact]
         public void ShouldHandleLengthTooShortEvenWithCorrectPreamble()
         {
-            Assert.That(OidParser.ReadFromBytes(new byte[] { 6 }), Is.Null);
+            Assert.Null(OidParser.ReadFromBytes(new byte[] { 6 }));
         }
 
-        [Test]
+        [Fact]
         public void ShouldHandleValidValue()
         {
             var oid = OidParser.ReadFromBytes(new byte[] { 6, 8, 42, 134, 72, 206, 61, 3, 1, 7 });
-            Assert.That(oid.Value, Is.EqualTo("1.2.840.10045.3.1.7"));
+            Assert.Equal("1.2.840.10045.3.1.7", oid.Value);
         }
 
-        [Test]
+        [Fact]
         public void ShouldHandleIncorrectLengthCheck()
         {
             var oid = OidParser.ReadFromBytes(new byte[] { 6, 9, 42, 134, 72, 206, 61, 3, 1, 7 });
-            Assert.That(oid, Is.Null);
+            Assert.Null(oid);
         }
 
-        [Test]
+        [Fact]
         public void ShouldHandleIncorrectlyTerminatedData()
         {
             var oid = OidParser.ReadFromBytes(new byte[] { 6, 8, 42, 134, 72, 206, 61, 3, 1, 255 });
-            Assert.That(oid, Is.Null);
+            Assert.Null(oid);
         }
     }
 }

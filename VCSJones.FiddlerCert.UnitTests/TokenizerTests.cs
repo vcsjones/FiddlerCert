@@ -1,100 +1,99 @@
 ﻿using System;
 using System.Linq;
-using NUnit.Framework;
+using Xunit;
 
 namespace VCSJones.FiddlerCert.UnitTests
 {
-    [TestFixture]
     public class TokenizerTests
     {
-        [Test]
+        [Fact]
         public void TestBasicTokenization()
         {
             var input = "hello;world";
             var expectedTokens = new[] { "hello", "world" };
-            Assert.That(Tokenizers.TokenizeString(input).ToArray(), Is.EqualTo(expectedTokens));
+            Assert.Equal(expectedTokens, Tokenizers.TokenizeString(input));
         }
 
 
-        [Test]
+        [Fact]
         public void TestBasicTokenizationWithTrailingToken()
         {
             var input = "hello;world;";
             var expectedTokens = new[] { "hello", "world" };
-            Assert.That(Tokenizers.TokenizeString(input).ToArray(), Is.EqualTo(expectedTokens));
+            Assert.Equal(expectedTokens, Tokenizers.TokenizeString(input));
         }
 
-        [Test]
+        [Fact]
         public void ShouldIgnoreInsignificantWhiteSpacePreToken()
         {
             var input = "   hello;   world";
             var expectedTokens = new[] { "hello", "world" };
-            Assert.That(Tokenizers.TokenizeString(input).ToArray(), Is.EqualTo(expectedTokens));
+            Assert.Equal(expectedTokens, Tokenizers.TokenizeString(input));
         }
 
-        [Test]
+        [Fact]
         public void ShouldIgnoreInsignificantWhiteSpacePostToken()
         {
             var input = "   hello    ;world    ";
             var expectedTokens = new[] { "hello", "world" };
-            Assert.That(Tokenizers.TokenizeString(input).ToArray(), Is.EqualTo(expectedTokens));
+            Assert.Equal(expectedTokens, Tokenizers.TokenizeString(input));
         }
 
-        [Test]
+        [Fact]
         public void ShouldNotIgnoreWhiteSpaceInToken()
         {
             var input = "   hell    o;worl    d";
             var expectedTokens = new[] { "hell    o", "worl    d" };
-            Assert.That(Tokenizers.TokenizeString(input, ';').ToArray(), Is.EqualTo(expectedTokens));
+            Assert.Equal(expectedTokens, Tokenizers.TokenizeString(input, ';'));
         }
 
-        [Test]
+        [Fact]
         public void ShouldNotDelimitWhenInQuotes()
         {
             var input = "\"hello;world\"";
             var expectedTokens = new[] { "\"hello;world\"" };
-            Assert.That(Tokenizers.TokenizeString(input).ToArray(), Is.EqualTo(expectedTokens));
+            Assert.Equal(expectedTokens, Tokenizers.TokenizeString(input));
         }
 
-        [Test]
+        [Fact]
         public void ShouldRemoveInsignificantWhiteSpaceInsideQuotes()
         {
             var input = "hello;\"    world    \"";
             var expectedTokens = new[] { "hello", "\"world\"" };
-            Assert.That(Tokenizers.TokenizeString(input).ToArray(), Is.EqualTo(expectedTokens));
+            Assert.Equal(expectedTokens, Tokenizers.TokenizeString(input).ToArray());
         }
 
-        [Test]
+        [Fact]
         public void ShouldThrowExceptionOnMalformedQuoting()
         {
             var input = "\"hello";
-            Assert.That(() => Tokenizers.TokenizeString(input).ToArray(), Throws.TypeOf<InvalidOperationException>());
+            Assert.Throws<InvalidOperationException>(() => Tokenizers.TokenizeString(input).ToArray());
         }
 
-        [Test]
+        [Fact]
         public void ShouldThrowExceptionOnMalformedQuotingAtEnd()
         {
             var input = "hello\"";
-            Assert.That(() => Tokenizers.TokenizeString(input).ToArray(), Throws.TypeOf<InvalidOperationException>());
+            Assert.Throws<InvalidOperationException>(() => Tokenizers.TokenizeString(input).ToArray());
         }
 
-        [Test]
+        [Fact]
         public void ShouldHandleComplexScenario()
         {
             var input = "\r   Hel\nlo  ;  \"   Wo \rrld  \"  ;  \"By  ;   e \" ";
             var expectedTokens = new[] {"Hello", "\"Wo rld\"", "\"By  ;   e\"" };
-            Assert.That(Tokenizers.TokenizeString(input, ';'), Is.EqualTo(expectedTokens));
+            Assert.Equal(expectedTokens, Tokenizers.TokenizeString(input, ';'));
         }
 
-        [Test]
+        [Fact]
         public void ShouldHandleSignificantWhiteSpace()
         {
             var input = "\"By  ;   e \" ";
             var expectedTokens = new[] { "\"By  ;   e\"" };
-            Assert.That(Tokenizers.TokenizeString(input), Is.EqualTo(expectedTokens));
+            Assert.Equal(expectedTokens, Tokenizers.TokenizeString(input));
         }
 
-        [Test]
+        [Fact]
         public void ShouldSampleHpkpHeader()
         {
             var input = "pin-sha256=\"jV54RY1EPxNKwrQKIa5QMGDNPSbj3VwLPtXaHiEE8y8=\"; pin-sha256=\"7qVfhXJFRlcy/9VpKFxHBuFzvQZSqajgfRwvsdx1oG8=\"; pin-sha256=\"/sMEqQowto9yX5BozHLPdnciJkhDiL5+Ug0uil3DkUM=\"; max-age=5184000;";
@@ -105,64 +104,58 @@ namespace VCSJones.FiddlerCert.UnitTests
                 "pin-sha256=\"/sMEqQowto9yX5BozHLPdnciJkhDiL5+Ug0uil3DkUM=\"",
                 "max-age=5184000"
             };
-            Assert.That(Tokenizers.TokenizeString(input).ToArray(), Is.EqualTo(expectedTokens));
+            Assert.Equal(expectedTokens, Tokenizers.TokenizeString(input));
         }
 
-        [Test]
-        public void ShouldThrowErrorOnMissingKey()
-        {
-            var input = "=hello";
-            Assert.That(() => Tokenizers.TokenizeIdentifiers(input), Throws.TypeOf<InvalidOperationException>());
-        }
 
-        [Test]
+        [Fact]
         public void ShouldHandleValuelessIdentifier()
         {
             var input = "hello";
             var tokenized = Tokenizers.TokenizeIdentifiers(input);
-            Assert.That(tokenized.Identifier, Is.EqualTo("hello"));
-            Assert.That(tokenized.IsQuoted, Is.False);
-            Assert.That(tokenized.Value, Is.Null);
+            Assert.Equal("hello", tokenized.Identifier);
+            Assert.False(tokenized.IsQuoted);
+            Assert.Null(tokenized.Value);
         }
 
-        [Test]
+        [Fact]
         public void ShouldHandleSimpleIdentifierAndValue()
         {
             var input = "hello=world";
             var tokenized = Tokenizers.TokenizeIdentifiers(input);
-            Assert.That(tokenized.Identifier, Is.EqualTo("hello"));
-            Assert.That(tokenized.IsQuoted, Is.False);
-            Assert.That(tokenized.Value, Is.EqualTo("world"));
+            Assert.Equal("hello", tokenized.Identifier);
+            Assert.False(tokenized.IsQuoted);
+            Assert.Equal("world", tokenized.Value);
         }
 
-        [Test]
+        [Fact]
         public void ShouldHandleSimpleIdentifierAndValueWhileIgnoringInsignificantWhiteSpace()
         {
             var input = "    hel lo  =   wor ld   ";
             var tokenized = Tokenizers.TokenizeIdentifiers(input);
-            Assert.That(tokenized.Identifier, Is.EqualTo("hel lo"));
-            Assert.That(tokenized.IsQuoted, Is.False);
-            Assert.That(tokenized.Value, Is.EqualTo("wor ld"));
+            Assert.Equal("hel lo", tokenized.Identifier);
+            Assert.False(tokenized.IsQuoted);
+            Assert.Equal("wor ld", tokenized.Value);
         }
 
-        [Test]
+        [Fact]
         public void ShouldHandleSimpleIdentifierAndValueWhileIgnoringInsignificantWhiteSpaceWithQuotes()
         {
             var input = "    hel lo  =   \"wor ld\"   ";
             var tokenized = Tokenizers.TokenizeIdentifiers(input);
-            Assert.That(tokenized.Identifier, Is.EqualTo("hel lo"));
-            Assert.That(tokenized.IsQuoted, Is.True);
-            Assert.That(tokenized.Value, Is.EqualTo("wor ld"));
+            Assert.Equal("hel lo", tokenized.Identifier);
+            Assert.True(tokenized.IsQuoted);
+            Assert.Equal("wor ld", tokenized.Value);
         }
 
-        [Test]
+        [Fact]
         public void IdentiferAndValueForHPKP()
         {
             var input = "pin-sha256=\"jV54RY1EPxNKwrQKIa5QMGDNPSbj3VwLPtXaHiEE8y8=\"";
             var tokenized = Tokenizers.TokenizeIdentifiers(input);
-            Assert.That(tokenized.Identifier, Is.EqualTo("pin-sha256"));
-            Assert.That(tokenized.IsQuoted, Is.True);
-            Assert.That(tokenized.Value, Is.EqualTo("jV54RY1EPxNKwrQKIa5QMGDNPSbj3VwLPtXaHiEE8y8="));
+            Assert.Equal("pin-sha256", tokenized.Identifier);
+            Assert.True(tokenized.IsQuoted);
+            Assert.Equal("jV54RY1EPxNKwrQKIa5QMGDNPSbj3VwLPtXaHiEE8y8=", tokenized.Value);
         }
     }
 }

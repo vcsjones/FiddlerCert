@@ -1,7 +1,11 @@
 bin/
 obj/
 packages/
+.vs/
 out/
 *.user
 *.suo
+*.lock.json
+*.nuget.props
+*.nuget.targets
 

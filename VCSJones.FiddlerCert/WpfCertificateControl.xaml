@@ -24,12 +24,12 @@
                     <Setter Property="Text" Value="EV" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CertificateType}" Value="{x:Static local:CertificateType.DV}">
-                    <Setter Property="Background" Value="#FFCCCCCC" />
+                    <Setter Property="Background" Value="#FFAAAAAA" />
                     <Setter Property="Foreground" Value="White" />
                     <Setter Property="Text" Value="DV" />
                 </DataTrigger>
                 <DataTrigger Binding="{Binding CertificateType}" Value="{x:Static local:CertificateType.OV}">
-                    <Setter Property="Background" Value="#FFCCCCCC" />
+                    <Setter Property="Background" Value="#FFAAAAAA" />
                     <Setter Property="Foreground" Value="White" />
                     <Setter Property="Text" Value="OV" />
                 </DataTrigger>

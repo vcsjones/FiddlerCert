@@ -41,6 +41,17 @@ namespace VCSJones.FiddlerCert
             return OVOids.Intersect(policies.Select(p => p.PolicyOid.Value)).Any();
         }
 
+        public static bool IsCertificateDomainValidated(X509Certificate2 certificate)
+        {
+            var decoder = new CertificatePolicyDecoder();
+            var policies = decoder.GetPolicies(certificate);
+            if (policies.Count == 0)
+            {
+                return false;
+            }
+            return DVOids.Intersect(policies.Select(p => p.PolicyOid.Value)).Any();
+        }
+
         //Converted from https://code.google.com/p/chromium/codesearch#chromium/src/net/cert/ev_root_ca_metadata.cc
         //Last updated: 4/20/2016 @ 15:40 EDT
         //Git SHA: dc2cea95fae5b9f91db96f79398529a0eff4a3d6 
@@ -589,6 +600,13 @@ namespace VCSJones.FiddlerCert
             "1.3.6.1.4.1.8024.0.2.100.1.1", //QuoVadis
             "2.16.840.1.114414.1.7.23.2", //Starfield
             "2.16.792.3.0.3.1.1.2" //TurkTrust
+        };
+
+        public static string[] DVOids { get; } = new[]
+        {
+            "2.23.140.1.2.1", //CAB Forum BR Standard
+            "2.16.840.1.114413.1.7.23.1", //GoDaddy
+            "2.16.840.1.114414.1.7.23.1", //Starfield
         };
     }
 

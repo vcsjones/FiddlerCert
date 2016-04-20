@@ -214,7 +214,11 @@ namespace VCSJones.FiddlerCert
             {
                 return CertificateType.OV;
             }
-            return CertificateType.DV;
+            if (CertificateValidatedChecker.IsCertificateDomainValidated(certificate))
+            {
+                return CertificateType.DV;
+            }
+            return CertificateType.None;
         }
 
 

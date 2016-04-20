@@ -45,6 +45,20 @@ namespace VCSJones.FiddlerCert.Interop
             [param: Out] out LocalBufferSafeHandle pvEncoded,
             [param: In, Out, MarshalAs(UnmanagedType.U4)] ref uint pcbEncoded
             );
+
+        [method: DllImport(CRYPT32, CallingConvention = CallingConvention.Winapi, EntryPoint = "CryptDecodeObjectEx", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern unsafe bool CryptDecodeObjectEx
+        (
+            [param: In, MarshalAs(UnmanagedType.U4)] EncodingType dwCertEncodingType,
+            [param: In, MarshalAs(UnmanagedType.SysInt)] IntPtr lpszStructType,
+            [param: In, MarshalAs(UnmanagedType.SysInt)] IntPtr pbEncoded,
+            [param: In, MarshalAs(UnmanagedType.U4)] uint cbEncoded,
+            [param: In, MarshalAs(UnmanagedType.U4)] CryptDecodeFlags dwFlags,
+            [param: In, MarshalAs(UnmanagedType.SysInt)] IntPtr pDecodePara,
+            [param: Out] out LocalBufferSafeHandle pvStructInfo,
+            [param: In, Out, MarshalAs(UnmanagedType.U4)] ref uint pcbStructInfo
+        );
     }
 
     [Flags]
@@ -52,5 +66,11 @@ namespace VCSJones.FiddlerCert.Interop
     {
         PKCS_7_ASN_ENCODING = 65536,
         X509_ASN_ENCODING = 1
+    }
+
+    [type: Flags]
+    internal enum CryptDecodeFlags : uint
+    {
+        CRYPT_DECODE_ALLOC_FLAG = 0x8000
     }
 }

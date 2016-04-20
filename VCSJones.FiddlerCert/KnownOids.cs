@@ -11,6 +11,7 @@
         public static class X509Extensions
         {
             public const string SubjectAltNameExtension = "2.5.29.17";
+            public const string CertificatePolicies = "2.5.29.32";
         }
 
         public static class EccCurves
@@ -32,6 +33,11 @@
             public const string sha256ECDSA = "1.2.840.10045.4.3.2";
             public const string sha384ECDSA = "1.2.840.10045.4.3.3";
             public const string sha512ECDSA = "1.2.840.10045.4.3.4";
+        }
+
+        public static class Policies
+        {
+            public const string OrganizationValidated = "2.23.140.1.2.2";
         }
     }
 }

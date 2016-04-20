@@ -129,7 +129,7 @@ namespace VCSJones.FiddlerCert
                         IsNotTunnel = (oS.BitFlags & SessionFlags.IsDecryptingTunnel) != SessionFlags.IsDecryptingTunnel,
                         CertificateChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
                         {
-                            var chainItems = (from X509ChainElement t in chain.ChainElements select AssignCertificate(t, reportOnly, pinnedKeys)).ToList();
+                            var chainItems = chain.ChainElements.Cast<X509ChainElement>().Select((t, i) => AssignCertificate(t, reportOnly, pinnedKeys, chain, i)).ToList();
                             return new ObservableCollection<CertificateModel>(chainItems);
                         })),
                         Hpkp = new HpkpModel
@@ -152,7 +152,7 @@ namespace VCSJones.FiddlerCert
         }
 
 
-        private CertificateModel AssignCertificate(X509ChainElement chainElement, bool reportOnly, PublicPinnedKeys pinnedKey)
+        private CertificateModel AssignCertificate(X509ChainElement chainElement, bool reportOnly, PublicPinnedKeys pinnedKey, X509Chain chain, int index)
         {
             var certificate = chainElement.Certificate;
             var algorithmBits = BitStrengthCalculator.CalculateStrength(certificate);
@@ -177,6 +177,7 @@ namespace VCSJones.FiddlerCert
                     SignatureAlgorithm = certificate.SignatureAlgorithm,
                     IsTrustedRoot = _rootStore.Certificates.Contains(certificate) || _userStore.Certificates.Contains(certificate)
                 },
+                CertificateType = index == 0 ? GetCertificateType(certificate, chain) : CertificateType.None,
                 Errors = new AsyncProperty<CertificateErrors>(Task.Factory.StartNew(() => CertificateErrorsCalculator.GetCertificateErrors(chainElement))),
                 SpkiHashes = new AsyncProperty<SpkiHashesModel>(Task.Factory.StartNew(() => CalculateHashes(chainElement.Certificate, reportOnly, pinnedKey))),
                 InstallCommand = new RelayCommand(parameter => CertificateUI.ShowImportCertificate(chainElement.Certificate, FiddlerApplication.UI)),
@@ -186,8 +187,6 @@ namespace VCSJones.FiddlerCert
 
         private static SpkiHashesModel CalculateHashes(X509Certificate2 certificate, bool reportOnly, PublicPinnedKeys pinnedKeys)
         {
-            
-
             var sha256 = CertificateHashBuilder.BuildHashForPublicKey<SHA256CryptoServiceProvider>(certificate);
             var model = new SpkiHashesModel
             {
@@ -203,6 +202,19 @@ namespace VCSJones.FiddlerCert
                 }
             };
             return model;
+        }
+
+        private static CertificateType GetCertificateType(X509Certificate2 certificate, X509Chain chain)
+        {
+            if (CertificateValidatedChecker.IsCertificateExtendedValidation(certificate, chain))
+            {
+                return CertificateType.EV;
+            }
+            if (CertificateValidatedChecker.IsCertificateOrganizationValidated(certificate))
+            {
+                return CertificateType.OV;
+            }
+            return CertificateType.DV;
         }
 
 

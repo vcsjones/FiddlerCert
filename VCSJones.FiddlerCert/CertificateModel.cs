@@ -19,6 +19,7 @@ namespace VCSJones.FiddlerCert
         private AsyncProperty<SpkiHashesModel> _spkiHashes;
         private Dictionary<string, List<string>> _distinguishedName;
         private string _serialNumber;
+        private CertificateType _certificateType;
 
         public string CommonName
         {
@@ -110,6 +111,16 @@ namespace VCSJones.FiddlerCert
             set
             {
                 _signatureAlgorithm = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public CertificateType CertificateType
+        {
+            get { return _certificateType; }
+            set
+            {
+                _certificateType = value;
                 OnPropertyChanged();
             }
         }

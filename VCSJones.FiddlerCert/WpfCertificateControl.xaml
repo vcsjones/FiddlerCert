@@ -13,10 +13,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources.xaml" />
                 <ResourceDictionary>
-                    <local:KeyStengthConverter x:Key="KeyStrengthConverter" />
                     <local:ExpiryStrengthConverter x:Key="ExpiryStrengthConverter" />
                     <local:TimeSpanConverter x:Key="TimeSpanConverter" />
-                    <local:OidConverter x:Key="OidConverter" />
                     <local:SignatureAlgorithmStrengthConverter x:Key="SignatureAlgorithmStrengthConverter" />
                     <local:ContainedValueVisibilityConverter x:Key="ContainedValueVisibilityConverter" />
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -111,7 +109,7 @@
                                                 </Label.Content>
                                             </Label>
                                             <Label Grid.Column="0" Grid.Row="4">Signature Algorithm:</Label>
-                                            <Label Grid.Column="1" Grid.Row="4" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Content="{Binding SignatureAlgorithm.SignatureAlgorithm, Converter={StaticResource OidConverter}}" ToolTip="{Binding SignatureAlgorithm.SignatureAlgorithm.Value}">
+                                            <Label Grid.Column="1" Grid.Row="4" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Content="{Binding SignatureAlgorithm.SignatureAlgorithm.FriendlyName }" ToolTip="{Binding SignatureAlgorithm.SignatureAlgorithm.Value}">
                                                 <Label.Foreground>
                                                     <Binding Path="SignatureAlgorithm" Converter="{StaticResource SignatureAlgorithmStrengthConverter}" />
                                                 </Label.Foreground>

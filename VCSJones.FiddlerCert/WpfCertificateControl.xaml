@@ -9,67 +9,21 @@
              d:DesignHeight="300" d:DesignWidth="500"
              MinHeight="200">
     <UserControl.Resources>
-        <Style x:Key="ErrorShield" TargetType="{x:Type Image}">
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Errors.Result}" Value="{x:Static local:CertificateErrors.UnknownRevocation}">
-                    <Setter Property="Source" Value="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Alert_16xLG_color.png" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Errors.Result}" Value="{x:Static local:CertificateErrors.Critical}">
-                    <Setter Property="Source" Value="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Critical_16xLG_color.png" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding Errors.Result}" Value="{x:Static local:CertificateErrors.None}">
-                    <Setter Property="Source" Value="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Complete_and_ok_16xLG_color.png" />
-                </DataTrigger>
-            </Style.Triggers>
-            <Setter Property="Source" Value="/VCSJones.FiddlerCert;component/Assets/security_Shields_Blank_16xLG.png" />
-        </Style>
-        <Style x:Key="TabHeader" TargetType="{x:Type TextBlock}">
-            <Style.Setters>
-                <Setter Property="FontSize" Value="24"/>
-                <Setter Property="Margin" Value="10,0,0,0" />
-                <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Text}" />
-            </Style.Setters>
-        </Style>
-        <Style x:Key="CertificateTypeStyle" TargetType="{x:Type TextBlock}">
-            <Style.Triggers>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding CertificateType}" Value="{x:Static local:CertificateType.EV}" />
-                        <Condition Binding="{Binding Errors.Result}" Value="{x:Static local:CertificateErrors.None}" />
-                    </MultiDataTrigger.Conditions>
-                    <MultiDataTrigger.Setters>
-                        <Setter Property="Background" Value="Green" />
-                        <Setter Property="Foreground" Value="White" />
-                        <Setter Property="Text" Value="EV" />
-                        <Setter Property="ToolTip" Value="Extended Validated" />
-                    </MultiDataTrigger.Setters>
-                </MultiDataTrigger>
-                <DataTrigger Binding="{Binding CertificateType}" Value="{x:Static local:CertificateType.DV}">
-                    <Setter Property="Background" Value="#FFAAAAAA" />
-                    <Setter Property="Foreground" Value="White" />
-                    <Setter Property="Text" Value="DV" />
-                    <Setter Property="ToolTip" Value="Domain Validated" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding CertificateType}" Value="{x:Static local:CertificateType.OV}">
-                    <Setter Property="Background" Value="#FFAAAAAA" />
-                    <Setter Property="Foreground" Value="White" />
-                    <Setter Property="Text" Value="OV" />
-                    <Setter Property="ToolTip" Value="Organization Validated" />
-                </DataTrigger>
-                <DataTrigger Binding="{Binding CertificateType}" Value="{x:Static local:CertificateType.None}">
-                    <Setter Property="Visibility" Value="Hidden" />
-                </DataTrigger>
-            </Style.Triggers>
-        </Style>
-        <local:KeyStengthConverter x:Key="KeyStrengthConverter" />
-        <local:ExpiryStrengthConverter x:Key="ExpiryStrengthConverter" />
-        <local:TimeSpanConverter x:Key="TimeSpanConverter" />
-        <local:OidConverter x:Key="OidConverter" />
-        <local:SignatureAlgorithmStrengthConverter x:Key="SignatureAlgorithmStrengthConverter" />
-        <local:ContainedValueVisibilityConverter x:Key="ContainedValueVisibilityConverter" />
-        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        <local:AndAllVisibilityConverter x:Key="AndAllVisibilityConverter" />
-        
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources.xaml" />
+                <ResourceDictionary>
+                    <local:KeyStengthConverter x:Key="KeyStrengthConverter" />
+                    <local:ExpiryStrengthConverter x:Key="ExpiryStrengthConverter" />
+                    <local:TimeSpanConverter x:Key="TimeSpanConverter" />
+                    <local:OidConverter x:Key="OidConverter" />
+                    <local:SignatureAlgorithmStrengthConverter x:Key="SignatureAlgorithmStrengthConverter" />
+                    <local:ContainedValueVisibilityConverter x:Key="ContainedValueVisibilityConverter" />
+                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+                    <local:AndAllVisibilityConverter x:Key="AndAllVisibilityConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
     </UserControl.Resources>
     <TabControl>
         <TabItem Header="Certificates">

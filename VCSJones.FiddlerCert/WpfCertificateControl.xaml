@@ -20,7 +20,6 @@
                     <local:SignatureAlgorithmStrengthConverter x:Key="SignatureAlgorithmStrengthConverter" />
                     <local:ContainedValueVisibilityConverter x:Key="ContainedValueVisibilityConverter" />
                     <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-                    <local:AndAllVisibilityConverter x:Key="AndAllVisibilityConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -241,13 +240,7 @@
                 </Grid>
             </ScrollViewer>
         </TabItem>
-        <TabItem Header="HPKP">
-            <TabItem.Visibility>
-                <MultiBinding Converter="{StaticResource AndAllVisibilityConverter}">
-                    <Binding Path="IsNotTunnel" />
-                    <Binding Path="Hpkp.HasHpkpHeaders" />
-                </MultiBinding>
-            </TabItem.Visibility>
+        <TabItem Header="HPKP" Style="{StaticResource TabItemHpkp}">
             <ScrollViewer>
                 <Grid DataContext="{Binding Hpkp}">
                     <Grid.RowDefinitions>

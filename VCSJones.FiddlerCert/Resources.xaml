@@ -53,5 +53,18 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
-
+    <Style x:Key="TabItemHpkp" TargetType="{x:Type TabItem}">
+        <Style.Triggers>
+            <MultiDataTrigger>
+                <MultiDataTrigger.Conditions>
+                    <Condition Binding="{Binding IsNotTunnel}" Value="True" />
+                    <Condition Binding="{Binding Hpkp.HasHpkpHeaders}" Value="True" />
+                </MultiDataTrigger.Conditions>
+                <MultiDataTrigger.Setters>
+                    <Setter Property="Visibility" Value="Visible" />
+                </MultiDataTrigger.Setters>
+            </MultiDataTrigger>
+        </Style.Triggers>
+        <Setter Property="Visibility" Value="Collapsed" />
+    </Style>
 </ResourceDictionary>

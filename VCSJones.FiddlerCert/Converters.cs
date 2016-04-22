@@ -217,26 +217,4 @@ namespace VCSJones.FiddlerCert
             throw new NotSupportedException();
         }
     }
-
-    public class AndAllVisibilityConverter : IMultiValueConverter
-    {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (values == null || values.Length == 0)
-            {
-                return Visibility.Collapsed;
-            }
-            if (!(values[0] is bool))
-            {
-                return Visibility.Collapsed;
-            }
-            var alltrue = values.Select(m => (bool) m).All(x => x);
-            return alltrue ? Visibility.Visible : Visibility.Collapsed;
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
-    }
 }

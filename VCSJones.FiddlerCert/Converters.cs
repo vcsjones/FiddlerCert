@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Globalization;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using Expression = System.Linq.Expressions.Expression;
 
 namespace VCSJones.FiddlerCert
@@ -160,80 +157,6 @@ namespace VCSJones.FiddlerCert
                 default:
                     return red;
             }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
-    }
-
-    public class ErrorsToShieldConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (!(value is CertificateErrors))
-            {
-                return null;
-            }
-            var errors = (CertificateErrors)value;
-            var blank = new BitmapImage();
-            blank.BeginInit();
-            switch (errors)
-            {
-                default:
-                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/security_Shields_Blank_16xLG.png", UriKind.Relative);
-                    break;
-                case CertificateErrors.UnknownRevocation:
-                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/Security_Shields_Alert_16xLG_color.png", UriKind.Relative);
-                    break;
-                case CertificateErrors.Critical:
-                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/Security_Shields_Critical_16xLG_color.png", UriKind.Relative);
-                    break;
-                case CertificateErrors.None:
-                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/Security_Shields_Complete_and_ok_16xLG_color.png", UriKind.Relative);
-                    break;
-
-            }
-            blank.EndInit();
-            return blank;
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
-    }
-
-    public class CommonErrorToShieldConverter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (!(value is CommonError))
-            {
-                return null;
-            }
-            var errors = (CommonError) value;
-            var blank = new BitmapImage();
-            blank.BeginInit();
-            switch (errors)
-            {
-                default:
-                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/security_Shields_Blank_16xLG.png", UriKind.Relative);
-                    break;
-                case CommonError.Warning:
-                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/Security_Shields_Alert_16xLG_color.png", UriKind.Relative);
-                    break;
-                case CommonError.Fail:
-                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/Security_Shields_Critical_16xLG_color.png", UriKind.Relative);
-                    break;
-                case CommonError.OK:
-                    blank.UriSource = new Uri("/VCSJones.FiddlerCert;component/Assets/Security_Shields_Complete_and_ok_16xLG_color.png", UriKind.Relative);
-                    break;
-
-            }
-            blank.EndInit();
-            return blank;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

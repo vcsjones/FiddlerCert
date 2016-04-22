@@ -9,6 +9,20 @@
              d:DesignHeight="300" d:DesignWidth="500"
              MinHeight="200">
     <UserControl.Resources>
+        <Style x:Key="ErrorShield" TargetType="{x:Type Image}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Errors.Result}" Value="{x:Static local:CertificateErrors.UnknownRevocation}">
+                    <Setter Property="Source" Value="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Alert_16xLG_color.png" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Errors.Result}" Value="{x:Static local:CertificateErrors.Critical}">
+                    <Setter Property="Source" Value="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Critical_16xLG_color.png" />
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Errors.Result}" Value="{x:Static local:CertificateErrors.None}">
+                    <Setter Property="Source" Value="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Complete_and_ok_16xLG_color.png" />
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="Source" Value="/VCSJones.FiddlerCert;component/Assets/security_Shields_Blank_16xLG.png" />
+        </Style>
         <Style x:Key="TabHeader" TargetType="{x:Type TextBlock}">
             <Style.Setters>
                 <Setter Property="FontSize" Value="24"/>
@@ -84,7 +98,7 @@
                                             </Grid.RowDefinitions>
                                             <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                                                 <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" />
-                                                <Image Width="16" Height="16" Source="{Binding Errors.Result, Converter={StaticResource ErrorsToShieldConverter}, FallbackValue={x:Static local:CertificateErrors.Unknown}}" Stretch="None" ToolTipService.ShowDuration="{x:Static system:Int32.MaxValue}">
+                                                <Image Width="16" Height="16" Style="{DynamicResource ErrorShield}"  Stretch="None" ToolTipService.ShowDuration="{x:Static system:Int32.MaxValue}">
                                                 
                                                     <Image.ToolTip>
                                                         <Grid>

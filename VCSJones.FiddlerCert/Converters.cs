@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Globalization;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Data;
@@ -96,10 +94,9 @@ namespace VCSJones.FiddlerCert
             {
                 case KnownOids.SignatureAlgorithms.sha1DSA:
                 case KnownOids.SignatureAlgorithms.md5RSA:
-                    return red;
                 case KnownOids.SignatureAlgorithms.sha1ECDSA:
                 case KnownOids.SignatureAlgorithms.sha1RSA:
-                    return yellow;
+                    return red;
                 case KnownOids.SignatureAlgorithms.sha256ECDSA:
                 case KnownOids.SignatureAlgorithms.sha256RSA:
                 case KnownOids.SignatureAlgorithms.sha384ECDSA:

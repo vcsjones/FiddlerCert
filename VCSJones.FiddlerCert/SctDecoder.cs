@@ -111,6 +111,11 @@ namespace VCSJones.FiddlerCert
                 return false;
             }
             var chunkSize = (ushort)(inputCopy[0] << 8 | inputCopy[1]); //TLS records are big endian.
+            if (chunkSize > inputCopy.Length)
+            {
+                output = default(ArrayOffset<byte>);
+                return false;
+            }
             var amountToConsume = headerSize + chunkSize;
             output = inputCopy + headerSize;
             input += amountToConsume;

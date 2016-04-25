@@ -54,8 +54,7 @@
                                             </Grid.RowDefinitions>
                                             <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                                                 <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" />
-                                                <Image Width="16" Height="16" Style="{DynamicResource ErrorShield}"  Stretch="None" ToolTipService.ShowDuration="{x:Static system:Int32.MaxValue}">
-                                                
+                                                <Image Width="16" Height="16" Style="{StaticResource ErrorShield}" Stretch="None" ToolTipService.ShowDuration="{x:Static system:Int32.MaxValue}">
                                                     <Image.ToolTip>
                                                         <Grid>
                                                             <Grid.ColumnDefinitions>
@@ -94,7 +93,7 @@
                                             <Label Grid.Column="0" Grid.Row="2">Thumbprint:</Label>
                                             <Label Grid.Column="1" Grid.Row="2" Content="{Binding Thumbprint}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
                                             <Label Grid.Column="0" Grid.Row="3">Public Key:</Label>
-                                            <Label Grid.Column="1" Grid.Row="3" Foreground="{Binding PublicKey, Converter={StaticResource KeyStrengthConverter}}">
+                                            <Label Grid.Column="1" Grid.Row="3">
                                                 <Label.Content>
                                                     <TextBlock local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True">
                                                         <TextBlock.Text>
@@ -190,9 +189,9 @@
                                             </Grid.RowDefinitions>
                                             <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                                                 <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" SnapsToDevicePixels="True" />
-                                                <TextBlock Style="{StaticResource TabHeader}">SPKI Hashes</TextBlock>
+                                                <TextBlock Style="{StaticResource TabHeader}">SPKI Fingerprints</TextBlock>
                                             </StackPanel>
-                                            <ItemsControl ItemsSource="{Binding SpkiHashes.Result.Hashes}"  Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">
+                                            <ItemsControl ItemsSource="{Binding SpkiHashes.Result.Hashes}" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">
                                                 <ItemsControl.ItemTemplate>
                                                     <DataTemplate DataType="{x:Type local:SpkiHashModel}">
                                                         <Grid>
@@ -254,7 +253,7 @@
                     <Label Grid.Row="1" Grid.Column="0">Pin Header:</Label>
                     <Label Grid.Row="1" Grid.Column="1">
                         <Label.Content>
-                            <TextBlock  local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" TextWrapping="Wrap" Text="{Binding RawHpkpHeader}" />
+                            <TextBlock local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" TextWrapping="Wrap" Text="{Binding RawHpkpHeader}" />
                         </Label.Content>
                     </Label>
                     <Label Grid.Row="2" Grid.Column="0">Pin Directives:</Label>
@@ -267,7 +266,7 @@
                                         <ColumnDefinition />
                                     </Grid.ColumnDefinitions>
                                     <Label Content="{Binding Algorithm}" FontWeight="Bold" />
-                                    <Label Grid.Column="1" Content="{Binding HashBase64}"  local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                    <Label Grid.Column="1" Content="{Binding HashBase64}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
                                 </Grid>
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>

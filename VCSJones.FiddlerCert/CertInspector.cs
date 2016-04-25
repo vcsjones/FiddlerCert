@@ -10,7 +10,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
-using System.Windows.Threading;
 
 namespace VCSJones.FiddlerCert
 {

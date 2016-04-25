@@ -31,6 +31,16 @@ namespace VCSJones.FiddlerCert.Interop
             }
         }
 
+        public void CopyTo(byte[] buffer, int offset = 0, int? length = null)
+        {
+            if (IsClosed || IsInvalid)
+            {
+                throw new InvalidOperationException("Handle is closed or invalid.");
+            }
+            var len = length ?? buffer.Length;
+            Marshal.Copy(handle, buffer, offset, len);
+        }
+
         protected override bool ReleaseHandle()
         {
             return IntPtr.Zero == LocalFree(handle);

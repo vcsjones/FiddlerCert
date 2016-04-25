@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using VCSJones.FiddlerCert.Interop;
+using static VCSJones.FiddlerCert.KnownDecodeEncodeConstants;
 
 namespace VCSJones.FiddlerCert
 {
@@ -23,7 +24,7 @@ namespace VCSJones.FiddlerCert
                 LocalBufferSafeHandle buffer;
                 var size = 0u;
                 const EncodingType encodingType = EncodingType.PKCS_7_ASN_ENCODING | EncodingType.X509_ASN_ENCODING;
-                if (!Crypto32.CryptDecodeObjectEx(encodingType, (IntPtr)16, handle.AddrOfPinnedObject(), (uint)extension.RawData.Length, CryptDecodeFlags.CRYPT_DECODE_ALLOC_FLAG, IntPtr.Zero, out buffer, ref size))
+                if (!Crypto32.CryptDecodeObjectEx(encodingType, X509_CERT_POLICIES, handle.AddrOfPinnedObject(), (uint)extension.RawData.Length, CryptDecodeFlags.CRYPT_DECODE_ALLOC_FLAG, IntPtr.Zero, out buffer, ref size))
                 {
                     //Can't decode it, gracefully retun an empty collection.
                     return new List<CertificatePolicy>();

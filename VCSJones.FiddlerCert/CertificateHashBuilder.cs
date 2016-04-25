@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using VCSJones.FiddlerCert.Interop;
@@ -38,7 +37,7 @@ namespace VCSJones.FiddlerCert
                     if (Crypto32.CryptEncodeObjectEx(EncodingType.X509_ASN_ENCODING, PUBLIC_KEY_INFO_TYPE, ref publicKeyInfo, CRYPT_ENCODE_ALLOC_FLAG, IntPtr.Zero, out handle, ref size))
                     {
                         var encoded = new byte[size];
-                        Marshal.Copy(handle.DangerousGetHandle(), encoded, 0, encoded.Length);
+                        handle.CopyTo(encoded);
                         using (var algorithm = new THashAlgorithm())
                         {
                             return algorithm.ComputeHash(encoded);

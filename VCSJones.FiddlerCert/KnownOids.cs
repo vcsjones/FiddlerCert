@@ -12,6 +12,7 @@
         {
             public const string SubjectAltNameExtension = "2.5.29.17";
             public const string CertificatePolicies = "2.5.29.32";
+            public const string CertificateTimeStampListCT = "1.3.6.1.4.1.11129.2.4.2";
         }
 
         public static class EccCurves

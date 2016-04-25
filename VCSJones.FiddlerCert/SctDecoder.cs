@@ -55,7 +55,7 @@ namespace VCSJones.FiddlerCert
             ArrayOffset<byte> list;
             if (!ReadChunkUInt16Header(ref rData, out list))
             {
-                throw new Exception("BAD");
+                return signatures;
             }
             ArrayOffset<byte> sct;
             while (ReadChunkUInt16Header(ref list, out sct))

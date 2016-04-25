@@ -59,9 +59,15 @@
     <None Include="cert-test-ct\chromium-test-ct.cer">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="cert-test-policy\cert.cer" />
-    <None Include="cert-test-policy\ev-cert.cer" />
-    <None Include="cert-test-policy\nopolicy.cer" />
+    <None Include="cert-test-policy\cert.cer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="cert-test-policy\ev-cert.cer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="cert-test-policy\nopolicy.cer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>

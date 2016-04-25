@@ -7,122 +7,185 @@ using static VCSJones.FiddlerCert.KnownDecodeEncodeConstants;
 
 namespace VCSJones.FiddlerCert
 {
+    public enum SctHashAlgorithm : byte
+    {
+        HASH_ALGO_NONE = 0,
+        HASH_ALGO_MD5 = 1,
+        HASH_ALGO_SHA1 = 2,
+        HASH_ALGO_SHA224 = 3,
+        HASH_ALGO_SHA256 = 4,
+        HASH_ALGO_SHA384 = 5,
+        HASH_ALGO_SHA512 = 6,
+    }
+
+    public enum SctSignatureAlgorithm : byte
+    {
+        SIG_ALGO_ANONYMOUS = 0,
+        SIG_ALGO_RSA = 1,
+        SIG_ALGO_DSA = 2,
+        SIG_ALGO_ECDSA = 3
+    }
+
     public enum SctVersion : byte
     {
         SCT_VERSION_1 = 0,
     }
 
-    public class SctDecoder
+    public class SctSignature
+    {
+        public byte[] Extensions { get; set; }
+        public SctHashAlgorithm HashAlgorithm { get; set; }
+        public byte[] LogId { get; set; }
+        public SctSignatureAlgorithm SignatureAlgorithm { get; set; }
+        public DateTime Timestamp { get; set; }
+        public byte[] Signature { get; set; }
+        public byte[] RawSct { get; set; }
+    }
+
+    public static class SctDecoder
     {
         private const int LOG_ID_SIZE = 32;
         private static readonly DateTime UNIX_EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        public static void DecodeData(AsnEncodedData data)
+        public static IList<SctSignature> DecodeData(AsnEncodedData data)
         {
+            var signatures = new List<SctSignature>();
             var decodedOctets = DecodeOctetString(data.RawData);
-            byte[] peices = decodedOctets;
-            var sctList = ReadChunkUInt16Header(ref peices);
-            byte[] listItem;
-            while ((listItem = ReadChunkUInt16Header(ref sctList)) != null)
+            var rData = new ArrayOffset<byte>(decodedOctets, 0);
+            ArrayOffset<byte> list;
+            if (!ReadChunkUInt16Header(ref rData, out list))
             {
-                var version = ReadSctVersion(ref listItem);
-                if (version != SctVersion.SCT_VERSION_1) continue;
-                var logId = ReadChunk(ref listItem, LOG_ID_SIZE);
-                if (logId == null)  continue;
-                var timestamp = ReadTimestamp(ref listItem);
-                if (timestamp == null) continue;
+                throw new Exception("BAD");
             }
+            ArrayOffset<byte> sct;
+            while (ReadChunkUInt16Header(ref list, out sct))
+            {
+                var originalSct = sct;
+                SctVersion version;
+                byte[] logId;
+                DateTime timestamp;
+                byte[] extensions;
+                SctHashAlgorithm hashAlgorithm;
+                SctSignatureAlgorithm signatureAlgorithm;
+                byte[] signature;
+                if (
+                    !ReadByteEnumeration(ref sct, out version) ||
+                    !ReadFixedData(ref sct, LOG_ID_SIZE, out logId) ||
+                    !ReadTimestamp(ref sct, out timestamp) ||
+                    !ReadVariableDataUInt16Header(ref sct, out extensions) ||
+                    !ReadByteEnumeration(ref sct, out hashAlgorithm) || 
+                    !ReadByteEnumeration(ref sct, out signatureAlgorithm) ||
+                    !ReadVariableDataUInt16Header(ref sct, out signature)
+                )
+                {
+                    continue;
+                }
+                if (sct.Length > 0)
+                {
+                    //There was additional data beyond the signature.
+                    continue;
+                }
+                var rawSct = new byte[originalSct.Length];
+                originalSct.CopyTo(rawSct, 0, originalSct.Length);
+                signatures.Add(new SctSignature
+                {
+                    LogId = logId,
+                    Timestamp = timestamp,
+                    HashAlgorithm = hashAlgorithm,
+                    SignatureAlgorithm = signatureAlgorithm,
+                    Extensions = extensions,
+                    Signature = signature,
+                    RawSct = rawSct
+                });
+            }
+            return signatures;
         }
 
-        public static IList<byte[]> ReadPieces(byte[] data)
+        private static bool ReadChunkUInt16Header(ref ArrayOffset<byte> input, out ArrayOffset<byte> output)
         {
-            var items = new List<byte[]>();
-
-            return items;
+            var inputCopy = input;
+            const int headerSize = sizeof(ushort);
+            if (inputCopy.Length < headerSize)
+            {
+                output = default(ArrayOffset<byte>);
+                return false;
+            }
+            var chunkSize = (ushort)(inputCopy[0] << 8 | inputCopy[1]); //TLS records are big endian.
+            var amountToConsume = headerSize + chunkSize;
+            output = inputCopy + headerSize;
+            input += amountToConsume;
+            return true;
         }
 
-        private static byte[] ReadChunkUInt16Header(ref byte[] input)
+        private static bool ReadVariableDataUInt16Header(ref ArrayOffset<byte> input, out byte[] data)
         {
-            const int size = sizeof(ushort);
-            if (input.Length < size)
+            const int headerSize = sizeof(ushort);
+            if (input.Length < headerSize)
             {
-                return null;
+                data = null;
+                return false;
             }
-            var chunkSize = (ushort)(input[0] << 8 | input[1]); //TLS records are big endian.
+            var chunkSize = (ushort)(input[0] << 8 | input[1]); //Big endian read
+            input += headerSize;
             if (chunkSize == 0)
             {
-                return new byte[0];
+                data = new byte[0];
+                return true;
             }
-            var amountToConsume = size + chunkSize;
-            var chunk = new byte[chunkSize];
-            Buffer.BlockCopy(input, size, chunk, 0, chunkSize);
-            var newInputSize = input.Length - amountToConsume;
-            if (newInputSize > 0)
-            {
-                var resizeInput = new byte[newInputSize];
-                Buffer.BlockCopy(input, amountToConsume, resizeInput, 0, newInputSize);
-                input = resizeInput;
-            }
-            else
-            {
-                input = new byte[0];
-            }
-            return chunk;
+            var result = new byte[chunkSize];
+            input.CopyTo(result, 0, chunkSize);
+            input += chunkSize;
+            data = result;
+            return true;
         }
 
-        private static SctVersion? ReadSctVersion(ref byte[] input)
+        private static bool ReadByteEnumeration<TEnumType>(ref ArrayOffset<byte> input, out TEnumType value)
         {
-            const int size = sizeof(SctVersion);
+            if (!typeof(TEnumType).IsEnum || typeof(TEnumType).GetEnumUnderlyingType() != typeof(byte))
+            {
+                throw new ArgumentException(nameof(TEnumType));
+            }
+            const int size = sizeof(byte);
             if (input.Length < size)
             {
-                return null;
+                value = default(TEnumType);
+                return false;
             }
-            var version = (SctVersion)input[0];
-            var newInput = new byte[input.Length - size];
-            Buffer.BlockCopy(input, size, newInput, 0, newInput.Length);
-            input = newInput;
-            return version;
+            var val = input[0];
+            value = (TEnumType)(object)val;
+            input += size;
+            return true;
         }
 
-        private static byte[] ReadChunk(ref byte[] input, int size)
+        private static bool ReadFixedData(ref ArrayOffset<byte> input, int length, out byte[] data)
         {
-            if (input.Length < size)
+            if (input.Length < length)
             {
-                return null;
+                data = null;
+                return false;
             }
-            var chunk = new byte[size];
-            Buffer.BlockCopy(input, 0, chunk, 0, size);
-            var newInputSize = input.Length - size;
-            if (newInputSize > 0)
-            {
-                var resizeInput = new byte[newInputSize];
-                Buffer.BlockCopy(input, size, resizeInput, 0, newInputSize);
-                input = resizeInput;
-            }
-            else
-            {
-                input = new byte[0];
-            }
-            return chunk;
+            data = new byte[length];
+            input.CopyTo(data, 0, length);
+            input += length;
+            return true;
         }
 
-        private static DateTime? ReadTimestamp(ref byte[] input)
+        private static bool ReadTimestamp(ref ArrayOffset<byte> input, out DateTime timestamp)
         {
             const int size = sizeof(ulong);
             if (input.Length < size)
             {
-                return null;
+                timestamp = default(DateTime);
+                return false;
             }
             var epochTime = 0UL;
-            for (int i = 0, shift = size-1; i < size; i++, shift --)
+            for (int i = 0, shift = size - 1; i < size; i++, shift--)
             {
                 epochTime |= ((ulong)input[i] << (shift * 8));
             }
-            var timestamp = UNIX_EPOCH.AddMilliseconds(epochTime);
-            var newInput = new byte[input.Length - size];
-            Buffer.BlockCopy(input, size, newInput, 0, newInput.Length);
-            input = newInput;
-            return timestamp;
+            timestamp = UNIX_EPOCH.AddMilliseconds(epochTime);
+            input += size;
+            return true;
         }
 
         private static byte[] DecodeOctetString(byte[] data)

@@ -47,11 +47,10 @@ namespace VCSJones.FiddlerCert
         private const int LOG_ID_SIZE = 32;
         private static readonly DateTime UNIX_EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
-        public static IList<SctSignature> DecodeData(AsnEncodedData data)
+        public static IList<SctSignature> DecodeData(byte[] rawData)
         {
             var signatures = new List<SctSignature>();
-            var decodedOctets = DecodeOctetString(data.RawData);
-            var rData = new ArrayOffset<byte>(decodedOctets, 0);
+            var rData = new ArrayOffset<byte>(rawData, 0);
             ArrayOffset<byte> list;
             if (!ReadChunkUInt16Header(ref rData, out list))
             {
@@ -73,7 +72,7 @@ namespace VCSJones.FiddlerCert
                     !ReadFixedData(ref sct, LOG_ID_SIZE, out logId) ||
                     !ReadTimestamp(ref sct, out timestamp) ||
                     !ReadVariableDataUInt16Header(ref sct, out extensions) ||
-                    !ReadByteEnumeration(ref sct, out hashAlgorithm) || 
+                    !ReadByteEnumeration(ref sct, out hashAlgorithm) ||
                     !ReadByteEnumeration(ref sct, out signatureAlgorithm) ||
                     !ReadVariableDataUInt16Header(ref sct, out signature)
                 )
@@ -100,6 +99,8 @@ namespace VCSJones.FiddlerCert
             }
             return signatures;
         }
+
+        public static IList<SctSignature> DecodeData(AsnEncodedData data) => DecodeData(DecodeOctetString(data.RawData));
 
         private static bool ReadChunkUInt16Header(ref ArrayOffset<byte> input, out ArrayOffset<byte> output)
         {

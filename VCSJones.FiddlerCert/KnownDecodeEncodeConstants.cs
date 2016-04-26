@@ -6,5 +6,6 @@ namespace VCSJones.FiddlerCert
     {
         public static IntPtr X509_OCTET_STRING { get; } = (IntPtr)25;
         public static IntPtr X509_CERT_POLICIES { get; } = (IntPtr)16;
+        public static IntPtr SUBJECT_PUBLIC_KEY_INFO { get; } = (IntPtr)8;
     }
 }

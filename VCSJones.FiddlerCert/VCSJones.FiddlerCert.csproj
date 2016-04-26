@@ -71,6 +71,8 @@
     <Compile Include="CertificateType.cs" />
     <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
+    <Compile Include="CtLogs.cs" />
+    <Compile Include="CtVerifier.cs" />
     <Compile Include="DoubleClickCopyBehavior.cs" />
     <Compile Include="ExtendedValidationCertificateAuthority.cs" />
     <Compile Include="HpkpHashModel.cs" />

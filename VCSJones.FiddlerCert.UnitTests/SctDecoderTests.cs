@@ -1,4 +1,6 @@
-﻿using System.Security.Cryptography.X509Certificates;
+﻿using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using Xunit;
 
 namespace VCSJones.FiddlerCert.UnitTests
@@ -8,7 +10,7 @@ namespace VCSJones.FiddlerCert.UnitTests
         [Fact]
         public void Decode()
         {
-            using (var cert = new X509Certificate2("cert-test-ct\\chromium-test-ct.cer"))
+            using (var cert = new X509Certificate2("cert-test-ct\\symantec.cer"))
             {
                 var extension = cert.Extensions[KnownOids.X509Extensions.CertificateTimeStampListCT];
                 var scts = SctDecoder.DecodeData(extension);

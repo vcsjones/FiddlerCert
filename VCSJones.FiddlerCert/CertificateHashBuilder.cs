@@ -2,6 +2,7 @@
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using VCSJones.FiddlerCert.Interop;
+using static VCSJones.FiddlerCert.KnownDecodeEncodeConstants;
 
 namespace VCSJones.FiddlerCert
 {
@@ -14,7 +15,6 @@ namespace VCSJones.FiddlerCert
 
         public static unsafe byte[] BuildHashForPublicKeyBinary<THashAlgorithm>(X509Certificate2 certificate) where THashAlgorithm : HashAlgorithm, new()
         {
-            var PUBLIC_KEY_INFO_TYPE = new IntPtr(8);
             const uint CRYPT_ENCODE_ALLOC_FLAG = 0x8000u;
             var handle = LocalBufferSafeHandle.Zero;
             try
@@ -34,7 +34,7 @@ namespace VCSJones.FiddlerCert
                     publicKeyInfo.Algorithm.Parameters.cbData = (uint) certificate.PublicKey.EncodedParameters.RawData.Length;
                     publicKeyInfo.Algorithm.Parameters.pbData = publicKeyParametersPtr;
                     uint size = 0;
-                    if (Crypto32.CryptEncodeObjectEx(EncodingType.X509_ASN_ENCODING, PUBLIC_KEY_INFO_TYPE, ref publicKeyInfo, CRYPT_ENCODE_ALLOC_FLAG, IntPtr.Zero, out handle, ref size))
+                    if (Crypto32.CryptEncodeObjectEx(EncodingType.X509_ASN_ENCODING, SUBJECT_PUBLIC_KEY_INFO, ref publicKeyInfo, CRYPT_ENCODE_ALLOC_FLAG, IntPtr.Zero, out handle, ref size))
                     {
                         var encoded = new byte[size];
                         handle.CopyTo(encoded);

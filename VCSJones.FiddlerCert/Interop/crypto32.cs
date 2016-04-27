@@ -25,11 +25,15 @@ namespace VCSJones.FiddlerCert.Interop
         public uint cUnusedBits;
     }
 
-    [StructLayout(LayoutKind.Sequential)]
+    [StructLayout(LayoutKind.Explicit)]
     internal struct CRYPT_OBJID_BLOB
     {
+        [field: FieldOffset(0)]
         public uint cbData;
+        [field: FieldOffset(4)]
         public unsafe byte* pbData;
+        [field: FieldOffset(4)]
+        public IntPtr ipbData;
     }
     internal static class Crypto32
     {

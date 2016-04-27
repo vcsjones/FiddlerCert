@@ -14,8 +14,8 @@ namespace VCSJones.FiddlerCert.UnitTests
             {
                 var extension = cert.Extensions[KnownOids.X509Extensions.CertificateTimeStampListCT];
                 var scts = SctDecoder.DecodeData(extension);
-                Assert.Equal(1, scts.Count);
-                var sct = scts[0];
+                Assert.Equal(2, scts.Count);
+                var sct = scts[0]; //Pilot
                 Assert.Equal(SctHashAlgorithm.HASH_ALGO_SHA256, sct.HashAlgorithm);
                 Assert.Equal(SctSignatureAlgorithm.SIG_ALGO_ECDSA, sct.SignatureAlgorithm);
             }

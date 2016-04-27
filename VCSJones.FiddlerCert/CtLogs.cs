@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Security.Cryptography;
+using VCSJones.FiddlerCert.Interop;
 
 namespace VCSJones.FiddlerCert
 {
@@ -107,6 +110,26 @@ namespace VCSJones.FiddlerCert
                                  , 0xa6, 0xf8, 0xce, 0xd2, 0x18, 0x4d }
             }
         }.AsReadOnly();
+
+        public static CtLogInfo FindByLogId(byte[] logId)
+        {
+            using (var sha = new SHA256Cng())
+            {
+                foreach(var log in Logs)
+                {
+                    var hash = sha.ComputeHash(log.Key);
+                    if (logId.Length != hash.Length)
+                    {
+                        continue;
+                    }
+                    if (Msvcrt.memcmp(hash, logId, new UIntPtr((uint)logId.Length)) == 0)
+                    {
+                        return log;
+                    }
+                }
+            }
+            return null;
+        }
     }
 
     public sealed class CtLogInfo

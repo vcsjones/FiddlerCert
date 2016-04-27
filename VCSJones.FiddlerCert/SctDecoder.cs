@@ -39,14 +39,11 @@ namespace VCSJones.FiddlerCert
         public SctSignatureAlgorithm SignatureAlgorithm { get; set; }
         public DateTime Timestamp { get; set; }
         public byte[] Signature { get; set; }
-        public byte[] RawSct { get; set; }
     }
 
     public static class SctDecoder
     {
         private const int LOG_ID_SIZE = 32;
-        private static readonly DateTime UNIX_EPOCH = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         public static IList<SctSignature> DecodeData(byte[] rawData)
         {
             var signatures = new List<SctSignature>();
@@ -79,13 +76,6 @@ namespace VCSJones.FiddlerCert
                 {
                     continue;
                 }
-                if (sct.Length > 0)
-                {
-                    //There was additional data beyond the signature.
-                    continue;
-                }
-                var rawSct = new byte[originalSct.Length];
-                originalSct.CopyTo(rawSct, 0, originalSct.Length);
                 signatures.Add(new SctSignature
                 {
                     LogId = logId,
@@ -94,7 +84,6 @@ namespace VCSJones.FiddlerCert
                     SignatureAlgorithm = signatureAlgorithm,
                     Extensions = extensions,
                     Signature = signature,
-                    RawSct = rawSct
                 });
             }
             return signatures;
@@ -189,7 +178,7 @@ namespace VCSJones.FiddlerCert
             {
                 epochTime |= ((ulong)input[i] << (shift * 8));
             }
-            timestamp = UNIX_EPOCH.AddMilliseconds(epochTime);
+            timestamp = Epoch.UNIX_EPOCH.AddMilliseconds(epochTime);
             input += size;
             return true;
         }
@@ -214,7 +203,7 @@ namespace VCSJones.FiddlerCert
                     {
                         var structure = (CRYPT_OBJID_BLOB)Marshal.PtrToStructure(buffer.DangerousGetHandle(), typeof(CRYPT_OBJID_BLOB));
                         var ret = new byte[structure.cbData];
-                        Marshal.Copy(new IntPtr(structure.pbData), ret, 0, ret.Length);
+                        Marshal.Copy(structure.ipbData, ret, 0, ret.Length);
                         return ret;
                     }
                 }

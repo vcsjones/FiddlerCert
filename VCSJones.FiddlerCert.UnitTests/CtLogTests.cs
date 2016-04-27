@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using System.Security.Cryptography.X509Certificates;
+using Xunit;
 
 namespace VCSJones.FiddlerCert.UnitTests
 {
@@ -7,8 +8,16 @@ namespace VCSJones.FiddlerCert.UnitTests
         [Fact]
         public void ParseKey()
         {
-            var verifier = new CtVerifier(CtLogs.Logs[6].Key);
+            using (var cert = new X509Certificate2("cert-test-ct\\symantec.cer"))
+            {
+                var extension = cert.Extensions[KnownOids.X509Extensions.CertificateTimeStampListCT];
+                var scts = SctDecoder.DecodeData(extension);
+                Assert.Equal(2, scts.Count);
+                var sct = scts[0]; //Pilot
+                var ctKey = CtLogs.FindByLogId(sct.LogId);
+                var verifier = new CtVerifier(ctKey.Key);
+                Assert.True(verifier.Verify(sct));
+            }
         }
-
     }
 }

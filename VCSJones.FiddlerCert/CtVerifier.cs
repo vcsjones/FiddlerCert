@@ -35,7 +35,7 @@ namespace VCSJones.FiddlerCert
                 return false;
             }
             //verify this signature is for this log key.
-            if (Msvcrt.memcmp(signature.LogId, LogId, new UIntPtr((uint)LogId.Length)) != 0)
+            if (!signature.LogId.MemoryCompare(LogId))
             {
                 return false;
             }
@@ -96,7 +96,7 @@ namespace VCSJones.FiddlerCert
             var parameters = new byte[spki.Algorithm.Parameters.cbData];
             if (spki.Algorithm.Parameters.cbData > 0)
             {
-                Marshal.Copy(spki.Algorithm.Parameters.ipbData, parameters, 0, parameters.Length);
+                Marshal.Copy(spki.Algorithm.Parameters.pbData, parameters, 0, parameters.Length);
             }
             switch (spki.Algorithm.pszObjId)
             {
@@ -151,7 +151,11 @@ namespace VCSJones.FiddlerCert
 
             public override bool Verify(byte[] data, byte[] signature, SctHashAlgorithm algorithm)
             {
-                var blob = EcdsaKeyFormatter.ToEcdsa256PublicKeyBlob(_key);
+                byte[] blob;
+                if(!EcdsaKeyFormatter.ToEcdsa256PublicKeyBlob(_key, out blob))
+                {
+                    return false;
+                }
                 using (var key = CngKey.Import(blob, CngKeyBlobFormat.EccPublicBlob, CngProvider.MicrosoftSoftwareKeyStorageProvider))
                 {
                     using (var ecdsa = new ECDsaCng(key))
@@ -182,7 +186,7 @@ namespace VCSJones.FiddlerCert
                 {
                     return false;
                 }
-                return false;
+                return rsa.VerifyData(data, SctHashAlgorithmToOid(algorithm), signature);
             }
 
             private readonly static AsnEncodedData AsnNull = new AsnEncodedData(new byte[] { 0, 5 });
@@ -201,6 +205,22 @@ namespace VCSJones.FiddlerCert
                     return CngAlgorithm.Sha384;
                 case SctHashAlgorithm.HASH_ALGO_SHA512:
                     return CngAlgorithm.Sha512;
+                default:
+                    return null;
+            }
+        }
+        private static string SctHashAlgorithmToOid(SctHashAlgorithm algorithm)
+        {
+            switch (algorithm)
+            {
+                case SctHashAlgorithm.HASH_ALGO_SHA1:
+                    return KnownOids.HashAlgorithms.sha1;
+                case SctHashAlgorithm.HASH_ALGO_SHA256:
+                    return KnownOids.HashAlgorithms.sha256;
+                case SctHashAlgorithm.HASH_ALGO_SHA384:
+                    return KnownOids.HashAlgorithms.sha384;
+                case SctHashAlgorithm.HASH_ALGO_SHA512:
+                    return KnownOids.HashAlgorithms.sha512;
                 default:
                     return null;
             }

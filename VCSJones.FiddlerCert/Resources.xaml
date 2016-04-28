@@ -67,4 +67,35 @@
         </Style.Triggers>
         <Setter Property="Visibility" Value="Collapsed" />
     </Style>
+    <Style x:Key="SctSignatureAlgorithmStyle" TargetType="{x:Type Label}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding SignatureAlgorithm}" Value="{x:Static local:SctSignatureAlgorithm.SIG_ALGO_RSA}">
+                <Setter Property="Content" Value="RSA" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding SignatureAlgorithm}" Value="{x:Static local:SctSignatureAlgorithm.SIG_ALGO_ECDSA}">
+                <Setter Property="Content" Value="ECDSA" />
+            </DataTrigger>
+        </Style.Triggers>
+        <Setter Property="Content" Value="Unknown" />
+    </Style>
+    <Style x:Key="SctHashAlgorithmStyle" TargetType="{x:Type Label}">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding HashAlgorithm}" Value="{x:Static local:SctHashAlgorithm.HASH_ALGO_MD5}">
+                <Setter Property="Content" Value="MD5" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding HashAlgorithm}" Value="{x:Static local:SctHashAlgorithm.HASH_ALGO_SHA1}">
+                <Setter Property="Content" Value="SHA1" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding HashAlgorithm}" Value="{x:Static local:SctHashAlgorithm.HASH_ALGO_SHA256}">
+                <Setter Property="Content" Value="SHA256" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding HashAlgorithm}" Value="{x:Static local:SctHashAlgorithm.HASH_ALGO_SHA384}">
+                <Setter Property="Content" Value="SHA384" />
+            </DataTrigger>
+            <DataTrigger Binding="{Binding HashAlgorithm}" Value="{x:Static local:SctHashAlgorithm.HASH_ALGO_SHA512}">
+                <Setter Property="Content" Value="SHA512" />
+            </DataTrigger>
+        </Style.Triggers>
+        <Setter Property="Content" Value="Unknown" />
+    </Style>
 </ResourceDictionary>

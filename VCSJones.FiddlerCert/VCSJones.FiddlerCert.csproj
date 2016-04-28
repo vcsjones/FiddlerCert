@@ -62,6 +62,7 @@
     <Compile Include="AsyncProperty.cs" />
     <Compile Include="BitStrengthCalculator.cs" />
     <Compile Include="CallerMemberNameAttribute.cs" />
+    <Compile Include="CertificateCtModel.cs" />
     <Compile Include="CertificateErrors.cs" />
     <Compile Include="CertificateErrorsCalculator.cs" />
     <Compile Include="CertificateHashBuilder.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="EcdsaKeyFormatter.cs" />
     <Compile Include="Epoch.cs" />
     <Compile Include="ExtendedValidationCertificateAuthority.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="HpkpHashModel.cs" />
     <Compile Include="HttpSecurityModel.cs" />
     <Compile Include="Interop\bcrypt.cs" />

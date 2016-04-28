@@ -32,7 +32,7 @@ namespace VCSJones.FiddlerCert
                     publicKeyInfo.PublicKey.cUnusedBits = 0;
                     publicKeyInfo.PublicKey.pbData = publicKeyPtr;
                     publicKeyInfo.Algorithm.Parameters.cbData = (uint) certificate.PublicKey.EncodedParameters.RawData.Length;
-                    publicKeyInfo.Algorithm.Parameters.pbData = publicKeyParametersPtr;
+                    publicKeyInfo.Algorithm.Parameters.pbData = new IntPtr(publicKeyParametersPtr);
                     uint size = 0;
                     if (Crypto32.CryptEncodeObjectEx(EncodingType.X509_ASN_ENCODING, SUBJECT_PUBLIC_KEY_INFO, ref publicKeyInfo, CRYPT_ENCODE_ALLOC_FLAG, IntPtr.Zero, out handle, ref size))
                     {

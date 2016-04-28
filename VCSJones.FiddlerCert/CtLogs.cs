@@ -66,7 +66,7 @@ namespace VCSJones.FiddlerCert
             },
             new CtLogInfo
             {
-                Name = "Synantec log",
+                Name = "Symantec log",
                 Url = "https://ct.ws.symantec.com/",
                 Key = new byte[] { 0x30, 0x59, 0x30, 0x13, 0x06, 0x07, 0x2a, 0x86, 0x48, 0xce, 0x3d, 0x02, 0x01, 0x06, 0x08, 0x2a, 0x86
                                  , 0x48, 0xce, 0x3d, 0x03, 0x01, 0x07, 0x03, 0x42, 0x00, 0x04, 0x96, 0xea, 0xac, 0x1c, 0x46, 0x0c, 0x1b
@@ -122,7 +122,7 @@ namespace VCSJones.FiddlerCert
                     {
                         continue;
                     }
-                    if (Msvcrt.memcmp(hash, logId, new UIntPtr((uint)logId.Length)) == 0)
+                    if (hash.MemoryCompare(logId))
                     {
                         return log;
                     }

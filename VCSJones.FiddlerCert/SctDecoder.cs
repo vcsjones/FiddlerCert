@@ -39,6 +39,7 @@ namespace VCSJones.FiddlerCert
         public SctSignatureAlgorithm SignatureAlgorithm { get; set; }
         public DateTime Timestamp { get; set; }
         public byte[] Signature { get; set; }
+        public int Index { get; set; }
     }
 
     public static class SctDecoder
@@ -54,6 +55,7 @@ namespace VCSJones.FiddlerCert
                 return signatures;
             }
             ArrayOffset<byte> sct;
+            int index = 0;
             while (ReadChunkUInt16Header(ref list, out sct))
             {
                 var originalSct = sct;
@@ -84,6 +86,7 @@ namespace VCSJones.FiddlerCert
                     SignatureAlgorithm = signatureAlgorithm,
                     Extensions = extensions,
                     Signature = signature,
+                    Index = index++
                 });
             }
             return signatures;
@@ -203,7 +206,7 @@ namespace VCSJones.FiddlerCert
                     {
                         var structure = (CRYPT_OBJID_BLOB)Marshal.PtrToStructure(buffer.DangerousGetHandle(), typeof(CRYPT_OBJID_BLOB));
                         var ret = new byte[structure.cbData];
-                        Marshal.Copy(structure.ipbData, ret, 0, ret.Length);
+                        Marshal.Copy(structure.pbData, ret, 0, ret.Length);
                         return ret;
                     }
                 }

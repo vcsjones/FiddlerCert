@@ -24,7 +24,7 @@ namespace VCSJones.FiddlerCert
         {
             _rootStore.Open(OpenFlags.ReadOnly);
             _userStore.Open(OpenFlags.ReadOnly);
-            _host = new ElementHost {Dock = DockStyle.Fill};
+            _host = new ElementHost { Dock = DockStyle.Fill };
             _panel = new Grid();
             _host.Child = _panel;
             FiddlerApplication.Prefs.AddWatcher("fiddler.ui.font", FontChanged);
@@ -49,14 +49,14 @@ namespace VCSJones.FiddlerCert
                 double value;
                 if (double.TryParse(e.ValueString, out value))
                 {
-                    _panel.Dispatcher.BeginInvoke((Action) (() =>
-                    {
-                        var fontSizeInPoints = value*96d/72d;
-                        var style = new Style(typeof (StackPanel), _panel.Style);
-                        style.Setters.Add(new Setter(TextBlock.FontSizeProperty, fontSizeInPoints));
-                        style.Seal();
-                        _panel.Style = style;
-                    }));
+                    _panel.Dispatcher.BeginInvoke((Action)(() =>
+                   {
+                       var fontSizeInPoints = value * 96d / 72d;
+                       var style = new Style(typeof(StackPanel), _panel.Style);
+                       style.Setters.Add(new Setter(TextBlock.FontSizeProperty, fontSizeInPoints));
+                       style.Seal();
+                       _panel.Style = style;
+                   }));
                 }
             }
         }
@@ -135,9 +135,9 @@ namespace VCSJones.FiddlerCert
                         {
                             HasHpkpHeaders = pinnedKeys != null,
                             RawHpkpHeader = pkp ?? pkpReportOnly,
-                            PinDirectives = 
+                            PinDirectives =
                                 pinnedKeys == null ? null
-                                : new ObservableCollection<HpkpHashModel>(pinnedKeys.PinnedKeys.Select(pk => new HpkpHashModel {Algorithm = pk.Algorithm, HashBase64 = pk.FingerprintBase64}).ToArray())
+                                : new ObservableCollection<HpkpHashModel>(pinnedKeys.PinnedKeys.Select(pk => new HpkpHashModel { Algorithm = pk.Algorithm, HashBase64 = pk.FingerprintBase64 }).ToArray())
                         }
 
                     };
@@ -146,7 +146,7 @@ namespace VCSJones.FiddlerCert
             }
             else
             {
-                _panel.Children.Add(new System.Windows.Controls.Label {Content = "Certificates are for HTTPS connections only."});
+                _panel.Children.Add(new System.Windows.Controls.Label { Content = "Certificates are for HTTPS connections only." });
             }
         }
 
@@ -177,11 +177,39 @@ namespace VCSJones.FiddlerCert
                     IsTrustedRoot = _rootStore.Certificates.Contains(certificate) || _userStore.Certificates.Contains(certificate)
                 },
                 CertificateType = index == 0 ? GetCertificateType(certificate, chain) : CertificateType.None,
+                CertificateCtModel = new AsyncProperty<CertificateCtModel>(Task.Factory.StartNew(() => GetCtModel(certificate))),
                 Errors = new AsyncProperty<CertificateErrors>(Task.Factory.StartNew(() => CertificateErrorsCalculator.GetCertificateErrors(chainElement))),
                 SpkiHashes = new AsyncProperty<SpkiHashesModel>(Task.Factory.StartNew(() => CalculateHashes(chainElement.Certificate, reportOnly, pinnedKey))),
                 InstallCommand = new RelayCommand(parameter => CertificateUI.ShowImportCertificate(chainElement.Certificate, FiddlerApplication.UI)),
                 ViewCommand = new RelayCommand(parameter => CertificateUI.ShowCertificate(chainElement.Certificate, FiddlerApplication.UI))
             };
+        }
+
+        private static CertificateCtModel GetCtModel(X509Certificate2 certificate)
+        {
+            var model = new CertificateCtModel();
+            var extension = certificate.Extensions[KnownOids.X509Extensions.CertificateTimeStampListCT];
+            if (extension != null)
+            {
+                var scts = SctDecoder.DecodeData(extension);
+                foreach (var sct in scts)
+                {
+                    var log = CtLogs.FindByLogId(sct.LogId);
+                    model.Signatures.Add(
+                        new SctSignatureModel
+                        {
+                            HashAlgorithm = sct.HashAlgorithm,
+                            SignatureAlgorithm = sct.SignatureAlgorithm,
+                            LogIdHex = BitConverter.ToString(sct.LogId).Replace("-", ""),
+                            Timestamp = sct.Timestamp,
+                            LogName = log?.Name ?? "Unknown",
+                            LogUrl = log?.Url ?? "Unknown",
+                            Index = sct.Index
+                        }
+                    );
+                }
+            }
+            return model;
         }
 
         private static SpkiHashesModel CalculateHashes(X509Certificate2 certificate, bool reportOnly, PublicPinnedKeys pinnedKeys)

@@ -1,4 +1,4 @@
-# FiddlerCert
+# Fiddler Certificate Inspector
 A Fiddler extension for examining certificates.
 
 This is an extension for the excellent Fiddler tool, a web debugging tool developed by Eric Lawrence at Telerik.

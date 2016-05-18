@@ -130,7 +130,23 @@ namespace VCSJones.FiddlerCert
             }
             return null;
         }
+
+        public static ReadOnlyCollection<RevokedCtLog> RevokedCtLogs { get; } = new List<RevokedCtLog>
+        {
+            new RevokedCtLog
+            {
+                LogId = new byte[] {0x74, 0x61, 0xb4, 0xa0, 0x9c, 0xfb, 0x3d, 0x41, 0xd7, 0x51, 0x59, 0x57, 0x5b, 0x2e, 0x76, 0x49, 0xa4, 0x45, 0xa8, 0xd2, 0x77, 0x09, 0xb0, 0xcc, 0x56, 0x4a, 0x64, 0x82, 0xb7, 0xeb, 0x41, 0xa3 },
+                RevocationEffective = new DateTimeOffset(2016, 5, 30, 0, 0, 0, TimeSpan.Zero)
+            }
+        }.AsReadOnly();
     }
+
+    public sealed class RevokedCtLog
+    {
+        public byte[] LogId { get; set; }
+        public DateTimeOffset RevocationEffective { get; set; }
+    }
+
 
     public sealed class CtLogInfo
     {

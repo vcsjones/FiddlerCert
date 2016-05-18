@@ -204,7 +204,9 @@ namespace VCSJones.FiddlerCert
                             Timestamp = sct.Timestamp,
                             LogName = log?.Name ?? "Unknown",
                             LogUrl = log?.Url ?? "Unknown",
-                            Index = sct.Index
+                            Index = sct.Index,
+                            SignatureHex = BitConverter.ToString(sct.Signature).Replace("-", ""),
+                            RevocationEffective = CtLogs.RevokedCtLogs.FirstOrDefault(l => l.LogId.MemoryCompare(sct.LogId))?.RevocationEffective
                         }
                     );
                 }

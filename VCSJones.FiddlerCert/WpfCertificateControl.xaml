@@ -242,7 +242,7 @@
                                             </Grid.RowDefinitions>
                                             <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
                                                 <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" SnapsToDevicePixels="True" />
-                                                <TextBlock Style="{StaticResource TabHeader}">SCTs</TextBlock>
+                                                <TextBlock Style="{StaticResource TabHeader}">Precertificate SCTs</TextBlock>
                                             </StackPanel>
                                             <ItemsControl ItemsSource="{Binding CertificateCtModel.Result.Signatures}" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">
                                                 <ItemsControl.ItemTemplate>
@@ -261,9 +261,13 @@
                                                                     <RowDefinition />
                                                                     <RowDefinition />
                                                                     <RowDefinition />
+                                                                    <RowDefinition />
                                                                 </Grid.RowDefinitions>
                                                                 <Label Grid.Column="0" Grid.Row="0">Timestamp:</Label>
-                                                                <Label Grid.Column="1" Grid.Row="0" Content="{Binding Timestamp}" ContentStringFormat="{}{0:yyyy-MM-dd hh:mm:ss.fffff tt K}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                                                <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
+                                                                    <Label Content="{Binding Timestamp}" ContentStringFormat="{}{0:yyyy-MM-dd hh:mm:ss.fffff tt K}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                                                    <Label Foreground="Red" Content="{Binding RevocationEffective}" ContentStringFormat="{}Revoked {0:yyyy-MM-dd hh:mm:ss.fffff tt K}" Visibility="{Binding Revoked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                                </StackPanel>
                                                                 <Label Grid.Column="0" Grid.Row="1">Signature Algorithm:</Label>
                                                                 <Label Grid.Column="1" Grid.Row="1" Style="{StaticResource SctSignatureAlgorithmStyle}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
                                                                 <Label Grid.Column="0" Grid.Row="2">Hash Algorithm:</Label>
@@ -274,6 +278,12 @@
                                                                 <Label Grid.Column="1" Grid.Row="4" Content="{Binding LogName}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
                                                                 <Label Grid.Column="0" Grid.Row="5">CT Log URL:</Label>
                                                                 <Label Grid.Column="1" Grid.Row="5" Content="{Binding LogUrl}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                                                <Label Grid.Column="0" Grid.Row="6">Signature:</Label>
+                                                                <Label Grid.Column="1" Grid.Row="6">
+                                                                    <Label.Content>
+                                                                        <TextBlock TextWrapping="Wrap" Text="{Binding SignatureHex}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                                                    </Label.Content>
+                                                                </Label>
                                                             </Grid>
                                                         </StackPanel>
                                                     </DataTemplate>

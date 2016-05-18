@@ -42,5 +42,8 @@ namespace VCSJones.FiddlerCert
         public string LogName { get; set; }
         public string LogUrl { get; set; }
         public int Index { get; set; }
+        public string SignatureHex { get; set; }
+        public DateTimeOffset? RevocationEffective { get; set; }
+        public bool Revoked => Timestamp > RevocationEffective;
     }
 }

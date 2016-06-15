@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using VCSJones.FiddlerCert.Interop;
 
 namespace VCSJones.FiddlerCert
 {
@@ -21,7 +20,7 @@ namespace VCSJones.FiddlerCert
             {
                 return false;
             }
-            var findRoot = Array.Find(EVRootCAMetadata, p => Msvcrt.memcmp(p.Sha1Fingerprint, rootThumbprint, new UIntPtr(20u)) == 0);
+            var findRoot = Array.Find(EVRootCAMetadata, p => p.Sha1Fingerprint.MemoryCompare(rootThumbprint));
             if (findRoot == null)
             {
                 return false;

@@ -58,9 +58,11 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayOffset.cs" />
     <Compile Include="AsyncProperty.cs" />
     <Compile Include="BitStrengthCalculator.cs" />
     <Compile Include="CallerMemberNameAttribute.cs" />
+    <Compile Include="CertificateCtModel.cs" />
     <Compile Include="CertificateErrors.cs" />
     <Compile Include="CertificateErrorsCalculator.cs" />
     <Compile Include="CertificateHashBuilder.cs" />
@@ -70,13 +72,20 @@
     <Compile Include="CertificateType.cs" />
     <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
+    <Compile Include="CtLogs.cs" />
+    <Compile Include="CtVerifier.cs" />
     <Compile Include="DoubleClickCopyBehavior.cs" />
+    <Compile Include="EcdsaKeyFormatter.cs" />
+    <Compile Include="Epoch.cs" />
     <Compile Include="ExtendedValidationCertificateAuthority.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="HpkpHashModel.cs" />
     <Compile Include="HttpSecurityModel.cs" />
+    <Compile Include="Interop\bcrypt.cs" />
     <Compile Include="Interop\CERT_POLICIES_INFO.cs" />
     <Compile Include="Interop\LocalBufferSafeHandle.cs" />
     <Compile Include="IReadOnlyList.cs" />
+    <Compile Include="KnownDecodeEncodeConstants.cs" />
     <Compile Include="PinCheckResult.cs" />
     <Compile Include="Interop\Msvcrt.cs" />
     <Compile Include="PinnedKey.cs" />
@@ -98,6 +107,7 @@
     <Compile Include="PublicKeyAlgorithm.cs" />
     <Compile Include="PublicPinnedKeys.cs" />
     <Compile Include="RelayCommand.cs" />
+    <Compile Include="SctDecoder.cs" />
     <Compile Include="SignatureAlgorithmModel.cs" />
     <Compile Include="SpkiHashesModel.cs" />
     <Compile Include="SpkiHashModel.cs" />

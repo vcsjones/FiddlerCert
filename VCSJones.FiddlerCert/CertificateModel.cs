@@ -20,6 +20,20 @@ namespace VCSJones.FiddlerCert
         private Dictionary<string, List<string>> _distinguishedName;
         private string _serialNumber;
         private CertificateType _certificateType;
+        private AsyncProperty<CertificateCtModel> _certificateCtModel;
+
+        public AsyncProperty<CertificateCtModel> CertificateCtModel
+        {
+            get
+            {
+                return _certificateCtModel;
+            }
+            set
+            {
+                _certificateCtModel = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string CommonName
         {

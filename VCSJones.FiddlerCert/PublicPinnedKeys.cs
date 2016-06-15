@@ -6,7 +6,7 @@ namespace VCSJones.FiddlerCert
 {
     public class PublicPinnedKeys
     {
-        public PublicPinnedKeys(IList<PinnedKey> pinnedKeys, TimeSpan? maxAge, bool? includeSubDomains, Uri reportUri)
+        public PublicPinnedKeys(System.Collections.Generic.IList<PinnedKey> pinnedKeys, TimeSpan? maxAge, bool? includeSubDomains, Uri reportUri)
         {
             PinnedKeys = pinnedKeys;
             MaxAge = maxAge;
@@ -19,7 +19,7 @@ namespace VCSJones.FiddlerCert
         public bool? IncludeSubDomains { get; }
         public Uri ReportUri { get; }
 
-        public PinCheckResult IsValidPinning(IList<PinnedKey> certificateSpki)
+        public PinCheckResult IsValidPinning(System.Collections.Generic.IList<PinnedKey> certificateSpki)
         {
             var result = PinCheckResult.Pass;
             if (PinnedKeys.Count == 0)

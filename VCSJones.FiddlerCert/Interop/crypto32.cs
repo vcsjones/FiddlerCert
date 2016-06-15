@@ -29,7 +29,7 @@ namespace VCSJones.FiddlerCert.Interop
     internal struct CRYPT_OBJID_BLOB
     {
         public uint cbData;
-        public unsafe byte* pbData;
+        public IntPtr pbData;
     }
     internal static class Crypto32
     {
@@ -71,6 +71,7 @@ namespace VCSJones.FiddlerCert.Interop
     [type: Flags]
     internal enum CryptDecodeFlags : uint
     {
-        CRYPT_DECODE_ALLOC_FLAG = 0x8000
+        CRYPT_DECODE_ALLOC_FLAG = 0x8000,
+        CRYPT_DECODE_NO_SIGNATURE_BYTE_REVERSAL_FLAG = 0x8
     }
 }

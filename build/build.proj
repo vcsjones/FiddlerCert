@@ -11,11 +11,12 @@
 		<OutputDir>$(MSBuildThisFileDirectory)..\out\</OutputDir>
 		<NsisScript>$(MSBuildThisFileDirectory)fiddler-cert.nsi</NsisScript>
 		<OutInstaller>$(OutputDir)FiddlerCertInspector.exe</OutInstaller>
+        <Configuration Condition="'$(Configuration)' == ''">Release</Configuration>
 	</PropertyGroup>
 	<Target Name="Compile" DependsOnTargets="Clean">
 		<ItemGroup>
 			<FiddlerCertSolution Include="$(MSBuildThisFileDirectory)..\VCSJones.FiddlerCert\VCSJones.FiddlerCert.csproj">
-				<Properties>OutputPath=$(OutputDir);Configuration=Release</Properties>
+				<Properties>OutputPath=$(OutputDir);Configuration=$(Configuration)</Properties>
 			</FiddlerCertSolution>
 		</ItemGroup>
 		<MSBuild Targets="Rebuild" Projects="@(FiddlerCertSolution)">

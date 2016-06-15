@@ -10,7 +10,7 @@ namespace VCSJones.FiddlerCert.UnitTests
         [Fact]
         public void ShouldReturnEmptyOnCertificateWithNoPolicies()
         {
-            using (var cert = new X509Certificate2(X509Certificate.CreateFromCertFile("../../cert-test-policy/nopolicy.cer")))
+            using (var cert = new X509Certificate2(X509Certificate.CreateFromCertFile("cert-test-policy/nopolicy.cer")))
             {
                 var decoder = new CertificatePolicyDecoder();
                 var policies = decoder.GetPolicies(cert);
@@ -21,7 +21,7 @@ namespace VCSJones.FiddlerCert.UnitTests
         [Fact]
         public void ShouldReturnAllPolicies()
         {
-            using (var cert = new X509Certificate2(X509Certificate.CreateFromCertFile("../../cert-test-policy/ev-cert.cer")))
+            using (var cert = new X509Certificate2(X509Certificate.CreateFromCertFile("cert-test-policy/ev-cert.cer")))
             {
                 var decoder = new CertificatePolicyDecoder();
                 var policies = decoder.GetPolicies(cert);

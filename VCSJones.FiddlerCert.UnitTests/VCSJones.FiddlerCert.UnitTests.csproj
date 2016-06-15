@@ -42,10 +42,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CertificatePolicyDecoderTests.cs" />
+    <Compile Include="CtLogTests.cs" />
     <Compile Include="PublicKeyPinsParserTests.cs" />
     <Compile Include="OidParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PublicPinnedKeysValidationTests.cs" />
+    <Compile Include="SctDecoderTests.cs" />
     <Compile Include="TokenizerTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -55,14 +57,27 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="cert-test-ct\chromium-test-ct.cer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="cert-test-ct\symantec.cer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="cert-test-policy\cert.cer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="cert-test-policy\ev-cert.cer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="cert-test-policy\nopolicy.cer">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="cert-test-policy\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

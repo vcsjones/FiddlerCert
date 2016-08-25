@@ -7,6 +7,7 @@ namespace VCSJones.FiddlerCert
     public class HttpSecurityModel : INotifyPropertyChanged
     {
         private AsyncProperty<ObservableCollection<CertificateModel>> _certificateChain;
+        private AsyncProperty<ObservableCollection<CertificateModel>> _contentChain;
         private HpkpModel _hpkp;
         private bool _isNotTunnel;
 
@@ -16,6 +17,15 @@ namespace VCSJones.FiddlerCert
             set
             {
                 _certificateChain = value;
+                OnPropertyChanged();
+            }
+        }
+        public AsyncProperty<ObservableCollection<CertificateModel>> ContentChain
+        {
+            get { return _contentChain; }
+            set
+            {
+                _contentChain = value;
                 OnPropertyChanged();
             }
         }

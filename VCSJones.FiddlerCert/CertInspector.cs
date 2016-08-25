@@ -123,7 +123,7 @@ namespace VCSJones.FiddlerCert
                     var chain = cert.Item1;
 
                     var control = new WpfCertificateControl();
-                    control.DataContext = new HttpSecurityModel
+                    var model = new HttpSecurityModel
                     {
                         IsNotTunnel = (oS.BitFlags & SessionFlags.IsDecryptingTunnel) != SessionFlags.IsDecryptingTunnel,
                         CertificateChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
@@ -138,9 +138,23 @@ namespace VCSJones.FiddlerCert
                             PinDirectives =
                                 pinnedKeys == null ? null
                                 : new ObservableCollection<HpkpHashModel>(pinnedKeys.PinnedKeys.Select(pk => new HpkpHashModel { Algorithm = pk.Algorithm, HashBase64 = pk.FingerprintBase64 }).ToArray())
-                        }
-
+                        },
+                        ContentChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
+                        {
+                            if (!oS.bHasResponse)
+                            {
+                                return null;
+                            }
+                            var contentChain = ChainForContent(oS.ResponseBody);
+                            if (contentChain == null)
+                            {
+                                return null;
+                            }
+                            var chainItems = contentChain.ChainElements.Cast<X509ChainElement>().Select((t, i) => AssignCertificate(t, false, null, chain, i)).ToList();
+                            return new ObservableCollection<CertificateModel>(chainItems);
+                        }))
                     };
+                    control.DataContext = model;
                     _panel.Children.Add(control);
                 }
             }
@@ -150,6 +164,31 @@ namespace VCSJones.FiddlerCert
             }
         }
 
+        private static X509Chain ChainForContent(byte[] content)
+        {
+            if (content == null || content.Length < 2)
+            {
+                return null;
+            }
+            if (content[0] != 'M' || content[1] != 'Z')
+            {
+                return null;
+            }
+            try
+            {
+                var cert = new X509Certificate2(content);
+                var chain = new X509Chain();
+                //Revocation is checked async when the view is build.
+                //Don't do it here.
+                chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+                chain.Build(cert);
+                return chain;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
 
         private CertificateModel AssignCertificate(X509ChainElement chainElement, bool reportOnly, PublicPinnedKeys pinnedKey, X509Chain chain, int index)
         {

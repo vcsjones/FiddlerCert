@@ -12,13 +12,21 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources.xaml" />
+                <ResourceDictionary>
+                    <local:NullVisibilityConverter x:Key="NullVisibilityConverter" />
+                </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
     <TabControl>
-        <TabItem Header="Certificates">
+        <TabItem Header="HTTP Certificates">
             <ScrollViewer>
                 <local:CertificatesView DataContext="{Binding CertificateChain.Result}" />
+            </ScrollViewer>
+        </TabItem>
+        <TabItem Header="Content Certificates" Visibility="{Binding ContentChain.Result, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
+            <ScrollViewer>
+                <local:CertificatesView DataContext="{Binding ContentChain.Result}" />
             </ScrollViewer>
         </TabItem>
         <TabItem Header="HPKP" Style="{StaticResource TabItemHpkp}">

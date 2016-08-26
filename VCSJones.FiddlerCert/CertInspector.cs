@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace VCSJones.FiddlerCert
 {
@@ -212,9 +213,19 @@ namespace VCSJones.FiddlerCert
                 Errors = new AsyncProperty<CertificateErrors>(Task.Factory.StartNew(() => CertificateErrorsCalculator.GetCertificateErrors(chainElement))),
                 SpkiHashes = new AsyncProperty<SpkiHashesModel>(Task.Factory.StartNew(() => CalculateHashes(chainElement.Certificate, reportOnly, pinnedKey))),
                 InstallCommand = new RelayCommand(parameter => CertificateUI.ShowImportCertificate(chainElement.Certificate, FiddlerApplication.UI)),
-                ViewCommand = new RelayCommand(parameter => CertificateUI.ShowCertificate(chainElement.Certificate, FiddlerApplication.UI))
+                ViewCommand = new RelayCommand(parameter => CertificateUI.ShowCertificate(chainElement.Certificate, FiddlerApplication.UI)),
+                BrowseCommand = new RelayCommand(parameter =>
+                {
+                    var uri = parameter as Uri;
+                    if (uri?.Scheme == Uri.UriSchemeHttps)
+                    {
+                        Process.Start(uri.AbsoluteUri);
+                    }
+                })
             };
         }
+
+
 
         private static CertificateCtModel GetCtModel(X509Certificate2 certificate)
         {

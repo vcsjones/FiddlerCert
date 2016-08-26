@@ -15,7 +15,7 @@ namespace VCSJones.FiddlerCert
         private DateTime _endDate;
         private SignatureAlgorithmModel _signatureAlgorithm;
         private AsyncProperty<CertificateErrors> _errors;
-        private RelayCommand _viewCommand, _installCommand;
+        private RelayCommand _viewCommand, _installCommand, _browseCommand;
         private AsyncProperty<SpkiHashesModel> _spkiHashes;
         private Dictionary<string, List<string>> _distinguishedName;
         private string _serialNumber;
@@ -71,6 +71,16 @@ namespace VCSJones.FiddlerCert
             {
                 _thumbprint = value;
                 OnPropertyChanged();
+                // ReSharper disable once ExplicitCallerInfoArgument
+                OnPropertyChanged(nameof(CrtShUri));
+            }
+        }
+
+        public Uri CrtShUri
+        {
+            get
+            {
+                return new Uri($"https://crt.sh/?q={Thumbprint}");
             }
         }
 
@@ -183,6 +193,16 @@ namespace VCSJones.FiddlerCert
             set
             {
                 _viewCommand = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public RelayCommand BrowseCommand
+        {
+            get { return _browseCommand; }
+            set
+            {
+                _browseCommand = value;
                 OnPropertyChanged();
             }
         }

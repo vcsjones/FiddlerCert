@@ -87,7 +87,13 @@
                                     </Label.Content>
                                 </Label>
                                 <Label Grid.Column="0" Grid.Row="2">Thumbprint:</Label>
-                                <Label Grid.Column="1" Grid.Row="2" Content="{Binding Thumbprint}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                <Label Grid.Column="1" Grid.Row="2" ToolTip="{Binding CrtShUri, Mode=OneWay}">
+                                    <Label.Content>
+                                        <Hyperlink Command="{Binding BrowseCommand}" CommandParameter="{Binding CrtShUri, Mode=OneWay}">
+                                            <TextBlock Text="{Binding Thumbprint}" />
+                                        </Hyperlink>
+                                    </Label.Content>
+                                </Label>
                                 <Label Grid.Column="0" Grid.Row="3">Public Key:</Label>
                                 <Label Grid.Column="1" Grid.Row="3">
                                     <Label.Content>

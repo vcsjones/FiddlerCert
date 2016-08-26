@@ -19,7 +19,7 @@
         </ResourceDictionary>
     </UserControl.Resources>
     <TabControl>
-        <TabItem Header="HTTP Certificates">
+        <TabItem Header="HTTP Certificates" Visibility="{Binding CertificateChain.Result, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
             <ScrollViewer>
                 <local:CertificatesView DataContext="{Binding CertificateChain.Result}" />
             </ScrollViewer>

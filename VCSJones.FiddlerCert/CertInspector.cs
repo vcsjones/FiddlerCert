@@ -111,6 +111,25 @@ namespace VCSJones.FiddlerCert
         public override void AssignSession(Session oS)
         {
             Clear();
+            var control = new WpfCertificateControl();
+            var model = new HttpSecurityModel
+            {
+                IsNotTunnel = (oS.BitFlags & SessionFlags.IsDecryptingTunnel) != SessionFlags.IsDecryptingTunnel,
+                ContentChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
+                {
+                    if (!oS.bHasResponse)
+                    {
+                        return null;
+                    }
+                    var contentChain = ChainForContent(oS.ResponseBody);
+                    if (contentChain == null)
+                    {
+                        return null;
+                    }
+                    var chainItems = contentChain.ChainElements.Cast<X509ChainElement>().Select((t, i) => AssignCertificate(t, false, null, contentChain, i)).ToList();
+                    return new ObservableCollection<CertificateModel>(chainItems);
+                }))
+            };
             if (oS.isHTTPS || (oS.BitFlags & SessionFlags.IsDecryptingTunnel) == SessionFlags.IsDecryptingTunnel)
             {
                 Tuple<X509Chain, X509Certificate2> cert;
@@ -121,56 +140,29 @@ namespace VCSJones.FiddlerCert
                     var pinnedKeys = pkp == null && pkpReportOnly == null ? null : PublicKeyPinsParser.Parse(pkp ?? pkpReportOnly);
                     var reportOnly = pkpReportOnly != null;
                     var chain = cert.Item1;
-
-                    var control = new WpfCertificateControl();
-                    var model = new HttpSecurityModel
+                    model.CertificateChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
                     {
-                        IsNotTunnel = (oS.BitFlags & SessionFlags.IsDecryptingTunnel) != SessionFlags.IsDecryptingTunnel,
-                        CertificateChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
-                        {
-                            var chainItems = chain.ChainElements.Cast<X509ChainElement>().Select((t, i) => AssignCertificate(t, reportOnly, pinnedKeys, chain, i)).ToList();
-                            return new ObservableCollection<CertificateModel>(chainItems);
-                        })),
-                        Hpkp = new HpkpModel
-                        {
-                            HasHpkpHeaders = pinnedKeys != null,
-                            RawHpkpHeader = pkp ?? pkpReportOnly,
-                            PinDirectives =
-                                pinnedKeys == null ? null
-                                : new ObservableCollection<HpkpHashModel>(pinnedKeys.PinnedKeys.Select(pk => new HpkpHashModel { Algorithm = pk.Algorithm, HashBase64 = pk.FingerprintBase64 }).ToArray())
-                        },
-                        ContentChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
-                        {
-                            if (!oS.bHasResponse)
-                            {
-                                return null;
-                            }
-                            var contentChain = ChainForContent(oS.ResponseBody);
-                            if (contentChain == null)
-                            {
-                                return null;
-                            }
-                            var chainItems = contentChain.ChainElements.Cast<X509ChainElement>().Select((t, i) => AssignCertificate(t, false, null, chain, i)).ToList();
-                            return new ObservableCollection<CertificateModel>(chainItems);
-                        }))
+                        var chainItems = chain.ChainElements.Cast<X509ChainElement>().Select((t, i) => AssignCertificate(t, reportOnly, pinnedKeys, chain, i)).ToList();
+                        return new ObservableCollection<CertificateModel>(chainItems);
+                    }));
+                    model.Hpkp = new HpkpModel
+                    {
+                        HasHpkpHeaders = pinnedKeys != null,
+                        RawHpkpHeader = pkp ?? pkpReportOnly,
+                        PinDirectives =
+                            pinnedKeys == null ? null
+                            : new ObservableCollection<HpkpHashModel>(pinnedKeys.PinnedKeys.Select(pk => new HpkpHashModel { Algorithm = pk.Algorithm, HashBase64 = pk.FingerprintBase64 }).ToArray())
                     };
-                    control.DataContext = model;
-                    _panel.Children.Add(control);
                 }
             }
-            else
-            {
-                _panel.Children.Add(new System.Windows.Controls.Label { Content = "Certificates are for HTTPS connections only." });
-            }
+            control.DataContext = model;
+            _panel.Children.Add(control);
+                
         }
 
         private static X509Chain ChainForContent(byte[] content)
         {
             if (content == null || content.Length < 2)
-            {
-                return null;
-            }
-            if (content[0] != 'M' || content[1] != 'Z')
             {
                 return null;
             }

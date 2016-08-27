@@ -239,7 +239,13 @@
                                                        local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding HashBase64}"
                                                        />
                                                 <StackPanel Orientation="Horizontal" Grid.Column="1">
-                                                    <Label local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Content="{Binding HashBase64}" ContentStringFormat="&quot;{0}&quot;" />
+                                                    <Label Grid.Column="1" Grid.Row="2" ToolTip="{Binding CrtShUri, Mode=OneWay}">
+                                                        <Label.Content>
+                                                            <Hyperlink Command="{Binding ClickCommand}" CommandParameter="{Binding CrtShUri, Mode=OneWay}">
+                                                                <TextBlock Text="{Binding HashBase64}" />
+                                                            </Hyperlink>
+                                                        </Label.Content>
+                                                    </Label>
                                                     <StackPanel Visibility="{Binding IsPinned, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                         <Image
                                                                         Source="/VCSJones.FiddlerCert;component/Assets/pushpin_16xLG.png" Width="16" Height="16"

@@ -258,7 +258,7 @@ namespace VCSJones.FiddlerCert
 
         private static SpkiHashesModel CalculateHashes(X509Certificate2 certificate, bool reportOnly, PublicPinnedKeys pinnedKeys)
         {
-            var sha256 = CertificateHashBuilder.BuildHashForPublicKey<SHA256CryptoServiceProvider>(certificate);
+            var sha256 = CertificateHashBuilder.BuildHashForPublicKeyBinary<SHA256CryptoServiceProvider>(certificate);
             var model = new SpkiHashesModel
             {
                 Hashes = new ObservableCollection<SpkiHashModel>
@@ -267,8 +267,8 @@ namespace VCSJones.FiddlerCert
                     {
                         ReportOnly = reportOnly,
                         Algorithm = PinAlgorithm.SHA256,
-                        HashBase64 = sha256,
-                        IsPinned = pinnedKeys?.PinnedKeys?.Any(pk => pk.FingerprintBase64 == sha256) ?? false
+                        Hash = sha256,
+                        IsPinned = pinnedKeys?.PinnedKeys?.Any(pk => pk.Fingerprint.SequenceEqual(sha256)) ?? false
                     },
                 }
             };

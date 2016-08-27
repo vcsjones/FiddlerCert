@@ -80,13 +80,19 @@
                                     <TextBlock ClipToBounds="True" HorizontalAlignment="Center" Margin="5,0" Padding="10,2" VerticalAlignment="Center" TextAlignment="Center" Style="{StaticResource CertificateTypeStyle}" FontSize="10" SnapsToDevicePixels="True" UseLayoutRounding="True" />
                                     <TextBlock Style="{StaticResource TabHeader}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Text="{Binding CommonName, StringFormat=Issued To {0}}" />
                                 </StackPanel>
-                                <Label Grid.Column="0" Grid.Row="1">Subject Alternative Name:</Label>
+                                <Label Grid.Column="0" Grid.Row="1"
+                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                       local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding SubjectAlternativeName}"
+                                       >Subject Alternative Name:</Label>
                                 <Label Grid.Column="1" Grid.Row="1">
                                     <Label.Content>
                                         <TextBlock TextWrapping="Wrap" Text="{Binding SubjectAlternativeName}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
                                     </Label.Content>
                                 </Label>
-                                <Label Grid.Column="0" Grid.Row="2">Thumbprint:</Label>
+                                <Label Grid.Column="0" Grid.Row="2"
+                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                       local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding Thumbprint}"
+                                       >Thumbprint:</Label>
                                 <Label Grid.Column="1" Grid.Row="2" ToolTip="{Binding CrtShUri, Mode=OneWay}">
                                     <Label.Content>
                                         <Hyperlink Command="{Binding BrowseCommand}" CommandParameter="{Binding CrtShUri, Mode=OneWay}">
@@ -94,7 +100,17 @@
                                         </Hyperlink>
                                     </Label.Content>
                                 </Label>
-                                <Label Grid.Column="0" Grid.Row="3">Public Key:</Label>
+                                <Label Grid.Column="0" Grid.Row="3" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True">
+                                    <Label.Content>Public Key:</Label.Content>
+                                    <local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText>
+                                        <MultiBinding StringFormat="{}{0} ({1}-bit)">
+                                            <MultiBinding.Bindings>
+                                                <Binding Path="PublicKey.Algorithm" />
+                                                <Binding Path="PublicKey.KeySizeBits" />
+                                            </MultiBinding.Bindings>
+                                        </MultiBinding>
+                                    </local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText>
+                                </Label>
                                 <Label Grid.Column="1" Grid.Row="3">
                                     <Label.Content>
                                         <TextBlock local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True">
@@ -109,13 +125,27 @@
                                         </TextBlock>
                                     </Label.Content>
                                 </Label>
-                                <Label Grid.Column="0" Grid.Row="4">Signature Algorithm:</Label>
+                                <Label Grid.Column="0" Grid.Row="4"
+                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                       local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding SignatureAlgorithm.SignatureAlgorithm.FriendlyName}"
+                                       >Signature Algorithm:</Label>
                                 <Label Grid.Column="1" Grid.Row="4" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Content="{Binding SignatureAlgorithm.SignatureAlgorithm.FriendlyName }" ToolTip="{Binding SignatureAlgorithm.SignatureAlgorithm.Value}">
                                     <Label.Foreground>
                                         <Binding Path="SignatureAlgorithm" Converter="{StaticResource SignatureAlgorithmStrengthConverter}" />
                                     </Label.Foreground>
                                 </Label>
-                                <Label Grid.Column="0" Grid.Row="5">Validity From:</Label>
+                                <Label Grid.Column="0" Grid.Row="5"
+                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True">
+                                    <Label.Content>Validity From:</Label.Content>
+                                    <local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText>
+                                        <MultiBinding StringFormat="{}{0} to {1}">
+                                            <MultiBinding.Bindings>
+                                                <Binding Path="BeginDate" />
+                                                <Binding Path="EndDate" />
+                                            </MultiBinding.Bindings>
+                                        </MultiBinding>
+                                    </local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText>
+                                </Label>
                                 <Label Grid.Column="1" Grid.Row="5" Foreground="{Binding EndDate, Converter={StaticResource ExpiryStrengthConverter}}" ToolTip="{Binding ExpiresIn, Converter={StaticResource TimeSpanConverter}}">
                                     <Label.Content>
                                         <TextBlock local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True">
@@ -130,7 +160,10 @@
                                         </TextBlock>
                                     </Label.Content>
                                 </Label>
-                                <Label Grid.Column="0" Grid.Row="6">Serial Number:</Label>
+                                <Label Grid.Column="0" Grid.Row="6"
+                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                       local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding SerialNumber}"
+                                       >Serial Number:</Label>
                                 <Label Grid.Column="1" Grid.Row="6" Content="{Binding SerialNumber}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
                                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
                                     <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding ViewCommand}">View</Button>
@@ -201,9 +234,12 @@
                                                     <ColumnDefinition SharedSizeGroup="LabelGroup" Width="Auto" />
                                                     <ColumnDefinition />
                                                 </Grid.ColumnDefinitions>
-                                                <Label Grid.Column="0" Content="{Binding Algorithm}" ContentStringFormat="{}{0} SPKI Hash:" />
+                                                <Label Grid.Column="0" Content="{Binding Algorithm}" ContentStringFormat="{}{0} SPKI Hash:"
+                                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                                       local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding HashBase64}"
+                                                       />
                                                 <StackPanel Orientation="Horizontal" Grid.Column="1">
-                                                    <Label  local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Content="{Binding HashBase64}" ContentStringFormat="&quot;{0}&quot;" />
+                                                    <Label local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Content="{Binding HashBase64}" ContentStringFormat="&quot;{0}&quot;" />
                                                     <StackPanel Visibility="{Binding IsPinned, Converter={StaticResource BooleanToVisibilityConverter}}">
                                                         <Image
                                                                         Source="/VCSJones.FiddlerCert;component/Assets/pushpin_16xLG.png" Width="16" Height="16"
@@ -265,7 +301,10 @@
                                                         <RowDefinition />
                                                         <RowDefinition />
                                                     </Grid.RowDefinitions>
-                                                    <Label Grid.Column="0" Grid.Row="0">Timestamp:</Label>
+                                                    <Label Grid.Column="0" Grid.Row="0"
+                                                           local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                                           local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd hh:mm:ss.fffff tt K}}"
+                                                           >Timestamp:</Label>
                                                     <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
                                                         <Label Content="{Binding Timestamp}" ContentStringFormat="{}{0:yyyy-MM-dd hh:mm:ss.fffff tt K}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
                                                         <Label Foreground="Red" Content="{Binding RevocationEffective}" ContentStringFormat="{}Revoked {0:yyyy-MM-dd hh:mm:ss.fffff tt K}" Visibility="{Binding Revoked, Converter={StaticResource BooleanToVisibilityConverter}}" />

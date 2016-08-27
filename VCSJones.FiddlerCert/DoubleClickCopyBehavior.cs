@@ -10,6 +10,9 @@ namespace VCSJones.FiddlerCert
         public static readonly DependencyProperty IsCopyToClipBoardOnDoubleClickProperty =
             DependencyProperty.RegisterAttached("IsCopyToClipBoardOnDoubleClick", typeof(bool), typeof(DoubleClickCopyBehavior), new PropertyMetadata { DefaultValue = false, PropertyChangedCallback = OnIsCopyToClipBoardOnDoubleClickChanged });
 
+        public static readonly DependencyProperty CopyToClipBoardOnDoubleClickTextProperty =
+            DependencyProperty.RegisterAttached("CopyToClipBoardOnDoubleClickText", typeof(string), typeof(DoubleClickCopyBehavior), new PropertyMetadata { DefaultValue = null });
+
         public static readonly DependencyProperty LastClickTimeProperty =
             DependencyProperty.RegisterAttached("LastClickTime", typeof(int?), typeof(DoubleClickCopyBehavior), new PropertyMetadata { DefaultValue = null });
 
@@ -24,6 +27,16 @@ namespace VCSJones.FiddlerCert
         public static void SetIsCopyToClipBoardOnDoubleClick(UIElement element, bool value)
         {
             element.SetValue(IsCopyToClipBoardOnDoubleClickProperty, value);
+        }
+
+        public static string GetCopyToClipBoardOnDoubleClickText(UIElement element)
+        {
+            return (string)element.GetValue(IsCopyToClipBoardOnDoubleClickProperty);
+        }
+
+        public static void SetCopyToClipBoardOnDoubleClickText(UIElement element, string value)
+        {
+            element.SetValue(CopyToClipBoardOnDoubleClickTextProperty, value);
         }
 
         public static void OnIsCopyToClipBoardOnDoubleClickChanged(object sender, DependencyPropertyChangedEventArgs args)
@@ -67,6 +80,7 @@ namespace VCSJones.FiddlerCert
             }
             var lastClickLocation = element.GetValue(LastClickLocationProperty) as Point?;
             var lastClickTime = element.GetValue(LastClickTimeProperty) as int?;
+            var copyText = element.GetValue(CopyToClipBoardOnDoubleClickTextProperty) as string;
             if (lastClickLocation.HasValue && lastClickTime.HasValue)
             {
                 if (e.Timestamp - lastClickTime.Value > SystemInformation.DoubleClickTime)
@@ -80,20 +94,29 @@ namespace VCSJones.FiddlerCert
                 rect.Inflate(size.Width / 2, size.Height / 2);
                 if (rect.Contains(e.GetPosition(element)))
                 {
-                    var contentControl = element as ContentControl;
-                    if (contentControl != null)
+                    if (string.IsNullOrEmpty(copyText))
                     {
-                        Debug.WriteLine($"Clipboard set to: \"{contentControl.Content.ToString()}\"");
-                        System.Windows.Clipboard.SetText(contentControl.Content.ToString());
+                        var contentControl = element as ContentControl;
+                        if (contentControl != null)
+                        {
+                            Debug.WriteLine($"Clipboard set to: \"{contentControl.Content.ToString()}\"");
+                            System.Windows.Clipboard.SetText(contentControl.Content.ToString());
+                        }
+                        var textBlock = element as TextBlock;
+                        if (textBlock != null)
+                        {
+                            Debug.WriteLine($"Clipboard set to: \"{textBlock.Text}\"");
+                            System.Windows.Clipboard.SetText(textBlock.Text);
+                        }
                     }
-                    var textBlock = element as TextBlock;
-                    if (textBlock != null)
+                    else
                     {
-                        Debug.WriteLine($"Clipboard set to: \"{textBlock.Text}\"");
-                        System.Windows.Clipboard.SetText(textBlock.Text);
+                        Debug.WriteLine($"Clipboard set to: \"{copyText}\"");
+                        System.Windows.Clipboard.SetText(copyText);
                     }
                     ClearDoubleClickProperties(element);
                     return;
+
                 }
             }
             element.SetValue(LastClickLocationProperty, e.GetPosition(element));

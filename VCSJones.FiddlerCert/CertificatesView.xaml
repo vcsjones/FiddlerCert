@@ -1,0 +1,346 @@
+﻿<UserControl x:Class="VCSJones.FiddlerCert.CertificatesView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:VCSJones.FiddlerCert"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="500">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources.xaml" />
+                <ResourceDictionary>
+                    <local:ExpiryStrengthConverter x:Key="ExpiryStrengthConverter" />
+                    <local:TimeSpanConverter x:Key="TimeSpanConverter" />
+                    <local:SignatureAlgorithmStrengthConverter x:Key="SignatureAlgorithmStrengthConverter" />
+                    <local:ContainedValueVisibilityConverter x:Key="ContainedValueVisibilityConverter" />
+                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <ItemsControl ItemsSource="{Binding .}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel IsItemsHost="True" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:CertificateModel}" >
+                    <TabControl Margin="5">
+                        <TabItem Header="Overview">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                                    <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" />
+                                    <Image Width="16" Height="16" Style="{StaticResource ErrorShield}" Stretch="None" ToolTipService.ShowDuration="{x:Static system:Int32.MaxValue}">
+                                        <Image.ToolTip>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto" />
+                                                    <ColumnDefinition Width="*" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                    <RowDefinition />
+                                                </Grid.RowDefinitions>
+                                                <Image Grid.Column="0" Grid.Row="0" Width="16" Height="16" Stretch="None" Source="/VCSJones.FiddlerCert;component/Assets/security_Shields_Blank_16xLG.png" />
+                                                <Label Grid.Column="1" Grid.Row="0">The revocation status of the certificate is being checked.</Label>
+
+                                                <Image Grid.Column="0" Grid.Row="1" Width="16" Height="16" Stretch="None" Source="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Alert_16xLG_color.png" />
+                                                <Label Grid.Column="1" Grid.Row="1">The revocation status of the certificate was checked, but the status was unable to be determined.</Label>
+
+                                                <Image Grid.Column="0" Grid.Row="2" Width="16" Height="16" Stretch="None" Source="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Critical_16xLG_color.png" />
+                                                <Label Grid.Column="1" Grid.Row="2">The revocation status of the certificate was checked and it is revoked.</Label>
+
+                                                <Image Grid.Column="0" Grid.Row="3" Width="16" Height="16" Stretch="None" Source="/VCSJones.FiddlerCert;component/Assets/Security_Shields_Complete_and_ok_16xLG_color.png" />
+                                                <Label Grid.Column="1" Grid.Row="3">The revocation status of the certificate was checked and it is not revoked.</Label>
+                                            </Grid>
+                                        </Image.ToolTip>
+                                    </Image>
+                                    <TextBlock ClipToBounds="True" HorizontalAlignment="Center" Margin="5,0" Padding="10,2" VerticalAlignment="Center" TextAlignment="Center" Style="{StaticResource CertificateTypeStyle}" FontSize="10" SnapsToDevicePixels="True" UseLayoutRounding="True" />
+                                    <TextBlock Style="{StaticResource TabHeader}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Text="{Binding CommonName, StringFormat=Issued To {0}}" />
+                                </StackPanel>
+                                <Label Grid.Column="0" Grid.Row="1"
+                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                       local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding SubjectAlternativeName}"
+                                       >Subject Alternative Name:</Label>
+                                <Label Grid.Column="1" Grid.Row="1">
+                                    <Label.Content>
+                                        <TextBlock TextWrapping="Wrap" Text="{Binding SubjectAlternativeName}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                    </Label.Content>
+                                </Label>
+                                <Label Grid.Column="0" Grid.Row="2"
+                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                       local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding Thumbprint}"
+                                       >Thumbprint:</Label>
+                                <Label Grid.Column="1" Grid.Row="2" ToolTip="{Binding CrtShUri, Mode=OneWay}">
+                                    <Label.Content>
+                                        <Hyperlink Command="{Binding BrowseCommand}" CommandParameter="{Binding CrtShUri, Mode=OneWay}">
+                                            <TextBlock Text="{Binding Thumbprint}" />
+                                        </Hyperlink>
+                                    </Label.Content>
+                                </Label>
+                                <Label Grid.Column="0" Grid.Row="3" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True">
+                                    <Label.Content>Public Key:</Label.Content>
+                                    <local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText>
+                                        <MultiBinding StringFormat="{}{0} ({1}-bit)">
+                                            <MultiBinding.Bindings>
+                                                <Binding Path="PublicKey.Algorithm" />
+                                                <Binding Path="PublicKey.KeySizeBits" />
+                                            </MultiBinding.Bindings>
+                                        </MultiBinding>
+                                    </local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText>
+                                </Label>
+                                <Label Grid.Column="1" Grid.Row="3">
+                                    <Label.Content>
+                                        <TextBlock local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} ({1}-bit)">
+                                                    <MultiBinding.Bindings>
+                                                        <Binding Path="PublicKey.Algorithm" />
+                                                        <Binding Path="PublicKey.KeySizeBits" />
+                                                    </MultiBinding.Bindings>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </Label.Content>
+                                </Label>
+                                <Label Grid.Column="0" Grid.Row="4"
+                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                       local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding SignatureAlgorithm.SignatureAlgorithm.FriendlyName}"
+                                       >Signature Algorithm:</Label>
+                                <Label Grid.Column="1" Grid.Row="4" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Content="{Binding SignatureAlgorithm.SignatureAlgorithm.FriendlyName }" ToolTip="{Binding SignatureAlgorithm.SignatureAlgorithm.Value}">
+                                    <Label.Foreground>
+                                        <Binding Path="SignatureAlgorithm" Converter="{StaticResource SignatureAlgorithmStrengthConverter}" />
+                                    </Label.Foreground>
+                                </Label>
+                                <Label Grid.Column="0" Grid.Row="5"
+                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True">
+                                    <Label.Content>Validity From:</Label.Content>
+                                    <local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText>
+                                        <MultiBinding StringFormat="{}{0} to {1}">
+                                            <MultiBinding.Bindings>
+                                                <Binding Path="BeginDate" />
+                                                <Binding Path="EndDate" />
+                                            </MultiBinding.Bindings>
+                                        </MultiBinding>
+                                    </local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText>
+                                </Label>
+                                <Label Grid.Column="1" Grid.Row="5" Foreground="{Binding EndDate, Converter={StaticResource ExpiryStrengthConverter}}" ToolTip="{Binding ExpiresIn, Converter={StaticResource TimeSpanConverter}}">
+                                    <Label.Content>
+                                        <TextBlock local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True">
+                                            <TextBlock.Text>
+                                                <MultiBinding StringFormat="{}{0} to {1}">
+                                                    <MultiBinding.Bindings>
+                                                        <Binding Path="BeginDate" />
+                                                        <Binding Path="EndDate" />
+                                                    </MultiBinding.Bindings>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                    </Label.Content>
+                                </Label>
+                                <Label Grid.Column="0" Grid.Row="6"
+                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                       local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding SerialNumber}"
+                                       >Serial Number:</Label>
+                                <Label Grid.Column="1" Grid.Row="6" Content="{Binding SerialNumber}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Margin="5">
+                                    <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding ViewCommand}">View</Button>
+                                    <Button MinWidth="75" Margin="3" Padding="3" Command="{Binding InstallCommand}">Install</Button>
+                                </StackPanel>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="Subject">
+                            <Grid VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                                    <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" SnapsToDevicePixels="True" />
+                                    <TextBlock Style="{StaticResource TabHeader}">Subject</TextBlock>
+                                </StackPanel>
+                                <ItemsControl ItemsSource="{Binding DistinguishedName}"  Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition SharedSizeGroup="LabelGroupSubject" Width="Auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Grid.Column="0" Content="{Binding Key}" ContentStringFormat="{}{0}:" />
+                                                <ItemsControl Grid.Column="1" ItemsSource="{Binding Value}">
+                                                    <ItemsControl.ItemsPanel>
+                                                        <ItemsPanelTemplate>
+                                                            <StackPanel />
+                                                        </ItemsPanelTemplate>
+                                                    </ItemsControl.ItemsPanel>
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Label local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" Content="{Binding .}" />
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="SPKI Fingerprints">
+                            <Grid VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                                    <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" SnapsToDevicePixels="True" />
+                                    <TextBlock Style="{StaticResource TabHeader}">SPKI Fingerprints</TextBlock>
+                                </StackPanel>
+                                <ItemsControl ItemsSource="{Binding SpkiHashes.Result.Hashes}" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type local:SpkiHashModel}">
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition SharedSizeGroup="LabelGroup" Width="Auto" />
+                                                    <ColumnDefinition />
+                                                </Grid.ColumnDefinitions>
+                                                <Label Grid.Column="0" Content="{Binding Algorithm}" ContentStringFormat="{}{0} SPKI Hash:"
+                                                       local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                                       local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding HashBase64}"
+                                                       />
+                                                <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                                    <Label Grid.Column="1" Grid.Row="2" ToolTip="{Binding CrtShUri, Mode=OneWay}">
+                                                        <Label.Content>
+                                                            <Hyperlink Command="{Binding ClickCommand}" CommandParameter="{Binding CrtShUri, Mode=OneWay}">
+                                                                <TextBlock Text="{Binding HashBase64}" />
+                                                            </Hyperlink>
+                                                        </Label.Content>
+                                                    </Label>
+                                                    <StackPanel Visibility="{Binding IsPinned, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                        <Image
+                                                                        Source="/VCSJones.FiddlerCert;component/Assets/pushpin_16xLG.png" Width="16" Height="16"
+                                                                        ToolTip="Public key hash is pinned with HPKP." />
+                                                        <Image
+                                                                        Visibility="{Binding ReportOnly, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                                        Source="/VCSJones.FiddlerCert;component/Assets/Message_16xLG.png" Width="16" Height="16"
+                                                                        ToolTip="Public key is pinned using report-only." />
+                                                        <Image Source="/VCSJones.FiddlerCert;component/Assets/StatusAnnotations_Alert_16xLG_color.png" Width="16" Height="16"
+                                                                          ToolTip="This hash appears to be pinned, but using a non-standard algorithm.">
+                                                            <Image.Visibility>
+                                                                <Binding Path="Algorithm" Converter="{StaticResource ContainedValueVisibilityConverter}">
+                                                                    <Binding.ConverterParameter>
+                                                                        <x:Array Type="{x:Type local:PinAlgorithm}">
+                                                                            <local:PinAlgorithm>SHA1</local:PinAlgorithm>
+                                                                        </x:Array>
+                                                                    </Binding.ConverterParameter>
+                                                                </Binding>
+                                                            </Image.Visibility>
+                                                        </Image>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </TabItem>
+                        <TabItem Header="SCTs" Visibility="{Binding CertificateCtModel.Result.HasSignatures, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <Grid VerticalAlignment="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2">
+                                    <Image Width="32" Height="32" Source="/VCSJones.FiddlerCert;component/Assets/certificate_32xLG.png" Stretch="None" SnapsToDevicePixels="True" />
+                                    <TextBlock Style="{StaticResource TabHeader}">SCTs</TextBlock>
+                                </StackPanel>
+                                <ItemsControl ItemsSource="{Binding CertificateCtModel.Result.Signatures}" Grid.Row="1" Grid.ColumnSpan="2" Grid.Column="0" Grid.IsSharedSizeScope="True">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type local:SctSignatureModel}">
+                                            <StackPanel>
+                                                <Label FontSize="14" Content="{Binding Index}" ContentStringFormat="{}SCT #{0}" />
+                                                <Grid Margin="10, 0, 0, 10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition SharedSizeGroup="LabelGroup" Width="Auto" />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+                                                    <Label Grid.Column="0" Grid.Row="0"
+                                                           local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True"
+                                                           local:DoubleClickCopyBehavior.CopyToClipBoardOnDoubleClickText="{Binding Timestamp, StringFormat={}{0:yyyy-MM-dd hh:mm:ss.fffff tt K}}"
+                                                           >Timestamp:</Label>
+                                                    <StackPanel Orientation="Horizontal" Grid.Column="1" Grid.Row="0">
+                                                        <Label Content="{Binding Timestamp}" ContentStringFormat="{}{0:yyyy-MM-dd hh:mm:ss.fffff tt K}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                                        <Label Foreground="Red" Content="{Binding RevocationEffective}" ContentStringFormat="{}Revoked {0:yyyy-MM-dd hh:mm:ss.fffff tt K}" Visibility="{Binding Revoked, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                                    </StackPanel>
+                                                    <Label Grid.Column="0" Grid.Row="1">Signature Algorithm:</Label>
+                                                    <Label Grid.Column="1" Grid.Row="1" Style="{StaticResource SctSignatureAlgorithmStyle}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                                    <Label Grid.Column="0" Grid.Row="2">Hash Algorithm:</Label>
+                                                    <Label Grid.Column="1" Grid.Row="2" Style="{StaticResource SctHashAlgorithmStyle}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                                    <Label Grid.Column="0" Grid.Row="3">CT Log ID:</Label>
+                                                    <Label Grid.Column="1" Grid.Row="3" Content="{Binding LogIdHex}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                                    <Label Grid.Column="0" Grid.Row="4">CT Log Name:</Label>
+                                                    <Label Grid.Column="1" Grid.Row="4" Content="{Binding LogName}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                                    <Label Grid.Column="0" Grid.Row="5">CT Log URL:</Label>
+                                                    <Label Grid.Column="1" Grid.Row="5" Content="{Binding LogUrl}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                                    <Label Grid.Column="0" Grid.Row="6">Signature:</Label>
+                                                    <Label Grid.Column="1" Grid.Row="6">
+                                                        <Label.Content>
+                                                            <TextBlock TextWrapping="Wrap" Text="{Binding SignatureHex}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                                        </Label.Content>
+                                                    </Label>
+                                                </Grid>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </Grid>
+</UserControl>

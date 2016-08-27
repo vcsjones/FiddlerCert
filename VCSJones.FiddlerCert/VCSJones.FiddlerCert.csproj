@@ -69,6 +69,9 @@
     <Compile Include="CertificateInspector.cs" />
     <Compile Include="CertificateModel.cs" />
     <Compile Include="CertificatePolicyDecoder.cs" />
+    <Compile Include="CertificatesView.xaml.cs">
+      <DependentUpon>CertificatesView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="CertificateType.cs" />
     <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
@@ -133,6 +136,10 @@
     <Resource Include="Assets\Security_Shields_Critical_16xLG_color.png" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="CertificatesView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -10,6 +10,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
+using System.Diagnostics;
 
 namespace VCSJones.FiddlerCert
 {
@@ -111,6 +112,25 @@ namespace VCSJones.FiddlerCert
         public override void AssignSession(Session oS)
         {
             Clear();
+            var control = new WpfCertificateControl();
+            var model = new HttpSecurityModel
+            {
+                IsNotTunnel = (oS.BitFlags & SessionFlags.IsDecryptingTunnel) != SessionFlags.IsDecryptingTunnel,
+                ContentChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
+                {
+                    if (!oS.bHasResponse)
+                    {
+                        return null;
+                    }
+                    var contentChain = ChainForContent(oS.ResponseBody);
+                    if (contentChain == null)
+                    {
+                        return null;
+                    }
+                    var chainItems = contentChain.ChainElements.Cast<X509ChainElement>().Select((t, i) => AssignCertificate(t, false, null, contentChain, i)).ToList();
+                    return new ObservableCollection<CertificateModel>(chainItems);
+                }))
+            };
             if (oS.isHTTPS || (oS.BitFlags & SessionFlags.IsDecryptingTunnel) == SessionFlags.IsDecryptingTunnel)
             {
                 Tuple<X509Chain, X509Certificate2> cert;
@@ -121,35 +141,47 @@ namespace VCSJones.FiddlerCert
                     var pinnedKeys = pkp == null && pkpReportOnly == null ? null : PublicKeyPinsParser.Parse(pkp ?? pkpReportOnly);
                     var reportOnly = pkpReportOnly != null;
                     var chain = cert.Item1;
-
-                    var control = new WpfCertificateControl();
-                    control.DataContext = new HttpSecurityModel
+                    model.CertificateChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
                     {
-                        IsNotTunnel = (oS.BitFlags & SessionFlags.IsDecryptingTunnel) != SessionFlags.IsDecryptingTunnel,
-                        CertificateChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
-                        {
-                            var chainItems = chain.ChainElements.Cast<X509ChainElement>().Select((t, i) => AssignCertificate(t, reportOnly, pinnedKeys, chain, i)).ToList();
-                            return new ObservableCollection<CertificateModel>(chainItems);
-                        })),
-                        Hpkp = new HpkpModel
-                        {
-                            HasHpkpHeaders = pinnedKeys != null,
-                            RawHpkpHeader = pkp ?? pkpReportOnly,
-                            PinDirectives =
-                                pinnedKeys == null ? null
-                                : new ObservableCollection<HpkpHashModel>(pinnedKeys.PinnedKeys.Select(pk => new HpkpHashModel { Algorithm = pk.Algorithm, HashBase64 = pk.FingerprintBase64 }).ToArray())
-                        }
-
+                        var chainItems = chain.ChainElements.Cast<X509ChainElement>().Select((t, i) => AssignCertificate(t, reportOnly, pinnedKeys, chain, i)).ToList();
+                        return new ObservableCollection<CertificateModel>(chainItems);
+                    }));
+                    model.Hpkp = new HpkpModel
+                    {
+                        HasHpkpHeaders = pinnedKeys != null,
+                        RawHpkpHeader = pkp ?? pkpReportOnly,
+                        PinDirectives =
+                            pinnedKeys == null ? null
+                            : new ObservableCollection<HpkpHashModel>(pinnedKeys.PinnedKeys.Select(pk => new HpkpHashModel { Algorithm = pk.Algorithm, HashBase64 = pk.FingerprintBase64 }).ToArray())
                     };
-                    _panel.Children.Add(control);
                 }
             }
-            else
-            {
-                _panel.Children.Add(new System.Windows.Controls.Label { Content = "Certificates are for HTTPS connections only." });
-            }
+            control.DataContext = model;
+            _panel.Children.Add(control);
+                
         }
 
+        private static X509Chain ChainForContent(byte[] content)
+        {
+            if (content == null || content.Length < 2)
+            {
+                return null;
+            }
+            try
+            {
+                var cert = new X509Certificate2(content);
+                var chain = new X509Chain();
+                //Revocation is checked async when the view is build.
+                //Don't do it here.
+                chain.ChainPolicy.RevocationMode = X509RevocationMode.NoCheck;
+                chain.Build(cert);
+                return chain;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
 
         private CertificateModel AssignCertificate(X509ChainElement chainElement, bool reportOnly, PublicPinnedKeys pinnedKey, X509Chain chain, int index)
         {
@@ -181,9 +213,19 @@ namespace VCSJones.FiddlerCert
                 Errors = new AsyncProperty<CertificateErrors>(Task.Factory.StartNew(() => CertificateErrorsCalculator.GetCertificateErrors(chainElement))),
                 SpkiHashes = new AsyncProperty<SpkiHashesModel>(Task.Factory.StartNew(() => CalculateHashes(chainElement.Certificate, reportOnly, pinnedKey))),
                 InstallCommand = new RelayCommand(parameter => CertificateUI.ShowImportCertificate(chainElement.Certificate, FiddlerApplication.UI)),
-                ViewCommand = new RelayCommand(parameter => CertificateUI.ShowCertificate(chainElement.Certificate, FiddlerApplication.UI))
+                ViewCommand = new RelayCommand(parameter => CertificateUI.ShowCertificate(chainElement.Certificate, FiddlerApplication.UI)),
+                BrowseCommand = new RelayCommand(parameter =>
+                {
+                    var uri = parameter as Uri;
+                    if (uri?.Scheme == Uri.UriSchemeHttps)
+                    {
+                        Process.Start(uri.AbsoluteUri);
+                    }
+                })
             };
         }
+
+
 
         private static CertificateCtModel GetCtModel(X509Certificate2 certificate)
         {
@@ -216,7 +258,7 @@ namespace VCSJones.FiddlerCert
 
         private static SpkiHashesModel CalculateHashes(X509Certificate2 certificate, bool reportOnly, PublicPinnedKeys pinnedKeys)
         {
-            var sha256 = CertificateHashBuilder.BuildHashForPublicKey<SHA256CryptoServiceProvider>(certificate);
+            var sha256 = CertificateHashBuilder.BuildHashForPublicKeyBinary<SHA256CryptoServiceProvider>(certificate);
             var model = new SpkiHashesModel
             {
                 Hashes = new ObservableCollection<SpkiHashModel>
@@ -225,8 +267,8 @@ namespace VCSJones.FiddlerCert
                     {
                         ReportOnly = reportOnly,
                         Algorithm = PinAlgorithm.SHA256,
-                        HashBase64 = sha256,
-                        IsPinned = pinnedKeys?.PinnedKeys?.Any(pk => pk.FingerprintBase64 == sha256) ?? false
+                        Hash = sha256,
+                        IsPinned = pinnedKeys?.PinnedKeys?.Any(pk => pk.Fingerprint.SequenceEqual(sha256)) ?? false
                     },
                 }
             };

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("VCSJones.FiddlerCert")]
-[assembly: AssemblyCopyright("Copyright ©2015 Kevin Jones")]
+[assembly: AssemblyCopyright("Copyright ©2016 Kevin Jones")]
 [assembly: System.Resources.NeutralResourcesLanguage("en-US")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: Guid("da40af7f-0862-47f9-8610-e726d2584477")]
 
 [assembly: Fiddler.RequiredVersion("4.5.1.0")]
-[assembly: AssemblyVersion("1.0.5.0")]
+[assembly: AssemblyVersion("1.0.6.0")]

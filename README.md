@@ -22,7 +22,8 @@ release. A pre-built, signed, installer is available for convenience.
 ### Installer
 
 You'll need Visual Studio 2015 or later to open the solution, or the [Microsoft Build Tools 2015](https://www.microsoft.com/en-us/download/details.aspx?id=48159)
-to run the build script. You'll also need NSIS installed to build the installer.
+to run the build script. You'll also need NSIS installed to build the installer. You will also need the
+[NSIS](http://nsis.sourceforge.net/) framework installed to the default location.
 
 To build and create an installer, simply point MSBuild to the `build` directory of the repository. For example:
 

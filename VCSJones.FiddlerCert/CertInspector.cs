@@ -113,7 +113,9 @@ namespace VCSJones.FiddlerCert
         {
             Clear();
             var control = new WpfCertificateControl();
-            var model = new HttpSecurityModel
+            var masterModel = new CertInspectorModel();
+            masterModel.UpdateBarModel = new UpdateBarModel(CertificateInspector.LatestVersion.Item1, CertificateInspector.LatestVersion.Item2);
+            masterModel.HttpSecurityModel = new HttpSecurityModel
             {
                 IsNotTunnel = (oS.BitFlags & SessionFlags.IsDecryptingTunnel) != SessionFlags.IsDecryptingTunnel,
                 ContentChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
@@ -141,12 +143,12 @@ namespace VCSJones.FiddlerCert
                     var pinnedKeys = pkp == null && pkpReportOnly == null ? null : PublicKeyPinsParser.Parse(pkp ?? pkpReportOnly);
                     var reportOnly = pkpReportOnly != null;
                     var chain = cert.Item1;
-                    model.CertificateChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
+                    masterModel.HttpSecurityModel.CertificateChain = new AsyncProperty<ObservableCollection<CertificateModel>>(Task.Factory.StartNew(() =>
                     {
                         var chainItems = chain.ChainElements.Cast<X509ChainElement>().Select((t, i) => AssignCertificate(t, reportOnly, pinnedKeys, chain, i)).ToList();
                         return new ObservableCollection<CertificateModel>(chainItems);
                     }));
-                    model.Hpkp = new HpkpModel
+                    masterModel.HttpSecurityModel.Hpkp = new HpkpModel
                     {
                         HasHpkpHeaders = pinnedKeys != null,
                         RawHpkpHeader = pkp ?? pkpReportOnly,
@@ -156,7 +158,7 @@ namespace VCSJones.FiddlerCert
                     };
                 }
             }
-            control.DataContext = model;
+            control.DataContext = masterModel;
             _panel.Children.Add(control);
                 
         }

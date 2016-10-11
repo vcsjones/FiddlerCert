@@ -46,6 +46,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -75,6 +76,7 @@
     <Compile Include="CertificateType.cs" />
     <Compile Include="CertificateUI.cs" />
     <Compile Include="CertInspector.cs" />
+    <Compile Include="CertInspectorModel.cs" />
     <Compile Include="CtLogs.cs" />
     <Compile Include="CtVerifier.cs" />
     <Compile Include="DoubleClickCopyBehavior.cs" />
@@ -114,6 +116,11 @@
     <Compile Include="SignatureAlgorithmModel.cs" />
     <Compile Include="SpkiHashesModel.cs" />
     <Compile Include="SpkiHashModel.cs" />
+    <Compile Include="UpdateBar.xaml.cs">
+      <DependentUpon>UpdateBar.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UpdateBarModel.cs" />
+    <Compile Include="UpdateModels.cs" />
     <Compile Include="WinErr.cs" />
     <Compile Include="WpfCertificateControl.xaml.cs">
       <DependentUpon>WpfCertificateControl.xaml</DependentUpon>
@@ -141,6 +148,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UpdateBar.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

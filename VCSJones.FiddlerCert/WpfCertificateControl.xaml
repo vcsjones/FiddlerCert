@@ -14,57 +14,65 @@
                 <ResourceDictionary Source="Resources.xaml" />
                 <ResourceDictionary>
                     <local:NullVisibilityConverter x:Key="NullVisibilityConverter" />
+                    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
-    <TabControl>
-        <TabItem Header="HTTP Certificates" Visibility="{Binding CertificateChain.Result, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
-            <ScrollViewer>
-                <local:CertificatesView DataContext="{Binding CertificateChain.Result}" />
-            </ScrollViewer>
-        </TabItem>
-        <TabItem Header="Content Certificates" Visibility="{Binding ContentChain.Result, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
-            <ScrollViewer>
-                <local:CertificatesView DataContext="{Binding ContentChain.Result}" />
-            </ScrollViewer>
-        </TabItem>
-        <TabItem Header="HPKP" Style="{StaticResource TabItemHpkp}">
-            <ScrollViewer>
-                <Grid DataContext="{Binding Hpkp}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition />
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TabHeader}" Text="Public-Key-Pins" />
-                    <Label Grid.Row="1" Grid.Column="0">Pin Header:</Label>
-                    <Label Grid.Row="1" Grid.Column="1">
-                        <Label.Content>
-                            <TextBlock local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" TextWrapping="Wrap" Text="{Binding RawHpkpHeader}" />
-                        </Label.Content>
-                    </Label>
-                    <Label Grid.Row="2" Grid.Column="0">Pin Directives:</Label>
-                    <ItemsControl Grid.Row="2" Grid.Column="1" Grid.IsSharedSizeScope="True" ItemsSource="{Binding PinDirectives}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate DataType="{x:Type local:HpkpHashModel}">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" SharedSizeGroup="PinHash" />
-                                        <ColumnDefinition />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="{Binding Algorithm}" FontWeight="Bold" />
-                                    <Label Grid.Column="1" Content="{Binding HashBase64}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
-                                </Grid>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </Grid>
-            </ScrollViewer>
-        </TabItem>
-    </TabControl>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <local:UpdateBar DataContext="{Binding UpdateBarModel}" Visibility="{Binding UpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <TabControl Grid.Row="1" DataContext="{Binding HttpSecurityModel}">
+            <TabItem Header="HTTP Certificates" Visibility="{Binding CertificateChain.Result, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
+                <ScrollViewer>
+                    <local:CertificatesView DataContext="{Binding CertificateChain.Result}" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="Content Certificates" Visibility="{Binding ContentChain.Result, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
+                <ScrollViewer>
+                    <local:CertificatesView DataContext="{Binding ContentChain.Result}" />
+                </ScrollViewer>
+            </TabItem>
+            <TabItem Header="HPKP" Style="{StaticResource TabItemHpkp}">
+                <ScrollViewer>
+                    <Grid DataContext="{Binding Hpkp}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Style="{StaticResource TabHeader}" Text="Public-Key-Pins" />
+                        <Label Grid.Row="1" Grid.Column="0">Pin Header:</Label>
+                        <Label Grid.Row="1" Grid.Column="1">
+                            <Label.Content>
+                                <TextBlock local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" TextWrapping="Wrap" Text="{Binding RawHpkpHeader}" />
+                            </Label.Content>
+                        </Label>
+                        <Label Grid.Row="2" Grid.Column="0">Pin Directives:</Label>
+                        <ItemsControl Grid.Row="2" Grid.Column="1" Grid.IsSharedSizeScope="True" ItemsSource="{Binding PinDirectives}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate DataType="{x:Type local:HpkpHashModel}">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" SharedSizeGroup="PinHash" />
+                                            <ColumnDefinition />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="{Binding Algorithm}" FontWeight="Bold" />
+                                        <Label Grid.Column="1" Content="{Binding HashBase64}" local:DoubleClickCopyBehavior.IsCopyToClipBoardOnDoubleClick="True" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
 </UserControl>

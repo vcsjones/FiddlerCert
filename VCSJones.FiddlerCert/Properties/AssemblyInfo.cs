@@ -16,4 +16,4 @@ using System.Runtime.InteropServices;
 [assembly: Guid("da40af7f-0862-47f9-8610-e726d2584477")]
 
 [assembly: Fiddler.RequiredVersion("4.5.1.0")]
-[assembly: AssemblyVersion("1.0.6.0")]
+[assembly: AssemblyVersion("1.0.8.0")]

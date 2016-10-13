@@ -6,6 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Net;
 using System.IO;
 using System.Runtime.Serialization.Json;
+using System.Threading;
 
 namespace VCSJones.FiddlerCert
 {
@@ -15,9 +16,9 @@ namespace VCSJones.FiddlerCert
         internal static readonly Dictionary<Tuple<string, int>, Tuple<X509Chain, X509Certificate2>> ServerCertificates = new Dictionary<Tuple<string, int>, Tuple<X509Chain, X509Certificate2>>();
         internal static Tuple<Version, string> LatestVersion { get; set; }
         private System.Threading.Timer _timer;
-        private const string ASK_CHECK_FOR_UPDATES_PREF = "certinspector.askedcheckforupdates", CHECK_FOR_UPDATED_PREF = "certinspector.checkforupdates";
         private const string UPDATE_URI = "https://api.github.com/repos/vcsjones/FiddlerCert/releases/latest";
         private const string INSTALLER_FILE_NAME = "FiddlerCertInspector.exe";
+        private readonly object _updateLockCheck = new object();
 
 
         private void CertificateValidationHandler(object sender, ValidateServerCertificateEventArgs e)
@@ -47,56 +48,76 @@ namespace VCSJones.FiddlerCert
             {
                 FiddlerApplication.OnValidateServerCertificate += CertificateValidationHandler;
             }
-            if (!FiddlerApplication.Prefs.GetBoolPref(ASK_CHECK_FOR_UPDATES_PREF, false))
-            {
-                var result = MessageBox.Show(
-                    "FiddlerCert Inspector can now automatically check for updates. Would you like to enable that?",
-                    "FiddlerCert Inspector",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Question,
-                    MessageBoxDefaultButton.Button2);
-                var enableCheck = result == DialogResult.Yes;
-                FiddlerApplication.Prefs.SetBoolPref(ASK_CHECK_FOR_UPDATES_PREF, true);
-                FiddlerApplication.Prefs.SetBoolPref(CHECK_FOR_UPDATED_PREF, enableCheck);
-            }
             _timer = new System.Threading.Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromDays(1));
+            //If the bar changes the preference to "yes", trigger a callback
+            FiddlerApplication.Prefs.AddWatcher(UpdateServices.CHECK_FOR_UPDATED_PREF, (s, e) =>
+            {
+                if (e.PrefName == UpdateServices.CHECK_FOR_UPDATED_PREF && e.ValueBool)
+                {
+                    FiddlerApplication.Log.LogString("CertInspector update check enabled.");
+                    TimerCallback(null);
+                }
+            });
         }
 
         private void TimerCallback(object arg)
         {
-            if (!FiddlerApplication.Prefs.GetBoolPref(CHECK_FOR_UPDATED_PREF, false))
-            {
-                return;
-            }
-            byte[] latestJson;
+            var lockTaken = false;
             try
             {
-                FiddlerApplication.Log.LogString("Checking for updates to FiddlerCert Inspector.");
-                var client = new WebClient();
-                client.Headers.Add("Accept", "application/vnd.github.v3+json");
-                client.Headers.Add("User-Agent", "vcsjones/FiddlerCert");
-                latestJson = client.DownloadData(UPDATE_URI);
-                var serializer = new DataContractJsonSerializer(typeof(Release));
-                using (var ms = new MemoryStream(latestJson, false))
+                Monitor.TryEnter(_updateLockCheck, ref lockTaken);
+                if (!lockTaken)
                 {
-                    var release = (Release)serializer.ReadObject(ms);
-                    FiddlerApplication.Log.LogString($"Latest version detected: {release.Name}");
-                    var version = new Version(release.Name.Substring(1));
-                    var downloadUrl = release.HtmlUrl;
-                    if (downloadUrl != null)
+                    FiddlerApplication.Log.LogString("CertInspector Update check is already in progress.");
+                    return;
+                }
+                if (!FiddlerApplication.Prefs.GetBoolPref(UpdateServices.CHECK_FOR_UPDATED_PREF, false))
+                {
+                    return;
+                }
+                byte[] latestJson;
+                try
+                {
+                    FiddlerApplication.Log.LogString("CertInspector Checking for updates to FiddlerCert Inspector.");
+                    var client = new WebClient();
+                    client.Headers.Add("Accept", "application/vnd.github.v3+json");
+                    client.Headers.Add("User-Agent", "vcsjones/FiddlerCert");
+                    latestJson = client.DownloadData(UPDATE_URI);
+                    var serializer = new DataContractJsonSerializer(typeof(Release));
+                    using (var ms = new MemoryStream(latestJson, false))
                     {
-                        LatestVersion = Tuple.Create(version, downloadUrl);
+                        var release = (Release)serializer.ReadObject(ms);
+                        FiddlerApplication.Log.LogString($"CertInspector Latest version detected: {release.Name}");
+                        var version = new Version(release.Name.Substring(1));
+                        var downloadUrl = release.HtmlUrl;
+                        if (downloadUrl != null)
+                        {
+                            LatestVersion = Tuple.Create(version, downloadUrl);
+                        }
+                    }
+                    _timer.Change(TimeSpan.FromDays(1), TimeSpan.FromDays(1));
+
+                }
+                catch (Exception e)
+                {
+                    FiddlerApplication.Log.LogFormat("Failed to check for updates to FiddlerCert Inspector: {0}", e.Message);
+                    FiddlerApplication.Log.LogString("FiddlerCert Inspector will try to check for updates in 5 minutes.");
+                    try
+                    {
+                        _timer.Change(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                        //Fiddler is trying to unload. Don't blow up.
                     }
                 }
-                _timer.Change(TimeSpan.FromDays(1), TimeSpan.FromDays(1));
-
             }
-            catch(Exception e)
+            finally
             {
-                FiddlerApplication.Log.LogFormat("Failed to check for updates to FiddlerCert Inspector: {0}", e.Message);
-                FiddlerApplication.Log.LogString("FiddlerCert Inspector will try to check for updates in 5 minutes.");
-                _timer.Change(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
-                return;
+                if (lockTaken)
+                {
+                    Monitor.Exit(_updateLockCheck);
+                }
             }
         }
 

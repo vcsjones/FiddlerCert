@@ -114,7 +114,8 @@ namespace VCSJones.FiddlerCert
             Clear();
             var control = new WpfCertificateControl();
             var masterModel = new CertInspectorModel();
-            masterModel.UpdateBarModel = new UpdateBarModel(CertificateInspector.LatestVersion.Item1, CertificateInspector.LatestVersion.Item2);
+            masterModel.UpdateBarModel = new UpdateBarModel(CertificateInspector.LatestVersion?.Item1, CertificateInspector.LatestVersion?.Item2);
+            masterModel.AskUpdateBarModel = new AskUpdateBarModel();
             masterModel.HttpSecurityModel = new HttpSecurityModel
             {
                 IsNotTunnel = (oS.BitFlags & SessionFlags.IsDecryptingTunnel) != SessionFlags.IsDecryptingTunnel,

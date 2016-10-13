@@ -43,6 +43,11 @@ namespace VCSJones.FiddlerCert
 
         public UpdateBarModel(Version version, string downloadUri)
         {
+            if (version == null || downloadUri == null)
+            {
+                UpdateAvailable = false;
+                return;
+            }
             const string DISMISSED_VERSION = "certinspector.dismissedversion";
             Version = version;
             var dismissed = Fiddler.FiddlerApplication.Prefs.GetStringPref(DISMISSED_VERSION, null);

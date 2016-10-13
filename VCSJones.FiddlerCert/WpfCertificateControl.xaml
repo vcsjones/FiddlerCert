@@ -22,10 +22,12 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <local:UpdateBar DataContext="{Binding UpdateBarModel}" Visibility="{Binding UpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}" />
-        <TabControl Grid.Row="1" DataContext="{Binding HttpSecurityModel}">
+        <local:AskUpdateBar Grid.Row="0" DataContext="{Binding AskUpdateBarModel}" Visibility="{Binding AskRequired, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <local:UpdateBar Grid.Row="1" DataContext="{Binding UpdateBarModel}" Visibility="{Binding UpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}" />
+        <TabControl Grid.Row="2" DataContext="{Binding HttpSecurityModel}">
             <TabItem Header="HTTP Certificates" Visibility="{Binding CertificateChain.Result, Converter={StaticResource NullVisibilityConverter}, FallbackValue=Collapsed}">
                 <ScrollViewer>
                     <local:CertificatesView DataContext="{Binding CertificateChain.Result}" />

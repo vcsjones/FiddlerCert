@@ -7,6 +7,7 @@ namespace VCSJones.FiddlerCert
     {
         private HttpSecurityModel _httpSecurityModel;
         private UpdateBarModel _updateBarModel;
+        private AskUpdateBarModel _askUpdateBarModel;
 
         public HttpSecurityModel HttpSecurityModel
         {
@@ -30,6 +31,19 @@ namespace VCSJones.FiddlerCert
             set
             {
                 _updateBarModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public AskUpdateBarModel AskUpdateBarModel
+        {
+            get
+            {
+                return _askUpdateBarModel;
+            }
+            set
+            {
+                _askUpdateBarModel = value;
                 OnPropertyChanged();
             }
         }

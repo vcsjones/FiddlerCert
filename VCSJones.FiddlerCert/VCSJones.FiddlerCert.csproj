@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayOffset.cs" />
+    <Compile Include="AskUpdateBarModel.cs" />
     <Compile Include="AsyncProperty.cs" />
     <Compile Include="BitStrengthCalculator.cs" />
     <Compile Include="CallerMemberNameAttribute.cs" />
@@ -116,6 +117,9 @@
     <Compile Include="SignatureAlgorithmModel.cs" />
     <Compile Include="SpkiHashesModel.cs" />
     <Compile Include="SpkiHashModel.cs" />
+    <Compile Include="AskUpdateBar.xaml.cs">
+      <DependentUpon>AskUpdateBar.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UpdateBar.xaml.cs">
       <DependentUpon>UpdateBar.xaml</DependentUpon>
     </Compile>
@@ -150,6 +154,10 @@
     <Page Include="Resources.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AskUpdateBar.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UpdateBar.xaml">
       <SubType>Designer</SubType>

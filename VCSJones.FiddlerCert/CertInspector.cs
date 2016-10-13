@@ -39,7 +39,7 @@ namespace VCSJones.FiddlerCert
                 var fontFamily = new FontFamily(font);
                 _panel.Dispatcher.BeginInvoke((Action)(() =>
                 {
-                    var style = new Style(typeof(StackPanel), _panel.Style);
+                    var style = new Style(_panel.GetType(), _panel.Style);
                     style.Setters.Add(new Setter(TextBlock.FontFamilyProperty, fontFamily));
                     style.Seal();
                     _panel.Style = style;
@@ -53,7 +53,7 @@ namespace VCSJones.FiddlerCert
                     _panel.Dispatcher.BeginInvoke((Action)(() =>
                    {
                        var fontSizeInPoints = value * 96d / 72d;
-                       var style = new Style(typeof(StackPanel), _panel.Style);
+                       var style = new Style(_panel.GetType(), _panel.Style);
                        style.Setters.Add(new Setter(TextBlock.FontSizeProperty, fontSizeInPoints));
                        style.Seal();
                        _panel.Style = style;

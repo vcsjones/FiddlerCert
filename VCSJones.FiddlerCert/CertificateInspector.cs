@@ -19,6 +19,7 @@ namespace VCSJones.FiddlerCert
         private const string UPDATE_URI = "https://api.github.com/repos/vcsjones/FiddlerCert/releases/latest";
         private const string INSTALLER_FILE_NAME = "FiddlerCertInspector.exe";
         private readonly object _updateLockCheck = new object();
+        public static bool HttpsDecryptionEnabledOnStartup { get; private set; } = false;
 
 
         private void CertificateValidationHandler(object sender, ValidateServerCertificateEventArgs e)
@@ -36,15 +37,13 @@ namespace VCSJones.FiddlerCert
         public void OnLoad()
         {
             _isSupportedOperatingSystem = Environment.OSVersion.Version >= new Version(6, 0);
+            HttpsDecryptionEnabledOnStartup = CONFIG.bCaptureCONNECT && CONFIG.bMITM_HTTPS;
             if (!_isSupportedOperatingSystem)
             {
                 MessageBox.Show("Windows Vista / Server 2008 or greater is required for the Certificate inspector extension to function.");
             }
-            else if (!CONFIG.bCaptureCONNECT || !CONFIG.bMITM_HTTPS)
-            {
-                MessageBox.Show("FiddlerCert will not work without capturing HTTPS CONNECTs. Please enable CONNECT capturing in configuration.");
-            }
-            else
+
+            else if (HttpsDecryptionEnabledOnStartup)
             {
                 FiddlerApplication.OnValidateServerCertificate += CertificateValidationHandler;
             }

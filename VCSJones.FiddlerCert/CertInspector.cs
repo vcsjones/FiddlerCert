@@ -112,6 +112,13 @@ namespace VCSJones.FiddlerCert
         public override void AssignSession(Session oS)
         {
             Clear();
+            if (!CertificateInspector.HttpsDecryptionEnabledOnStartup || !CONFIG.bCaptureCONNECT || !CONFIG.bMITM_HTTPS)
+            {
+                _panel.Children.Add(new System.Windows.Controls.Label {
+                    Content = "Fiddler Cert Inspector requires enabling decryption of HTTPS traffic, and restarting Fiddler."
+                });
+                return;
+            }
             var control = new WpfCertificateControl();
             var masterModel = new CertInspectorModel();
             masterModel.UpdateBarModel = new UpdateBarModel(CertificateInspector.LatestVersion?.Item1, CertificateInspector.LatestVersion?.Item2);

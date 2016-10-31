@@ -119,6 +119,14 @@ namespace VCSJones.FiddlerCert
                 });
                 return;
             }
+            if (!CertificateInspector.IsSupportedOperatingSystem)
+            {
+                _panel.Children.Add(new System.Windows.Controls.Label
+                {
+                    Content = "Fiddler Cert Inspector requires Windows Vista or Windows Server 2008 or later."
+                });
+                return;
+            }
             var control = new WpfCertificateControl();
             var masterModel = new CertInspectorModel();
             masterModel.UpdateBarModel = new UpdateBarModel(CertificateInspector.LatestVersion?.Item1, CertificateInspector.LatestVersion?.Item2);

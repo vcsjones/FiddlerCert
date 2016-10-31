@@ -12,7 +12,7 @@ namespace VCSJones.FiddlerCert
 {
     public class CertificateInspector : IFiddlerExtension
     {
-        private bool _isSupportedOperatingSystem = false;
+        internal static bool IsSupportedOperatingSystem { get; private set; } = false;
         internal static readonly Dictionary<Tuple<string, int>, Tuple<X509Chain, X509Certificate2>> ServerCertificates = new Dictionary<Tuple<string, int>, Tuple<X509Chain, X509Certificate2>>();
         internal static Tuple<Version, string> LatestVersion { get; set; }
         private System.Threading.Timer _timer;
@@ -20,6 +20,9 @@ namespace VCSJones.FiddlerCert
         private const string INSTALLER_FILE_NAME = "FiddlerCertInspector.exe";
         private readonly object _updateLockCheck = new object();
         public static bool HttpsDecryptionEnabledOnStartup { get; private set; } = false;
+
+        private static readonly TimeSpan _normalUpdateInterval = TimeSpan.FromDays(1);
+        private static readonly TimeSpan _failedUpdateInterval = TimeSpan.FromMinutes(5);
 
 
         private void CertificateValidationHandler(object sender, ValidateServerCertificateEventArgs e)
@@ -36,11 +39,12 @@ namespace VCSJones.FiddlerCert
 
         public void OnLoad()
         {
-            _isSupportedOperatingSystem = Environment.OSVersion.Version >= new Version(6, 0);
+            IsSupportedOperatingSystem = Environment.OSVersion.Version >= new Version(6, 0);
             HttpsDecryptionEnabledOnStartup = CONFIG.bCaptureCONNECT && CONFIG.bMITM_HTTPS;
-            if (!_isSupportedOperatingSystem)
+            if (!IsSupportedOperatingSystem)
             {
-                MessageBox.Show("Windows Vista / Server 2008 or greater is required for the Certificate inspector extension to function.");
+                FiddlerApplication.Log.LogString("Fiddler Cert Inspector not supported on this operating system.");
+                return;
             }
 
             else if (HttpsDecryptionEnabledOnStartup)
@@ -94,7 +98,7 @@ namespace VCSJones.FiddlerCert
                             LatestVersion = Tuple.Create(version, downloadUrl);
                         }
                     }
-                    _timer.Change(TimeSpan.FromDays(1), TimeSpan.FromDays(1));
+                    _timer.Change(_normalUpdateInterval, _normalUpdateInterval);
 
                 }
                 catch (Exception e)
@@ -103,7 +107,7 @@ namespace VCSJones.FiddlerCert
                     FiddlerApplication.Log.LogString("FiddlerCert Inspector will try to check for updates in 5 minutes.");
                     try
                     {
-                        _timer.Change(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5));
+                        _timer.Change(_failedUpdateInterval, _failedUpdateInterval);
                     }
                     catch (ObjectDisposedException)
                     {

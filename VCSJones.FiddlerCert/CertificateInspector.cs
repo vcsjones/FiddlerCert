@@ -53,12 +53,19 @@ namespace VCSJones.FiddlerCert
             }
             _timer = new System.Threading.Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromDays(1));
             //If the bar changes the preference to "yes", trigger a callback
+            //otherwise, null out the latest version info so the bar and settings window don't know
+            //there a new version anymore.
             FiddlerApplication.Prefs.AddWatcher(UpdateServices.CHECK_FOR_UPDATED_PREF, (s, e) =>
             {
                 if (e.PrefName == UpdateServices.CHECK_FOR_UPDATED_PREF && e.ValueBool)
                 {
                     FiddlerApplication.Log.LogString("CertInspector update check enabled.");
                     TimerCallback(null);
+                }
+                if (e.PrefName == UpdateServices.CHECK_FOR_UPDATED_PREF && !e.ValueBool)
+                {
+                    FiddlerApplication.Log.LogString("CertInspector update check disabled.");
+                    LatestVersion = null;
                 }
             });
         }

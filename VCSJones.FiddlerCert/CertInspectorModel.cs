@@ -8,6 +8,7 @@ namespace VCSJones.FiddlerCert
         private HttpSecurityModel _httpSecurityModel;
         private UpdateBarModel _updateBarModel;
         private AskUpdateBarModel _askUpdateBarModel;
+        private RelayCommand _settingsCommand;
 
         public HttpSecurityModel HttpSecurityModel
         {
@@ -44,6 +45,19 @@ namespace VCSJones.FiddlerCert
             set
             {
                 _askUpdateBarModel = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public RelayCommand SettingsCommand
+        {
+            get
+            {
+                return _settingsCommand;
+            }
+            set
+            {
+                _settingsCommand = value;
                 OnPropertyChanged();
             }
         }

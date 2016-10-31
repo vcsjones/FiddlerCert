@@ -11,6 +11,7 @@ using System.Windows.Controls;
 using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using System.Diagnostics;
+using System.Windows.Interop;
 
 namespace VCSJones.FiddlerCert
 {
@@ -131,6 +132,13 @@ namespace VCSJones.FiddlerCert
             var masterModel = new CertInspectorModel();
             masterModel.UpdateBarModel = new UpdateBarModel(CertificateInspector.LatestVersion?.Item1, CertificateInspector.LatestVersion?.Item2);
             masterModel.AskUpdateBarModel = new AskUpdateBarModel();
+            masterModel.SettingsCommand = new RelayCommand(_ =>
+            {
+                var window = new SettingsWindow();
+                var helper = new WindowInteropHelper(window);
+                helper.Owner = FiddlerApplication.UI.Handle;
+                window.ShowDialog();
+            });
             masterModel.HttpSecurityModel = new HttpSecurityModel
             {
                 IsNotTunnel = (oS.BitFlags & SessionFlags.IsDecryptingTunnel) != SessionFlags.IsDecryptingTunnel,

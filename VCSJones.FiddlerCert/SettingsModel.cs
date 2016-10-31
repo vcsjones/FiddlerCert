@@ -57,14 +57,14 @@ namespace VCSJones.FiddlerCert
         {
             SaveCommand = new RelayCommand(_ =>
             {
-                FiddlerApplication.Prefs.SetBoolPref(UpdateServices.CHECK_FOR_UPDATED_PREF, CheckForUpdates);
+                FiddlerApplication.Prefs.SetBoolPref(PreferenceNames.CHECK_FOR_UPDATED_PREF, CheckForUpdates);
                 CloseRequest?.Invoke();
             });
             CancelCommand = new RelayCommand(_ =>
             {
                 CloseRequest?.Invoke();
             });
-            CheckForUpdates = FiddlerApplication.Prefs.GetBoolPref(UpdateServices.CHECK_FOR_UPDATED_PREF, false);
+            CheckForUpdates = FiddlerApplication.Prefs.GetBoolPref(PreferenceNames.CHECK_FOR_UPDATED_PREF, false);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -48,9 +48,9 @@ namespace VCSJones.FiddlerCert
                 UpdateAvailable = false;
                 return;
             }
-            const string DISMISSED_VERSION = "certinspector.dismissedversion";
+            
             Version = version;
-            var dismissed = Fiddler.FiddlerApplication.Prefs.GetStringPref(DISMISSED_VERSION, null);
+            var dismissed = Fiddler.FiddlerApplication.Prefs.GetStringPref(PreferenceNames.DISMISSED_VERSION, null);
             var isVersionDismissed = false;
             if (dismissed != null)
             {
@@ -63,7 +63,7 @@ namespace VCSJones.FiddlerCert
                 catch
                 {
                     Fiddler.FiddlerApplication.Log.LogString("Preference contains bogus version for dismissal. Clearing.");
-                    Fiddler.FiddlerApplication.Prefs.RemovePref(DISMISSED_VERSION);
+                    Fiddler.FiddlerApplication.Prefs.RemovePref(PreferenceNames.DISMISSED_VERSION);
                     isVersionDismissed = false;
                 }
             }
@@ -76,7 +76,7 @@ namespace VCSJones.FiddlerCert
             Fiddler.FiddlerApplication.Log.LogString($"FiddlerCert Inspector: Current version is {currentVersion}, latest version is {version}.");
             _dismissCommand = new RelayCommand((_) =>
             {
-                Fiddler.FiddlerApplication.Prefs.SetStringPref(DISMISSED_VERSION, version.ToString(4));
+                Fiddler.FiddlerApplication.Prefs.SetStringPref(PreferenceNames.DISMISSED_VERSION, version.ToString(4));
                 UpdateAvailable = false;
             });
             _downloadCommand = new RelayCommand((_) =>

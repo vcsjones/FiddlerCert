@@ -96,6 +96,7 @@
     <Compile Include="PinCheckResult.cs" />
     <Compile Include="Interop\Msvcrt.cs" />
     <Compile Include="PinnedKey.cs" />
+    <Compile Include="PreferenceNames.cs" />
     <Compile Include="PublicKeyModel.cs" />
     <Compile Include="PublicKeyPinsParser.cs" />
     <Compile Include="Interop\crypto32.cs" />

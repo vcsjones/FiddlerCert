@@ -22,14 +22,26 @@ namespace VCSJones.FiddlerCert
         private readonly X509Store _userStore = new X509Store(StoreName.Root, StoreLocation.LocalMachine);
         private readonly ElementHost _host;
 
+        private readonly AskUpdateBarModel _askUpdateBarModel;
+
         public CertInspector()
         {
+            _askUpdateBarModel = new AskUpdateBarModel();
             _rootStore.Open(OpenFlags.ReadOnly);
             _userStore.Open(OpenFlags.ReadOnly);
             _host = new ElementHost { Dock = DockStyle.Fill };
             _panel = new Grid();
             _host.Child = _panel;
             FiddlerApplication.Prefs.AddWatcher("fiddler.ui.font", FontChanged);
+            FiddlerApplication.Prefs.AddWatcher(PreferenceNames.ASK_CHECK_FOR_UPDATES_PREF, AskUpdateChanged);
+        }
+
+        private void AskUpdateChanged(object sender, PrefChangeEventArgs e)
+        {
+            if (e.PrefName == PreferenceNames.ASK_CHECK_FOR_UPDATES_PREF)
+            {
+                _askUpdateBarModel.AskRequired = !e.ValueBool;
+            }
         }
 
         private void FontChanged(object sender, PrefChangeEventArgs e)
@@ -131,7 +143,8 @@ namespace VCSJones.FiddlerCert
             var control = new WpfCertificateControl();
             var masterModel = new CertInspectorModel();
             masterModel.UpdateBarModel = new UpdateBarModel(CertificateInspector.LatestVersion?.Item1, CertificateInspector.LatestVersion?.Item2);
-            masterModel.AskUpdateBarModel = new AskUpdateBarModel();
+            masterModel.AskUpdateBarModel = _askUpdateBarModel;
+            masterModel.AskUpdateBarModel.AskRequired = !FiddlerApplication.Prefs.GetBoolPref(PreferenceNames.ASK_CHECK_FOR_UPDATES_PREF, false);
             masterModel.SettingsCommand = new RelayCommand(_ =>
             {
                 var window = new SettingsWindow();

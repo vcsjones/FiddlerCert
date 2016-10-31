@@ -24,7 +24,6 @@ namespace VCSJones.FiddlerCert
                 FiddlerApplication.Prefs.SetBoolPref(PreferenceNames.CHECK_FOR_UPDATED_PREF, false);
                 AskRequired = false;
             });
-            AskRequired = !FiddlerApplication.Prefs.GetBoolPref(PreferenceNames.ASK_CHECK_FOR_UPDATES_PREF, false);
         }
 
         public RelayCommand YesCommand => _yesCommand;

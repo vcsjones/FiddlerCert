@@ -58,6 +58,8 @@ namespace VCSJones.FiddlerCert
             SaveCommand = new RelayCommand(_ =>
             {
                 FiddlerApplication.Prefs.SetBoolPref(PreferenceNames.CHECK_FOR_UPDATED_PREF, CheckForUpdates);
+                //saving - and changing - the settings should count as asking.
+                FiddlerApplication.Prefs.SetBoolPref(PreferenceNames.ASK_CHECK_FOR_UPDATES_PREF, true);
                 CloseRequest?.Invoke();
             });
             CancelCommand = new RelayCommand(_ =>

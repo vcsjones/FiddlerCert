@@ -64,7 +64,7 @@ namespace VCSJones.FiddlerCert
             {
                 CloseRequest?.Invoke();
             });
-            CheckForUpdates = FiddlerApplication.Prefs.GetBoolPref(UpdateServices.CHECK_FOR_UPDATED_PREF, CheckForUpdates);
+            CheckForUpdates = FiddlerApplication.Prefs.GetBoolPref(UpdateServices.CHECK_FOR_UPDATED_PREF, false);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

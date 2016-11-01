@@ -86,6 +86,7 @@
     <Compile Include="Epoch.cs" />
     <Compile Include="ExtendedValidationCertificateAuthority.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="FiddlerPreferenceExtensions.cs" />
     <Compile Include="HpkpHashModel.cs" />
     <Compile Include="HttpSecurityModel.cs" />
     <Compile Include="Interop\bcrypt.cs" />

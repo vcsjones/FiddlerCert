@@ -29,7 +29,7 @@
         <local:UpdateBar Grid.Row="1" DataContext="{Binding UpdateBarModel}" Visibility="{Binding UpdateAvailable, Converter={StaticResource BooleanToVisibilityConverter}}" />
         <local:ActionBarTabControl Grid.Row="2" Style="{DynamicResource TabControlIcon}">
             <local:ActionBarTabControl.ActionBarTemplate>
-                <Button BorderThickness="0" Background="Transparent" Margin="0,0,2,0" Command="{Binding SettingsCommand}">
+                <Button BorderThickness="0" Background="Transparent" Margin="0" Command="{Binding SettingsCommand}">
                     <Image Source="/VCSJones.FiddlerCert;component/Assets/Settings_16x.png" />
                 </Button>
             </local:ActionBarTabControl.ActionBarTemplate>

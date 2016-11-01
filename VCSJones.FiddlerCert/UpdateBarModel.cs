@@ -9,7 +9,7 @@ namespace VCSJones.FiddlerCert
     {
         private bool _updateAvailable;
         private Version _version;
-        private RelayCommand _dismissCommand, _downloadCommand;
+        private RelayCommand _dismissCommand, _downloadCommand, _closeCommand;
 
         public bool UpdateAvailable
         {
@@ -41,6 +41,8 @@ namespace VCSJones.FiddlerCert
 
         public RelayCommand DownloadCommand => _downloadCommand;
 
+        public RelayCommand CloseCommand => _closeCommand;
+
         public UpdateBarModel(Version version, string downloadUri)
         {
             if (version == null || downloadUri == null)
@@ -50,7 +52,7 @@ namespace VCSJones.FiddlerCert
             }
             
             Version = version;
-            var dismissed = Fiddler.FiddlerApplication.Prefs.GetStringPref(PreferenceNames.DISMISSED_VERSION, null);
+            var dismissed = Fiddler.FiddlerApplication.Prefs.GetPref<string>(PreferenceNames.DISMISSED_VERSION, null);
             var isVersionDismissed = false;
             if (dismissed != null)
             {
@@ -72,14 +74,15 @@ namespace VCSJones.FiddlerCert
             {
                 Fiddler.FiddlerApplication.Log.LogString($"The version {dismissed} has been dismissed. No notification bar will appear.");
             }
-            UpdateAvailable = version > currentVersion && !isVersionDismissed;
+            var closed = Fiddler.FiddlerApplication.Prefs.GetPref(PreferenceNames.HIDE_UPDATED_PREF, false);
+            UpdateAvailable = version > currentVersion && !isVersionDismissed && !closed;
             Fiddler.FiddlerApplication.Log.LogString($"FiddlerCert Inspector: Current version is {currentVersion}, latest version is {version}.");
-            _dismissCommand = new RelayCommand((_) =>
+            _dismissCommand = new RelayCommand(_ =>
             {
-                Fiddler.FiddlerApplication.Prefs.SetStringPref(PreferenceNames.DISMISSED_VERSION, version.ToString(4));
+                Fiddler.FiddlerApplication.Prefs.SetPref(PreferenceNames.DISMISSED_VERSION, version.ToString(4));
                 UpdateAvailable = false;
             });
-            _downloadCommand = new RelayCommand((_) =>
+            _downloadCommand = new RelayCommand(_ =>
             {
                 var uri = new Uri(downloadUri);
                 if (uri?.Scheme == Uri.UriSchemeHttps)
@@ -90,6 +93,11 @@ namespace VCSJones.FiddlerCert
                 {
                     Fiddler.FiddlerApplication.Log.LogString("Refusing to open non-HTTPS page.");
                 }
+            });
+            _closeCommand = new RelayCommand(_ =>
+            {
+                Fiddler.FiddlerApplication.Prefs.SetPref(PreferenceNames.HIDE_UPDATED_PREF, true);
+                UpdateAvailable = false;
             });
         }
 

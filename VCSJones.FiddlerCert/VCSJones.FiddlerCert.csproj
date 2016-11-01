@@ -92,7 +92,7 @@
     <Compile Include="Interop\bcrypt.cs" />
     <Compile Include="Interop\CERT_POLICIES_INFO.cs" />
     <Compile Include="Interop\LocalBufferSafeHandle.cs" />
-    <Compile Include="IReadOnlyList.cs" />
+    <Compile Include="IoC.cs" />
     <Compile Include="KnownDecodeEncodeConstants.cs" />
     <Compile Include="PinCheckResult.cs" />
     <Compile Include="Interop\Msvcrt.cs" />
@@ -117,7 +117,11 @@
     <Compile Include="PublicPinnedKeys.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="SctDecoder.cs" />
-    <Compile Include="SettingsModel.cs" />
+    <Compile Include="Services\FiddlerLoggerService.cs" />
+    <Compile Include="Services\FiddlerPreferencesService.cs" />
+    <Compile Include="Services\UpdateStatus.cs" />
+    <Compile Include="Services\UpdateWorker.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="SettingsWindow.xaml.cs">
       <DependentUpon>SettingsWindow.xaml</DependentUpon>
     </Compile>

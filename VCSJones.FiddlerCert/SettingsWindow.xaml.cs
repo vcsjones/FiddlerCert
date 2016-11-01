@@ -10,7 +10,7 @@ namespace VCSJones.FiddlerCert
         public SettingsWindow()
         {
             InitializeComponent();
-            var viewModel = new SettingsModel();
+            var viewModel = new SettingsViewModel();
             viewModel.CloseRequest += Close;
             DataContext = viewModel;
         }

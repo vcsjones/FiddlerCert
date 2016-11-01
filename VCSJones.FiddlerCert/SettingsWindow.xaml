@@ -24,6 +24,13 @@
             <Label FontSize="18">Settings</Label>
             <StackPanel Grid.Row="1" Margin="15, 0, 0, 0">
                 <CheckBox IsChecked="{Binding CheckForUpdates}">Allow check for updates</CheckBox>
+                <Label Padding="0" Margin="20, 0">
+                    <Label.Content>
+                        <Hyperlink Command="{Binding HyperlinkCommand}" CommandParameter="https://github.com/vcsjones/FiddlerCert/wiki/Automatic%20Update%20Checks">
+                            More information about updates
+                        </Hyperlink>
+                    </Label.Content>
+                </Label>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">

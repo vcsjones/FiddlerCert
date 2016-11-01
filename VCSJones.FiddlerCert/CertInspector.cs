@@ -12,6 +12,7 @@ using System.Windows.Forms.Integration;
 using System.Windows.Media;
 using System.Diagnostics;
 using System.Windows.Interop;
+using VCSJones.FiddlerCert.Services;
 
 namespace VCSJones.FiddlerCert
 {
@@ -142,7 +143,8 @@ namespace VCSJones.FiddlerCert
             }
             var control = new WpfCertificateControl();
             var masterModel = new CertInspectorModel();
-            masterModel.UpdateBarModel = new UpdateBarModel(CertificateInspector.LatestVersion?.Item1, CertificateInspector.LatestVersion?.Item2);
+            var status = Container.Instance.Resolve<UpdateStatus>();
+            masterModel.UpdateBarModel = new UpdateBarModel(status.LatestVersion, status.DownloadLocation);
             masterModel.AskUpdateBarModel = _askUpdateBarModel;
             masterModel.AskUpdateBarModel.AskRequired = !FiddlerApplication.Prefs.GetBoolPref(PreferenceNames.ASK_CHECK_FOR_UPDATES_PREF, false);
             masterModel.SettingsCommand = new RelayCommand(_ =>

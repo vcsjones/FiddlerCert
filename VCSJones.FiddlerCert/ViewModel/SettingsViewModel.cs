@@ -1,16 +1,18 @@
 ﻿using Fiddler;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using VCSJones.FiddlerCert.Services;
 
 namespace VCSJones.FiddlerCert
 {
-    public class SettingsModel : INotifyPropertyChanged
+    public class SettingsViewModel : INotifyPropertyChanged
     {
         private bool _checkForUpdates;
-        private RelayCommand _saveCommand, _cancelCommand;
+        private RelayCommand _saveCommand, _cancelCommand, _hyperlinkCommand;
 
-        public Version LatestVersion => CertificateInspector.LatestVersion?.Item1;
+        public Version LatestVersion => Container.Instance.Resolve<UpdateStatus>().LatestVersion;
 
         public Version CurrentVersion => typeof(CertInspector).Assembly.GetName().Version;
 
@@ -53,20 +55,47 @@ namespace VCSJones.FiddlerCert
             }
         }
 
-        public SettingsModel()
+        public RelayCommand HyperlinkCommand
+        {
+            get
+            {
+                return _hyperlinkCommand;
+            }
+            set
+            {
+                _hyperlinkCommand = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public SettingsViewModel()
         {
             SaveCommand = new RelayCommand(_ =>
             {
-                FiddlerApplication.Prefs.SetBoolPref(PreferenceNames.CHECK_FOR_UPDATED_PREF, CheckForUpdates);
+                FiddlerApplication.Prefs.SetPref(PreferenceNames.CHECK_FOR_UPDATED_PREF, CheckForUpdates);
                 //saving - and changing - the settings should count as asking.
-                FiddlerApplication.Prefs.SetBoolPref(PreferenceNames.ASK_CHECK_FOR_UPDATES_PREF, true);
+                FiddlerApplication.Prefs.SetPref(PreferenceNames.ASK_CHECK_FOR_UPDATES_PREF, true);
                 CloseRequest?.Invoke();
             });
             CancelCommand = new RelayCommand(_ =>
             {
                 CloseRequest?.Invoke();
             });
-            CheckForUpdates = FiddlerApplication.Prefs.GetBoolPref(PreferenceNames.CHECK_FOR_UPDATED_PREF, false);
+            HyperlinkCommand = new RelayCommand(arg =>
+            {
+                var link = arg as string;
+                if (link == null)
+                {
+                    return;
+                }
+                var uri = new Uri(link);
+                if (uri.Scheme != Uri.UriSchemeHttps)
+                {
+                    return;
+                }
+                Process.Start(uri.AbsoluteUri);
+            });
+            CheckForUpdates = FiddlerApplication.Prefs.GetPref(PreferenceNames.CHECK_FOR_UPDATED_PREF, false);
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

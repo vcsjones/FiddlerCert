@@ -9,7 +9,7 @@ namespace VCSJones.FiddlerCert
     {
         private bool _updateAvailable;
         private Version _version;
-        private RelayCommand _dismissCommand, _downloadCommand, _closeCommand;
+        private RelayCommand _downloadCommand, _closeCommand;
 
         public bool UpdateAvailable
         {
@@ -37,8 +37,6 @@ namespace VCSJones.FiddlerCert
             }
         }
 
-        public RelayCommand DismissCommand => _dismissCommand;
-
         public RelayCommand DownloadCommand => _downloadCommand;
 
         public RelayCommand CloseCommand => _closeCommand;
@@ -52,36 +50,10 @@ namespace VCSJones.FiddlerCert
             }
             
             Version = version;
-            var dismissed = Fiddler.FiddlerApplication.Prefs.GetPref<string>(PreferenceNames.DISMISSED_VERSION, null);
-            var isVersionDismissed = false;
-            if (dismissed != null)
-            {
-                try
-                {
-                    //User has indicated they don't want this version.
-                    var dismissedVersion = new Version(dismissed);
-                    isVersionDismissed = dismissedVersion >= version;
-                }
-                catch
-                {
-                    Fiddler.FiddlerApplication.Log.LogString("Preference contains bogus version for dismissal. Clearing.");
-                    Fiddler.FiddlerApplication.Prefs.RemovePref(PreferenceNames.DISMISSED_VERSION);
-                    isVersionDismissed = false;
-                }
-            }
             var currentVersion = typeof(CertInspector).Assembly.GetName().Version;
-            if (isVersionDismissed)
-            {
-                Fiddler.FiddlerApplication.Log.LogString($"The version {dismissed} has been dismissed. No notification bar will appear.");
-            }
             var closed = Fiddler.FiddlerApplication.Prefs.GetPref(PreferenceNames.HIDE_UPDATED_PREF, false);
-            UpdateAvailable = version > currentVersion && !isVersionDismissed && !closed;
+            UpdateAvailable = version > currentVersion && !closed;
             Fiddler.FiddlerApplication.Log.LogString($"FiddlerCert Inspector: Current version is {currentVersion}, latest version is {version}.");
-            _dismissCommand = new RelayCommand(_ =>
-            {
-                Fiddler.FiddlerApplication.Prefs.SetPref(PreferenceNames.DISMISSED_VERSION, version.ToString(4));
-                UpdateAvailable = false;
-            });
             _downloadCommand = new RelayCommand(_ =>
             {
                 var uri = new Uri(downloadUri);

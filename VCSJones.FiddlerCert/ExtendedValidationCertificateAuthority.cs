@@ -56,6 +56,82 @@ namespace VCSJones.FiddlerCert
         //Git SHA: dc2cea95fae5b9f91db96f79398529a0eff4a3d6 
         public static ExtendedValidationMetadata[] EVRootCAMetadata { get; } = new[]
         {
+            //Amazon Root CA 1,
+            new ExtendedValidationMetadata {
+                Sha1Fingerprint = new byte[] {0x8d, 0xa7, 0xf9, 0x65, 0xec, 0x5e, 0xfc, 0x37, 0x91, 0x0f,
+                      0x1c, 0x6e, 0x59, 0xfd, 0xc1, 0xcc, 0x6a, 0x6e, 0xde, 0x16},
+                PolicyOids = new string[] {
+                        "2.23.140.1.1"
+                }
+            },
+            
+            //Amazon Root CA 2,
+            new ExtendedValidationMetadata {
+                Sha1Fingerprint = new byte[] {0x5a, 0x8c, 0xef, 0x45, 0xd7, 0xa6, 0x98, 0x59, 0x76, 0x7a,
+                      0x8c, 0x8b, 0x44, 0x96, 0xb5, 0x78, 0xcf, 0x47, 0x4b, 0x1a},
+                PolicyOids = new string[] {
+                        "2.23.140.1.1"
+                }
+            },
+            
+            //Amazon Root CA 3,
+            new ExtendedValidationMetadata {
+                Sha1Fingerprint = new byte[] {0x0d, 0x44, 0xdd, 0x8c, 0x3c, 0x8c, 0x1a, 0x1a, 0x58, 0x75,
+                       0x64, 0x81, 0xe9, 0x0f, 0x2e, 0x2a, 0xff, 0xb3, 0xd2, 0x6e},
+                PolicyOids = new string[] {
+                        "2.23.140.1.1"
+                }
+            },
+            
+            //Amazon Root CA 4,
+            new ExtendedValidationMetadata {
+                Sha1Fingerprint = new byte[] {0xf6, 0x10, 0x84, 0x07, 0xd6, 0xf8, 0xbb, 0x67, 0x98, 0x0c,
+                       0xc2, 0xe2, 0x44, 0xc2, 0xeb, 0xae, 0x1c, 0xef, 0x63, 0xbe},
+                PolicyOids = new string[] {
+                        "2.23.140.1.1"
+                }
+            },
+
+            // CFCA EV ROOT
+            // https://www.erenepu.com/
+            new ExtendedValidationMetadata {
+                Sha1Fingerprint = new byte[] {0xe2, 0xb8, 0x29, 0x4b, 0x55, 0x84, 0xab, 0x6b, 0x58, 0xc2,
+                       0x90, 0x46, 0x6c, 0xac, 0x3f, 0xb8, 0x39, 0x8f, 0x84, 0x83},
+                PolicyOids = new string[] {
+                        "2.16.156.112554.3"
+                }
+            },
+
+            // Entrust Root Certification Authority – G2
+            // https://validg2.entrust.net
+            new ExtendedValidationMetadata {
+                Sha1Fingerprint = new byte[] {0x8c, 0xf4, 0x27, 0xfd, 0x79, 0x0c, 0x3a, 0xd1, 0x66, 0x06,
+                       0x8d, 0xe8, 0x1e, 0x57, 0xef, 0xbb, 0x93, 0x22, 0x72, 0xd4},
+                PolicyOids = new string[] {
+                        "2.16.840.1.114028.10.1.2"
+                }
+            },
+
+            // LuxTrust Global Root 2
+            // https://ltsslca5.trustme.lu/
+            new ExtendedValidationMetadata {
+                Sha1Fingerprint = new byte[] {0x1e, 0x0e, 0x56, 0x19, 0x0a, 0xd1, 0x8b, 0x25, 0x98, 0xb2,
+                       0x04, 0x44, 0xff, 0x66, 0x8a, 0x04, 0x17, 0x99, 0x5f, 0x3f},
+                PolicyOids = new string[] {
+                        "1.3.171.1.1.10.5.2"
+                }
+            },
+
+            // OISTE WISeKey Global Root GB CA
+            // https://goodevssl.wisekey.com
+            new ExtendedValidationMetadata {
+                Sha1Fingerprint = new byte[] {0x0f, 0xf9, 0x40, 0x76, 0x18, 0xd3, 0xd7, 0x6a, 0x4b, 0x98,
+                       0xf0, 0xa8, 0x35, 0x9e, 0x0c, 0xfd, 0x27, 0xac, 0xcc, 0xed},
+                PolicyOids = new string[] {
+                        "2.16.756.5.14.7.4.8"
+                }
+            },
+
             new ExtendedValidationMetadata {
             Sha1Fingerprint = new byte[] {0x78, 0x6a, 0x74, 0xac, 0x76, 0xab, 0x14, 0x7f, 0x9c, 0x6a,
                       0x30, 0x50, 0xba, 0x9e, 0xa8, 0x7e, 0xfe, 0x9a, 0xce, 0x3c},
@@ -452,7 +528,7 @@ namespace VCSJones.FiddlerCert
             new ExtendedValidationMetadata {
             Sha1Fingerprint = new byte[] {0x92, 0x5a, 0x8f, 0x8d, 0x2c, 0x6d, 0x04, 0xe0, 0x66, 0x5f,
                       0x59, 0x6a, 0xff, 0x22, 0xd8, 0x63, 0xe8, 0x25, 0x6f, 0x3f},
-            PolicyOids = new string[] {"2.16.840.1.114414.1.7.24.3", ""}
+            PolicyOids = new string[] {"2.16.840.1.114414.1.7.24.3", "2.23.140.1.1" }
             },
                 // SwissSign Gold CA - G2
                 // https://testevg2.swisssign.net/

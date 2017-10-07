@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using VCSJones.FiddlerCert.Interop;
@@ -8,6 +9,24 @@ namespace VCSJones.FiddlerCert
 {
     public static class CertificateHashBuilder
     {
+        public static byte[] BuildHashForCertificate<THashAlgotihm>(X509Certificate2 certificate) where THashAlgotihm : HashAlgorithm, new()
+        {
+            var context = (CERT_CONTEXT)Marshal.PtrToStructure(certificate.Handle, typeof(CERT_CONTEXT));
+            if (context.dwCertEncodingType == EncodingType.X509_ASN_ENCODING)
+            {
+                var contents = new byte[context.cbCertEncoded];
+                Marshal.Copy(context.pbCertEncoded, contents, 0, contents.Length);
+                using (var hash = new THashAlgotihm())
+                {
+                    return hash.ComputeHash(contents);
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("Certificate is not an X509 certificate");
+            }
+        }
+
         public static string BuildHashForPublicKey<THashAlgorithm>(X509Certificate2 certificate) where THashAlgorithm : HashAlgorithm, new()
         {
             return Convert.ToBase64String(BuildHashForPublicKeyBinary<THashAlgorithm>(certificate));

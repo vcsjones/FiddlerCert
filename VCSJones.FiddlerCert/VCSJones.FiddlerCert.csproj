@@ -90,6 +90,7 @@
     <Compile Include="HpkpHashModel.cs" />
     <Compile Include="HttpSecurityModel.cs" />
     <Compile Include="Interop\bcrypt.cs" />
+    <Compile Include="Interop\CERT_CONTEXT.cs" />
     <Compile Include="Interop\CERT_POLICIES_INFO.cs" />
     <Compile Include="Interop\LocalBufferSafeHandle.cs" />
     <Compile Include="KnownDecodeEncodeConstants.cs" />

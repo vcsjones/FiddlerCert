@@ -307,6 +307,10 @@ namespace VCSJones.FiddlerCert
             {
                 return CertificateType.EV;
             }
+            if (CertificateValidatedChecker.IsCertificateIndividualValidated(certificate))
+            {
+                return CertificateType.IV;
+            }
             if (CertificateValidatedChecker.IsCertificateOrganizationValidated(certificate))
             {
                 return CertificateType.OV;

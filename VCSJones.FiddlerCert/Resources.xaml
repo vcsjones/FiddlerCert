@@ -48,6 +48,12 @@
                 <Setter Property="Text" Value="OV" />
                 <Setter Property="ToolTip" Value="Organization Validated" />
             </DataTrigger>
+            <DataTrigger Binding="{Binding CertificateType}" Value="{x:Static local:CertificateType.IV}">
+                <Setter Property="Background" Value="#FFAAAAAA" />
+                <Setter Property="Foreground" Value="White" />
+                <Setter Property="Text" Value="IV" />
+                <Setter Property="ToolTip" Value="Individual Validated" />
+            </DataTrigger>
             <DataTrigger Binding="{Binding CertificateType}" Value="{x:Static local:CertificateType.None}">
                 <Setter Property="Visibility" Value="Hidden" />
             </DataTrigger>

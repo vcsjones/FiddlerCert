@@ -38,6 +38,17 @@ namespace VCSJones.FiddlerCert
             return OVOids.Intersect(policies.Select(p => p.PolicyOid.Value)).Any();
         }
 
+        public static bool IsCertificateIndividualValidated(X509Certificate2 certificate)
+        {
+            var decoder = new CertificatePolicyDecoder();
+            var policies = decoder.GetPolicies(certificate);
+            if (policies.Count == 0)
+            {
+                return false;
+            }
+            return IVOids.Intersect(policies.Select(p => p.PolicyOid.Value)).Any();
+        }
+
         public static bool IsCertificateDomainValidated(X509Certificate2 certificate)
         {
             var decoder = new CertificatePolicyDecoder();
@@ -50,8 +61,8 @@ namespace VCSJones.FiddlerCert
         }
 
         //Converted from https://code.google.com/p/chromium/codesearch#chromium/src/net/cert/ev_root_ca_metadata.cc
-        //Last updated: 4/20/2016 @ 15:40 EDT
-        //Git SHA: dc2cea95fae5b9f91db96f79398529a0eff4a3d6 
+        //Last updated: 10/7/2017 @ 18:06 EDT
+        //Git SHA: 9ffb4350f06f045c4ae096d97079a654be70b352 
         public static ExtendedValidationMetadata[] EVRootCAMetadata { get; } = new[]
         {
                // AC Camerfirma S.A. Chambers of Commerce Root - 2008
@@ -721,7 +732,7 @@ namespace VCSJones.FiddlerCert
         };
 
         //From https://cabforum.org/object-registry/
-        //Last updated: 4/20/2016 @ 17:08
+        //Last updated: 10/07/2017 @ 18:16
         public static string[] OVOids { get; } = new[]
         {
             "2.23.140.1.2.2", //CAB Forum BR Standard
@@ -731,7 +742,9 @@ namespace VCSJones.FiddlerCert
             "2.16.528.1.1003.1.2.5.6", //Logius
             "1.3.6.1.4.1.8024.0.2.100.1.1", //QuoVadis
             "2.16.840.1.114414.1.7.23.2", //Starfield
-            "2.16.792.3.0.3.1.1.2" //TurkTrust
+            "2.16.792.3.0.3.1.1.2", //TurkTrust,
+            "1.3.6.1.4.1.4146.1.20", //Globalsign
+            "1.3.6.1.4.1.14777.1.2.1", //Izenpe
         };
 
         public static string[] DVOids { get; } = new[]
@@ -739,6 +752,14 @@ namespace VCSJones.FiddlerCert
             "2.23.140.1.2.1", //CAB Forum BR Standard
             "2.16.840.1.114413.1.7.23.1", //GoDaddy
             "2.16.840.1.114414.1.7.23.1", //Starfield
+            "2.16.840.1.114412.1.2", //Digicert
+            "1.3.6.1.4.1.4146.1.10.10", //Globalsign
+
+        };
+
+        public static string[] IVOids { get; } = new[]
+        {
+            "2.23.140.1.2.3" //CAB Forum BR Standard
         };
     }
 

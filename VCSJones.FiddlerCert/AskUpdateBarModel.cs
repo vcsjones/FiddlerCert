@@ -31,11 +31,7 @@ namespace VCSJones.FiddlerCert
 
         public bool AskRequired
         {
-            get
-            {
-                return _askRequired;
-            }
-
+            get => _askRequired;
             set
             {
                 _askRequired = value;

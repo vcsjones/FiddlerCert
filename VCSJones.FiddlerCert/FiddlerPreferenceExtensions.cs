@@ -6,8 +6,7 @@ namespace VCSJones.FiddlerCert
     {
         public static T GetPref<T>(this Fiddler.IFiddlerPreferences preferences, string preferenceName, T defaultValue) where T : IConvertible
         {
-            T value;
-            if (preferences.TryGetPref(preferenceName, out value))
+            if (preferences.TryGetPref(preferenceName, out T value))
             {
                 return value;
             }

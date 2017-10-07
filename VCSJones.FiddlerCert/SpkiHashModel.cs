@@ -27,7 +27,7 @@ namespace VCSJones.FiddlerCert
 
         public bool ReportOnly
         {
-            get { return _reportOnly; }
+            get => _reportOnly;
             set
             {
                 _reportOnly = value;
@@ -37,10 +37,7 @@ namespace VCSJones.FiddlerCert
 
         public byte[] Hash
         {
-            get
-            {
-                return _hash;
-            }
+            get => _hash;
             set
             {
                 _hash = value;
@@ -51,28 +48,13 @@ namespace VCSJones.FiddlerCert
             }
         }
 
-        public string HashHex
-        {
-            get
-            {
-                return BitConverter.ToString(Hash).Replace("-", "");
-            }
-        }
+        public string HashHex => BitConverter.ToString(Hash).Replace("-", "");
 
-        public string HashBase64
-        {
-            get
-            {
-                return Convert.ToBase64String(Hash);
-            }
-        }
+        public string HashBase64 => Convert.ToBase64String(Hash);
 
         public bool IsPinned
         {
-            get
-            {
-                return _isPinned;
-            }
+            get => _isPinned;
             set
             {
                 _isPinned = value;
@@ -82,10 +64,7 @@ namespace VCSJones.FiddlerCert
 
         public PinAlgorithm Algorithm
         {
-            get
-            {
-                return _algorithm;
-            }
+            get => _algorithm;
             set
             {
                 _algorithm = value;
@@ -94,20 +73,11 @@ namespace VCSJones.FiddlerCert
             }
         }
 
-        public Uri CrtShUri
-        {
-            get
-            {
-                return new Uri($"https://crt.sh/?spki{Algorithm.ToString().ToLower()}={HashHex}");
-            }
-        }
+        public Uri CrtShUri => new Uri($"https://crt.sh/?spki{Algorithm.ToString().ToLower()}={HashHex}");
 
         public RelayCommand ClickCommand
         {
-            get
-            {
-                return _clickCommand;
-            }
+            get => _clickCommand;
             set
             {
                 _clickCommand = value;

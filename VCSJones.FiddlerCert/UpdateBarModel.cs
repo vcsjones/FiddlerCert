@@ -13,10 +13,7 @@ namespace VCSJones.FiddlerCert
 
         public bool UpdateAvailable
         {
-            get
-            {
-                return _updateAvailable;
-            }
+            get => _updateAvailable;
             set
             {
                 _updateAvailable = value;
@@ -26,10 +23,7 @@ namespace VCSJones.FiddlerCert
 
         public Version Version
         {
-            get
-            {
-                return _version;
-            }
+            get => _version;
             set
             {
                 _version = value;

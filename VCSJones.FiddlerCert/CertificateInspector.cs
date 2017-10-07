@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows.Forms;
 using Fiddler;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
@@ -23,7 +22,6 @@ namespace VCSJones.FiddlerCert
 
         private static readonly TimeSpan _normalUpdateInterval = TimeSpan.FromDays(1);
         private static readonly TimeSpan _failedUpdateInterval = TimeSpan.FromMinutes(5);
-
 
         private void CertificateValidationHandler(object sender, ValidateServerCertificateEventArgs e)
         {
@@ -51,7 +49,7 @@ namespace VCSJones.FiddlerCert
             {
                 FiddlerApplication.OnValidateServerCertificate += CertificateValidationHandler;
             }
-            _timer = new System.Threading.Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromDays(1));
+            _timer = new Timer(TimerCallback, null, TimeSpan.Zero, TimeSpan.FromDays(1));
             //If the bar changes the preference to "yes", trigger a callback
             //otherwise, null out the latest version info so the bar and settings window don't know
             //there a new version anymore.

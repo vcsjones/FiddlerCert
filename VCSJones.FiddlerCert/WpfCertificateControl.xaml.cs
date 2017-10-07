@@ -7,9 +7,6 @@ namespace VCSJones.FiddlerCert
     /// </summary>
     public partial class WpfCertificateControl : UserControl
     {
-        public WpfCertificateControl()
-        {
-            InitializeComponent();
-        }
+        public WpfCertificateControl() => InitializeComponent();
     }
 }

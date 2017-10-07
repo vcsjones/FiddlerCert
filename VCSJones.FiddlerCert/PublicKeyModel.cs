@@ -11,7 +11,7 @@ namespace VCSJones.FiddlerCert
 
         public PublicKeyAlgorithm Algorithm
         {
-            get { return _algorithm; }
+            get => _algorithm;
             set
             {
                 _algorithm = value;
@@ -21,7 +21,7 @@ namespace VCSJones.FiddlerCert
 
         public int? KeySizeBits
         {
-            get { return _keySizeBits; }
+            get => _keySizeBits;
             set
             {
                 _keySizeBits = value;
@@ -31,7 +31,7 @@ namespace VCSJones.FiddlerCert
 
         public byte[] PublicKey
         {
-            get { return _publicKey; }
+            get => _publicKey;
             set
             {
                 _publicKey = value;

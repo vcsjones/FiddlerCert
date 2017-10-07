@@ -13,7 +13,7 @@ namespace VCSJones.FiddlerCert
 
         public AsyncProperty<ObservableCollection<CertificateModel>> CertificateChain
         {
-            get { return _certificateChain; }
+            get => _certificateChain;
             set
             {
                 _certificateChain = value;
@@ -22,7 +22,7 @@ namespace VCSJones.FiddlerCert
         }
         public AsyncProperty<ObservableCollection<CertificateModel>> ContentChain
         {
-            get { return _contentChain; }
+            get => _contentChain;
             set
             {
                 _contentChain = value;
@@ -32,10 +32,7 @@ namespace VCSJones.FiddlerCert
 
         public HpkpModel Hpkp
         {
-            get
-            {
-                return _hpkp;
-            }
+            get => _hpkp;
             set
             {
                 _hpkp = value;
@@ -45,10 +42,7 @@ namespace VCSJones.FiddlerCert
 
         public bool IsNotTunnel
         {
-            get
-            {
-                return _isNotTunnel;
-            }
+            get => _isNotTunnel;
             set
             {
                 _isNotTunnel = value;
@@ -75,7 +69,7 @@ namespace VCSJones.FiddlerCert
 
         public bool HasHpkpHeaders
         {
-            get { return _hasHpkpHeaders; }
+            get => _hasHpkpHeaders;
             set
             {
                 _hasHpkpHeaders = value;
@@ -85,7 +79,7 @@ namespace VCSJones.FiddlerCert
 
         public string RawHpkpHeader
         {
-            get { return _rawHpkpHeader; }
+            get => _rawHpkpHeader;
             set
             {
                 _rawHpkpHeader = value;
@@ -95,7 +89,7 @@ namespace VCSJones.FiddlerCert
 
         public ObservableCollection<HpkpHashModel> PinDirectives
         {
-            get { return _pinDirectives; }
+            get => _pinDirectives;
             set
             {
                 _pinDirectives = value;
@@ -105,10 +99,7 @@ namespace VCSJones.FiddlerCert
 
         public ObservableCollection<PinCheckResult> PinningErrors
         {
-            get
-            {
-                return _pinningErrors;
-            }
+            get => _pinningErrors;
             set
             {
                 _pinningErrors = value;

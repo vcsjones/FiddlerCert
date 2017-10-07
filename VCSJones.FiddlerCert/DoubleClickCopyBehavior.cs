@@ -96,14 +96,12 @@ namespace VCSJones.FiddlerCert
                 {
                     if (string.IsNullOrEmpty(copyText))
                     {
-                        var contentControl = element as ContentControl;
-                        if (contentControl != null)
+                        if (element is ContentControl contentControl)
                         {
                             Debug.WriteLine($"Clipboard set to: \"{contentControl.Content.ToString()}\"");
                             System.Windows.Clipboard.SetText(contentControl.Content.ToString());
                         }
-                        var textBlock = element as TextBlock;
-                        if (textBlock != null)
+                        if (element is TextBlock textBlock)
                         {
                             Debug.WriteLine($"Clipboard set to: \"{textBlock.Text}\"");
                             System.Windows.Clipboard.SetText(textBlock.Text);

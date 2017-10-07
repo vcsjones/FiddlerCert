@@ -81,33 +81,21 @@ namespace VCSJones.FiddlerCert
             o.Controls.Add(_host);
         }
 
-        public override int GetOrder()
-        {
-            return int.MaxValue;
-        }
+        public override int GetOrder() => int.MaxValue;
 
-        public void Clear()
-        {
-            _panel.Children.Clear();
-        }
+        public void Clear() => _panel.Children.Clear();
 
         public HTTPResponseHeaders headers
         {
             // We don't allow editing, and look only at Session flags
-            get
-            {
-                return null;
-            }
+            get => null;
             set { }
         }
 
         public byte[] body
         {
             // We don't allow editing, and look only at Session flags
-            get
-            {
-                return null;
-            }
+            get => null;
             set { }
         }
 
@@ -117,7 +105,7 @@ namespace VCSJones.FiddlerCert
         public bool bReadOnly
         {
             // We don't allow editing
-            get { return true; }
+            get => true;
             set { }
         }
 
@@ -172,8 +160,7 @@ namespace VCSJones.FiddlerCert
             };
             if (oS.isHTTPS || (oS.BitFlags & SessionFlags.IsDecryptingTunnel) == SessionFlags.IsDecryptingTunnel)
             {
-                Tuple<X509Chain, X509Certificate2> cert;
-                if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.hostname, oS.port), out cert))
+                if (CertificateInspector.ServerCertificates.TryGetValue(Tuple.Create(oS.hostname, oS.port), out var cert))
                 {
                     var pkp = oS.ResponseHeaders.Exists("public-key-pins") ? oS.ResponseHeaders["public-key-pins"] : null;
                     var pkpReportOnly = oS.ResponseHeaders.Exists("public-key-pins-report-only") ? oS.ResponseHeaders["public-key-pins-report-only"] : null;

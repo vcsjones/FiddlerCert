@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -12,10 +11,7 @@ namespace VCSJones.FiddlerCert
 
         public ObservableCollection<SctSignatureModel> Signatures
         {
-            get
-            {
-                return _signatures;
-            }
+            get => _signatures;
             set
             {
                 _signatures = value;

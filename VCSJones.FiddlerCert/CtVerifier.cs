@@ -15,11 +15,7 @@ namespace VCSJones.FiddlerCert
         public CtVerifier(byte[] publicKey)
         {
             var key = DecodeSubjectPublicKeyInfo(publicKey);
-            if (key == null)
-            {
-                throw new ArgumentException("Could not decode public key.", nameof(publicKey));
-            }
-            _key = key;
+            _key = key ?? throw new ArgumentException("Could not decode public key.", nameof(publicKey));
             using (var sha = new SHA256Cng())
             {
                 LogId = sha.ComputeHash(publicKey);
@@ -65,9 +61,8 @@ namespace VCSJones.FiddlerCert
             try
             {
                 handle = GCHandle.Alloc(publicKey, GCHandleType.Pinned);
-                LocalBufferSafeHandle buffer;
                 var size = 0u;
-                if (Crypto32.CryptDecodeObjectEx(encodingType, SUBJECT_PUBLIC_KEY_INFO, handle.AddrOfPinnedObject(), (uint)publicKey.Length, CryptDecodeFlags.CRYPT_DECODE_ALLOC_FLAG, IntPtr.Zero, out buffer, ref size))
+                if (Crypto32.CryptDecodeObjectEx(encodingType, SUBJECT_PUBLIC_KEY_INFO, handle.AddrOfPinnedObject(), (uint)publicKey.Length, CryptDecodeFlags.CRYPT_DECODE_ALLOC_FLAG, IntPtr.Zero, out LocalBufferSafeHandle buffer, ref size))
                 {
                     using (buffer)
                     {
@@ -151,8 +146,7 @@ namespace VCSJones.FiddlerCert
 
             public override bool Verify(byte[] data, byte[] signature, SctHashAlgorithm algorithm)
             {
-                byte[] blob;
-                if(!EcdsaKeyFormatter.ToEcdsa256PublicKeyBlob(_key, out blob))
+                if (!EcdsaKeyFormatter.ToEcdsa256PublicKeyBlob(_key, out byte[] blob))
                 {
                     return false;
                 }

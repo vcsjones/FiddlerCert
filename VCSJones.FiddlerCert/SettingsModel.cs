@@ -16,10 +16,7 @@ namespace VCSJones.FiddlerCert
 
         public bool CheckForUpdates
         {
-            get
-            {
-                return _checkForUpdates;
-            }
+            get => _checkForUpdates;
             set
             {
                 _checkForUpdates = value;
@@ -29,10 +26,7 @@ namespace VCSJones.FiddlerCert
 
         public RelayCommand SaveCommand
         {
-            get
-            {
-                return _saveCommand;
-            }
+            get => _saveCommand;
             set
             {
                 _saveCommand = value;
@@ -42,10 +36,7 @@ namespace VCSJones.FiddlerCert
 
         public RelayCommand CancelCommand
         {
-            get
-            {
-                return _cancelCommand;
-            }
+            get => _cancelCommand;
             set
             {
                 _cancelCommand = value;

@@ -7,9 +7,6 @@ namespace VCSJones.FiddlerCert
     /// </summary>
     public partial class CertificatesView : UserControl
     {
-        public CertificatesView()
-        {
-            InitializeComponent();
-        }
+        public CertificatesView() => InitializeComponent();
     }
 }

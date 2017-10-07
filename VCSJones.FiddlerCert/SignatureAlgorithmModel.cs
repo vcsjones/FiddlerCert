@@ -11,7 +11,7 @@ namespace VCSJones.FiddlerCert
 
         public Oid SignatureAlgorithm
         {
-            get { return _signatureAlgorithm; }
+            get => _signatureAlgorithm;
             set
             {
                 _signatureAlgorithm = value;
@@ -21,7 +21,7 @@ namespace VCSJones.FiddlerCert
 
         public bool IsTrustedRoot
         {
-            get { return _isTrustedRoot; }
+            get => _isTrustedRoot;
             set
             {
                 _isTrustedRoot = value;

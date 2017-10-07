@@ -49,31 +49,22 @@ namespace VCSJones.FiddlerCert
         {
             var signatures = new List<SctSignature>();
             var rData = new ArrayOffset<byte>(rawData, 0);
-            ArrayOffset<byte> list;
-            if (!ReadChunkUInt16Header(ref rData, out list))
+            if (!ReadChunkUInt16Header(ref rData, out var list))
             {
                 return signatures;
             }
-            ArrayOffset<byte> sct;
             int index = 0;
-            while (ReadChunkUInt16Header(ref list, out sct))
+            while (ReadChunkUInt16Header(ref list, out var sct))
             {
                 var originalSct = sct;
-                SctVersion version;
-                byte[] logId;
-                DateTime timestamp;
-                byte[] extensions;
-                SctHashAlgorithm hashAlgorithm;
-                SctSignatureAlgorithm signatureAlgorithm;
-                byte[] signature;
                 if (
-                    !ReadByteEnumeration(ref sct, out version) ||
-                    !ReadFixedData(ref sct, LOG_ID_SIZE, out logId) ||
-                    !ReadTimestamp(ref sct, out timestamp) ||
-                    !ReadVariableDataUInt16Header(ref sct, out extensions) ||
-                    !ReadByteEnumeration(ref sct, out hashAlgorithm) ||
-                    !ReadByteEnumeration(ref sct, out signatureAlgorithm) ||
-                    !ReadVariableDataUInt16Header(ref sct, out signature)
+                    !ReadByteEnumeration(ref sct, out SctVersion version) ||
+                    !ReadFixedData(ref sct, LOG_ID_SIZE, out byte[] logId) ||
+                    !ReadTimestamp(ref sct, out DateTime timestamp) ||
+                    !ReadVariableDataUInt16Header(ref sct, out byte[] extensions) ||
+                    !ReadByteEnumeration(ref sct, out SctHashAlgorithm hashAlgorithm) ||
+                    !ReadByteEnumeration(ref sct, out SctSignatureAlgorithm signatureAlgorithm) ||
+                    !ReadVariableDataUInt16Header(ref sct, out byte[] signature)
                 )
                 {
                     continue;
@@ -193,10 +184,9 @@ namespace VCSJones.FiddlerCert
             try
             {
                 handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-                LocalBufferSafeHandle buffer;
                 var size = 0u;
                 const CryptDecodeFlags flags = CryptDecodeFlags.CRYPT_DECODE_ALLOC_FLAG;
-                if (!Crypto32.CryptDecodeObjectEx(type, X509_OCTET_STRING, handle.AddrOfPinnedObject(), (uint)data.Length, flags, IntPtr.Zero, out buffer, ref size))
+                if (!Crypto32.CryptDecodeObjectEx(type, X509_OCTET_STRING, handle.AddrOfPinnedObject(), (uint)data.Length, flags, IntPtr.Zero, out LocalBufferSafeHandle buffer, ref size))
                 {
                     return null;
                 }

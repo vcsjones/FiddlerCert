@@ -12,10 +12,7 @@ namespace VCSJones.FiddlerCert
 
         public HttpSecurityModel HttpSecurityModel
         {
-            get
-            {
-                return _httpSecurityModel;
-            }
+            get => _httpSecurityModel;
             set
             {
                 _httpSecurityModel = value;
@@ -25,10 +22,7 @@ namespace VCSJones.FiddlerCert
 
         public UpdateBarModel UpdateBarModel
         {
-            get
-            {
-                return _updateBarModel;
-            }
+            get => _updateBarModel;
             set
             {
                 _updateBarModel = value;
@@ -38,10 +32,7 @@ namespace VCSJones.FiddlerCert
 
         public AskUpdateBarModel AskUpdateBarModel
         {
-            get
-            {
-                return _askUpdateBarModel;
-            }
+            get => _askUpdateBarModel;
             set
             {
                 _askUpdateBarModel = value;
@@ -51,10 +42,7 @@ namespace VCSJones.FiddlerCert
 
         public RelayCommand SettingsCommand
         {
-            get
-            {
-                return _settingsCommand;
-            }
+            get => _settingsCommand;
             set
             {
                 _settingsCommand = value;

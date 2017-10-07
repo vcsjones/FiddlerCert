@@ -9,14 +9,8 @@ namespace VCSJones.FiddlerCert
 
         public ContentControl ActionBarTemplate
         {
-            get
-            {
-                return (ContentControl)GetValue(ActionBarTemplateProperty);
-            }
-            set
-            {
-                SetValue(ActionBarTemplateProperty, value);
-            }
+            get => (ContentControl)GetValue(ActionBarTemplateProperty);
+            set => SetValue(ActionBarTemplateProperty, value);
         }
     }
 }

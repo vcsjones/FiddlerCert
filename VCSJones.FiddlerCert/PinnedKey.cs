@@ -1,5 +1,4 @@
 ﻿using System;
-using VCSJones.FiddlerCert.Interop;
 
 namespace VCSJones.FiddlerCert
 {

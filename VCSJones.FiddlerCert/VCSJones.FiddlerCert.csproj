@@ -37,7 +37,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Fiddler">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Fiddler2\Fiddler.exe</HintPath>
+      <HintPath>$(HOMEPATH)\AppData\Local\Programs\Fiddler\Fiddler.exe</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -92,7 +92,6 @@
     <Compile Include="Interop\bcrypt.cs" />
     <Compile Include="Interop\CERT_POLICIES_INFO.cs" />
     <Compile Include="Interop\LocalBufferSafeHandle.cs" />
-    <Compile Include="IReadOnlyList.cs" />
     <Compile Include="KnownDecodeEncodeConstants.cs" />
     <Compile Include="PinCheckResult.cs" />
     <Compile Include="Interop\Msvcrt.cs" />

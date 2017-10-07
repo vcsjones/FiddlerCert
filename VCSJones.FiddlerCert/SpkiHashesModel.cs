@@ -10,10 +10,7 @@ namespace VCSJones.FiddlerCert
 
         public ObservableCollection<SpkiHashModel> Hashes
         {
-            get
-            {
-                return _hashes;
-            }
+            get => _hashes;
             set
             {
                 _hashes = value;

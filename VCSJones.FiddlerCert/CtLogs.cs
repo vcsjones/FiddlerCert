@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Security.Cryptography;
-using VCSJones.FiddlerCert.Interop;
 
 namespace VCSJones.FiddlerCert
 {

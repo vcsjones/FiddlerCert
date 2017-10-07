@@ -28,9 +28,8 @@ namespace VCSJones.FiddlerCert
             var red = new SolidColorBrush(Colors.Red);
             var black = new SolidColorBrush(Colors.Black);
             var yellow = new SolidColorBrush(Colors.Goldenrod);
-            if (value is DateTime)
+            if (value is DateTime dateTime)
             {
-                var dateTime = (DateTime)value;
                 if (dateTime < DateTime.Now)
                 {
                     return red;
@@ -42,14 +41,13 @@ namespace VCSJones.FiddlerCert
                 return black;
 
             }
-            if (value is DateTimeOffset)
+            if (value is DateTimeOffset dateTimeOffset)
             {
-                var dateTime = (DateTimeOffset)value;
-                if (dateTime < DateTimeOffset.Now)
+                if (dateTimeOffset < DateTimeOffset.Now)
                 {
                     return red;
                 }
-                if (dateTime < DateTimeOffset.Now.AddMonths(MONTHS_BEFORE_WARNING))
+                if (dateTimeOffset < DateTimeOffset.Now.AddMonths(MONTHS_BEFORE_WARNING))
                 {
                     return yellow;
                 }

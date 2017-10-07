@@ -28,8 +28,7 @@ namespace VCSJones.FiddlerCert
                 {
                     if (identifier.Identifier.Equals("max-age", StringComparison.CurrentCultureIgnoreCase))
                     {
-                        long maxAgeParsed;
-                        if (!long.TryParse(identifier.Value, out maxAgeParsed))
+                        if (!long.TryParse(identifier.Value, out long maxAgeParsed))
                         {
                             continue;
                         }

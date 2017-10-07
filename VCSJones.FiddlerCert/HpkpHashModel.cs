@@ -10,10 +10,7 @@ namespace VCSJones.FiddlerCert
 
         public string HashBase64
         {
-            get
-            {
-                return _hashBase64;
-            }
+            get => _hashBase64;
             set
             {
                 _hashBase64 = value;
@@ -23,10 +20,7 @@ namespace VCSJones.FiddlerCert
 
         public PinAlgorithm Algorithm
         {
-            get
-            {
-                return _algorithm;
-            }
+            get => _algorithm;
             set
             {
                 _algorithm = value;

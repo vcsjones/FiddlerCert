@@ -21,10 +21,9 @@ namespace VCSJones.FiddlerCert
             try
             {
                 handle = GCHandle.Alloc(extension.RawData, GCHandleType.Pinned);
-                LocalBufferSafeHandle buffer;
                 var size = 0u;
                 const EncodingType encodingType = EncodingType.PKCS_7_ASN_ENCODING | EncodingType.X509_ASN_ENCODING;
-                if (!Crypto32.CryptDecodeObjectEx(encodingType, X509_CERT_POLICIES, handle.AddrOfPinnedObject(), (uint)extension.RawData.Length, CryptDecodeFlags.CRYPT_DECODE_ALLOC_FLAG, IntPtr.Zero, out buffer, ref size))
+                if (!Crypto32.CryptDecodeObjectEx(encodingType, X509_CERT_POLICIES, handle.AddrOfPinnedObject(), (uint)extension.RawData.Length, CryptDecodeFlags.CRYPT_DECODE_ALLOC_FLAG, IntPtr.Zero, out var buffer, ref size))
                 {
                     //Can't decode it, gracefully retun an empty collection.
                     return new List<CertificatePolicy>();

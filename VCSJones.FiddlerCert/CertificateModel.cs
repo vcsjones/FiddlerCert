@@ -24,10 +24,7 @@ namespace VCSJones.FiddlerCert
 
         public AsyncProperty<CertificateCtModel> CertificateCtModel
         {
-            get
-            {
-                return _certificateCtModel;
-            }
+            get => _certificateCtModel;
             set
             {
                 _certificateCtModel = value;
@@ -37,10 +34,7 @@ namespace VCSJones.FiddlerCert
 
         public string CommonName
         {
-            get
-            {
-                return _commonName;
-            }
+            get => _commonName;
             set
             {
                 _commonName = value;
@@ -50,10 +44,7 @@ namespace VCSJones.FiddlerCert
 
         public Dictionary<string, List<string>> DistinguishedName
         {
-            get
-            {
-                return _distinguishedName;
-            }
+            get => _distinguishedName;
             set
             {
                 _distinguishedName = value;
@@ -63,10 +54,7 @@ namespace VCSJones.FiddlerCert
 
         public string Thumbprint
         {
-            get
-            {
-                return _thumbprint;
-            }
+            get => _thumbprint;
             set
             {
                 _thumbprint = value;
@@ -76,20 +64,11 @@ namespace VCSJones.FiddlerCert
             }
         }
 
-        public Uri CrtShUri
-        {
-            get
-            {
-                return new Uri($"https://crt.sh/?q={Thumbprint}");
-            }
-        }
+        public Uri CrtShUri  => new Uri($"https://crt.sh/?q={Thumbprint}");
 
         public string SubjectAlternativeName
         {
-            get
-            {
-                return _subjectAlternativeName;
-            }
+            get => _subjectAlternativeName;
             set
             {
                 _subjectAlternativeName = value;
@@ -99,7 +78,7 @@ namespace VCSJones.FiddlerCert
 
         public PublicKeyModel PublicKey
         {
-            get { return _publicKey; }
+            get => _publicKey;
             set
             {
                 _publicKey = value;
@@ -109,7 +88,7 @@ namespace VCSJones.FiddlerCert
 
         public DateTime BeginDate
         {
-            get { return _beginDate; }
+            get => _beginDate;
             set
             {
                 _beginDate = value;
@@ -119,7 +98,7 @@ namespace VCSJones.FiddlerCert
 
         public DateTime EndDate
         {
-            get { return _endDate; }
+            get => _endDate;
             set
             {
                 _endDate = value;
@@ -131,7 +110,7 @@ namespace VCSJones.FiddlerCert
 
         public SignatureAlgorithmModel SignatureAlgorithm
         {
-            get { return _signatureAlgorithm; }
+            get => _signatureAlgorithm;
             set
             {
                 _signatureAlgorithm = value;
@@ -141,7 +120,7 @@ namespace VCSJones.FiddlerCert
 
         public CertificateType CertificateType
         {
-            get { return _certificateType; }
+            get => _certificateType;
             set
             {
                 _certificateType = value;
@@ -153,10 +132,7 @@ namespace VCSJones.FiddlerCert
 
         public string SerialNumber
         {
-            get
-            {
-                return _serialNumber;
-            }
+            get => _serialNumber;
             set
             {
                 _serialNumber = value;
@@ -166,10 +142,7 @@ namespace VCSJones.FiddlerCert
 
         public AsyncProperty<CertificateErrors> Errors
         {
-            get
-            {
-                return _errors;
-            }
+            get => _errors;
             set
             {
                 _errors = value;
@@ -179,7 +152,7 @@ namespace VCSJones.FiddlerCert
 
         public AsyncProperty<SpkiHashesModel> SpkiHashes
         {
-            get { return _spkiHashes; }
+            get => _spkiHashes;
             set
             {
                 _spkiHashes = value;
@@ -189,7 +162,7 @@ namespace VCSJones.FiddlerCert
 
         public RelayCommand ViewCommand
         {
-            get { return _viewCommand; }
+            get => _viewCommand;
             set
             {
                 _viewCommand = value;
@@ -199,7 +172,7 @@ namespace VCSJones.FiddlerCert
 
         public RelayCommand BrowseCommand
         {
-            get { return _browseCommand; }
+            get => _browseCommand;
             set
             {
                 _browseCommand = value;
@@ -209,7 +182,7 @@ namespace VCSJones.FiddlerCert
 
         public RelayCommand InstallCommand
         {
-            get { return _installCommand; }
+            get => _installCommand;
             set
             {
                 _installCommand = value;

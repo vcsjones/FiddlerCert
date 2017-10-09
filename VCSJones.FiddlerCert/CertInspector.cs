@@ -217,7 +217,7 @@ namespace VCSJones.FiddlerCert
             return new CertificateModel
             {
                 CommonName = dn.ContainsKey("cn") ? dn["cn"].FirstOrDefault() ?? certificate.Thumbprint : certificate.Thumbprint,
-                Thumbprint = certificate.Thumbprint,
+                Thumbprint = CertificateHashBuilder.BuildHashForCertificateHex<SHA256Cng>(certificate),
                 DistinguishedName = dn,
                 SubjectAlternativeName = certificate.Extensions[KnownOids.X509Extensions.SubjectAltNameExtension]?.Format(false) ?? "None",
                 PublicKey = new PublicKeyModel

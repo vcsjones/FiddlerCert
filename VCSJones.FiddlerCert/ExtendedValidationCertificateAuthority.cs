@@ -17,7 +17,7 @@ namespace VCSJones.FiddlerCert
                 return false;
             }
             
-            var rootThumbprint = CertificateHashBuilder.BuildHashForCertificate<SHA256Cng>(rootCertificate);
+            var rootThumbprint = CertificateHashBuilder.BuildHashForCertificateBinary<SHA256Cng>(rootCertificate);
             var findRoot = Array.Find(EVRootCAMetadata, p => p.Sha256Fingerprint.MemoryCompare(rootThumbprint));
             if (findRoot == null)
             {

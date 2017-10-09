@@ -9,7 +9,7 @@ namespace VCSJones.FiddlerCert
 {
     public static class CertificateHashBuilder
     {
-        public static byte[] BuildHashForCertificate<THashAlgotihm>(X509Certificate2 certificate) where THashAlgotihm : HashAlgorithm, new()
+        public static byte[] BuildHashForCertificateBinary<THashAlgotihm>(X509Certificate2 certificate) where THashAlgotihm : HashAlgorithm, new()
         {
             var context = (CERT_CONTEXT)Marshal.PtrToStructure(certificate.Handle, typeof(CERT_CONTEXT));
             if (context.dwCertEncodingType == EncodingType.X509_ASN_ENCODING)
@@ -23,8 +23,13 @@ namespace VCSJones.FiddlerCert
             }
             else
             {
-                throw new InvalidOperationException("Certificate is not an X509 certificate");
+                return null;
             }
+        }
+
+        public static string BuildHashForCertificateHex<THashAlgotihm>(X509Certificate2 certificate) where THashAlgotihm : HashAlgorithm, new()
+        {
+            return BitConverter.ToString(BuildHashForCertificateBinary<THashAlgotihm>(certificate)).Replace("-", "");
         }
 
         public static string BuildHashForPublicKey<THashAlgorithm>(X509Certificate2 certificate) where THashAlgorithm : HashAlgorithm, new()

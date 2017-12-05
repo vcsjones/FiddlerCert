@@ -39,7 +39,7 @@ namespace VCSJones.FiddlerCert.Interop
             (
             [param: In, MarshalAs(UnmanagedType.U4)] EncodingType dwCertEncodingType,
             [param: In, MarshalAs(UnmanagedType.SysInt)] IntPtr lpszStructType,
-            [param: In, MarshalAs(UnmanagedType.Struct)] ref CERT_PUBLIC_KEY_INFO pvStructInfo,
+            [param: In] ref CERT_PUBLIC_KEY_INFO pvStructInfo,
             [param: In, MarshalAs(UnmanagedType.U4)] uint dwFlags,
             [param: In, MarshalAs(UnmanagedType.SysInt)] IntPtr pEncodePara,
             [param: Out] out LocalBufferSafeHandle pvEncoded,

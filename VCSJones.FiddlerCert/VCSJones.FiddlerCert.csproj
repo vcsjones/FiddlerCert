@@ -39,7 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Fiddler">
-      <HintPath>$(HOMEPATH)\AppData\Local\Programs\Fiddler\Fiddler.exe</HintPath>
+      <HintPath>$(HOMEDRIVE)$(HOMEPATH)\AppData\Local\Programs\Fiddler\Fiddler.exe</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="PresentationCore" />

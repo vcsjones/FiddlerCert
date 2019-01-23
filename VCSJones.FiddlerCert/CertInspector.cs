@@ -81,7 +81,7 @@ namespace VCSJones.FiddlerCert
             o.Controls.Add(_host);
         }
 
-        public override int GetOrder() => int.MaxValue;
+        public override int GetOrder() => 10_000;
 
         public void Clear() => _panel.Children.Clear();
 

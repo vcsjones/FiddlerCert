@@ -23,18 +23,17 @@
 			<Output ItemName="ProjectOutputs" TaskParameter="TargetOutputs"/>
 		</MSBuild>
 	</Target>
-	<Target Name="Build" DependsOnTargets="Compile">
+	<Target Name="Package" DependsOnTargets="Compile">
 		<GetAssemblyIdentity AssemblyFiles="@(ProjectOutputs)">
 			<Output
 				TaskParameter="Assemblies"
 				ItemName="FiddlerCertAssemblyIdentities" />
 		</GetAssemblyIdentity>
+		<Exec Command="signtool.exe sign /sha1 c05862d4fe5fb8212c3c0e329108393a47c95e83 /nosealwarn /d &quot;$(ProductName)&quot; /du $(ProductUrl) /n &quot;$(ProductCompanyName)&quot; /itos /ph /tr http://timestamp.digicert.com /fd SHA256 /td SHA256 &quot;@(ProjectOutputs)&quot;" />
+		<Exec Command="signtool.exe sign /sha1 c05862d4fe5fb8212c3c0e329108393a47c95e83 /seal /tseal http://timestamp.digicert.com /td SHA256 &quot;@(ProjectOutputs)&quot;" />
 		<Exec Command="&quot;$(MSBuildProgramFiles32)\NSIS\makensis.exe&quot; &quot;/XOutFile $(OutInstaller)&quot; &quot;/DProductName=$(ProductName)&quot; &quot;/DComments=$(ProductUrl)&quot; &quot;/DVERSION=%(FiddlerCertAssemblyIdentities.Version)&quot; &quot;/DProductCopy=$(ProductCopyright)&quot; &quot;/DCompanyName=$(ProductCompanyName)&quot; &quot;/DProductDescription=$(ProductDescription)&quot; &quot;$(NsisScript)&quot;" />
-	</Target>
-	<Target Name="Sign" DependsOnTargets="Build">
-		<Exec Command="signtool.exe sign /sha1 58D78D4D87C80E090A3E453E5039C1DCD464E7A3 /nosealwarn /d &quot;$(ProductName)&quot; /du $(ProductUrl) /n &quot;$(ProductCompanyName)&quot; /itos /ph /tr http://timestamp.digicert.com /fd SHA256 /td SHA256 &quot;$(OutInstaller)&quot;" />
-		<Exec Command="signtool.exe sign /sha1 58D78D4D87C80E090A3E453E5039C1DCD464E7A3 /seal /tseal http://timestamp.digicert.com /td SHA256 &quot;$(OutInstaller)&quot;" />
-
+		<Exec Command="signtool.exe sign /sha1 c05862d4fe5fb8212c3c0e329108393a47c95e83 /nosealwarn /d &quot;$(ProductName)&quot; /du $(ProductUrl) /n &quot;$(ProductCompanyName)&quot; /itos /ph /tr http://timestamp.digicert.com /fd SHA256 /td SHA256 &quot;$(OutInstaller)&quot;" />
+		<Exec Command="signtool.exe sign /sha1 c05862d4fe5fb8212c3c0e329108393a47c95e83 /seal /tseal http://timestamp.digicert.com /td SHA256 &quot;$(OutInstaller)&quot;" />
         <Exec Command="&quot;$(MSBuildThisFileDirectory)..\tools\authlint.exe&quot; -in &quot;$(OutInstaller)&quot;" />
 	</Target>
 	<Target Name="Install" DependsOnTargets="Compile">
